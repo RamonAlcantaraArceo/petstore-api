@@ -1,0 +1,11 @@
+apiVersion: v2
+name: petstore-api
+description: Petstore API Helm chart
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - petstore
+  - fastapi
+  - python
+home: https://github.com/RamonAlcantaraArceo/petstore-api

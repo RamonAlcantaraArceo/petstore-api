@@ -1,0 +1,12 @@
+replicaCount: 2
+
+env:
+  APP_ENV: staging
+  LOG_LEVEL: INFO
+  STORAGE_MODE: cloud
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
