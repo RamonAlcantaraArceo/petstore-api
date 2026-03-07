@@ -1,0 +1,9 @@
+replicaCount: 1
+
+env:
+  APP_ENV: dev
+  LOG_LEVEL: DEBUG
+  STORAGE_MODE: cloud
+
+autoscaling:
+  enabled: false

@@ -1,0 +1,67 @@
+name: Deploy to Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Docker image tag (commit SHA) to deploy"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging EKS
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --name ${{ secrets.EKS_STAGING_CLUSTER_NAME }} \
+            --region us-east-1
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install petstore-api ./helm/petstore-api \
+            -f ./helm/petstore-api/values-staging.yaml \
+            --set image.tag=${{ inputs.image_tag }} \
+            --set image.repository=${{ secrets.ECR_REGISTRY }}/petstore-api \
+            --wait --timeout 5m
+
+      - name: Set up Python for e2e tests
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Run e2e tests against staging
+        env:
+          E2E_BASE_URL: ${{ secrets.STAGING_URL }}
+          API_KEY: ${{ secrets.STAGING_API_KEY }}
+        run: |
+          pytest tests/e2e/ --alluredir=allure-results/ -p no:allure_pytest
+
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-staging
+          path: allure-results/
+        continue-on-error: true

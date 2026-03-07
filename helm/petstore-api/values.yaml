@@ -1,0 +1,45 @@
+replicaCount: 1
+
+image:
+  repository: <ECR_REGISTRY>/petstore-api
+  pullPolicy: IfNotPresent
+  tag: latest
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: alb
+  hosts:
+    - host: petstore-api.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+env:
+  STORAGE_MODE: cloud
+  APP_ENV: dev
+  LOG_LEVEL: INFO
+
+externalSecrets:
+  enabled: true
+  secretStoreName: aws-secrets-manager
+  remoteRef:
+    key: petstore-api/secrets

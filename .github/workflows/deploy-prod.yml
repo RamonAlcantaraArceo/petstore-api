@@ -1,0 +1,44 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Docker image tag (commit SHA) to deploy"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-prod:
+    name: Deploy to Production EKS
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --name ${{ secrets.EKS_PROD_CLUSTER_NAME }} \
+            --region us-east-1
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install petstore-api ./helm/petstore-api \
+            -f ./helm/petstore-api/values-prod.yaml \
+            --set image.tag=${{ inputs.image_tag }} \
+            --set image.repository=${{ secrets.ECR_REGISTRY }}/petstore-api \
+            --wait --timeout 10m

@@ -1,0 +1,46 @@
+site_name: Petstore API
+site_description: A production-ready Petstore API built with FastAPI
+site_url: https://ramonalcantaraarceo.github.io/petstore-api/
+repo_url: https://github.com/RamonAlcantaraArceo/petstore-api
+repo_name: petstore-api
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: indigo
+    accent: blue
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Architecture: architecture.md
+  - Configuration: configuration.md
+  - API Reference: api-reference.md
+  - Testing Guide: testing.md
+  - Deployment: deployment.md
+  - Changelog: changelog.md
+
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - toc:
+      permalink: true

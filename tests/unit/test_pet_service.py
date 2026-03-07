@@ -1,0 +1,163 @@
+"""Unit tests for PetService."""
+
+from __future__ import annotations
+
+from unittest.mock import AsyncMock
+
+import pytest
+
+from app.schemas.pet import Pet, PetCreate, PetStatus, PetUpdate
+from app.services.pet import PetService
+from tests.factories.pet import PetCreateFactory
+
+
+def make_service(repo: AsyncMock) -> PetService:
+    """Build a PetService around a mock repository.
+
+    Args:
+        repo: The mocked pet repository.
+
+    Returns:
+        PetService using the mock.
+    """
+    return PetService(repo)
+
+
+@pytest.mark.asyncio
+async def test_get_pet_returns_pet() -> None:
+    """get_pet returns the pet when found."""
+    repo = AsyncMock()
+    pet = Pet(id=1, name="Fido", photoUrls=[], status=PetStatus.available)
+    repo.get.return_value = pet
+
+    service = make_service(repo)
+    result = await service.get_pet(1)
+
+    assert result.id == 1
+    assert result.name == "Fido"
+
+
+@pytest.mark.asyncio
+async def test_get_pet_raises_404_when_not_found() -> None:
+    """get_pet raises HTTPException 404 when pet is not found."""
+    from fastapi import HTTPException
+
+    repo = AsyncMock()
+    repo.get.return_value = None
+
+    service = make_service(repo)
+    with pytest.raises(HTTPException) as exc_info:
+        await service.get_pet(99)
+
+    assert exc_info.value.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_add_pet_creates_pet() -> None:
+    """add_pet delegates creation to the repository."""
+    repo = AsyncMock()
+    pet_data = PetCreateFactory()
+    expected = Pet(id=1, name=pet_data.name, photoUrls=pet_data.photo_urls, status=pet_data.status)
+    repo.create.return_value = expected
+
+    service = make_service(repo)
+    result = await service.add_pet(pet_data)
+
+    repo.create.assert_called_once_with(pet_data)
+    assert result.id == 1
+
+
+@pytest.mark.asyncio
+async def test_add_pet_raises_value_error_for_empty_name() -> None:
+    """add_pet raises ValueError/ValidationError when name is empty."""
+    from pydantic import ValidationError
+
+    repo = AsyncMock()
+    service = make_service(repo)
+
+    with pytest.raises((ValueError, ValidationError)):
+        await service.add_pet(PetCreate(name="", photoUrls=[]))
+
+
+@pytest.mark.asyncio
+async def test_update_pet_delegates_to_repo() -> None:
+    """update_pet delegates to the repository and returns updated pet."""
+    repo = AsyncMock()
+    pet_update = PetUpdate(id=1, name="Rex", photoUrls=[], status=PetStatus.sold)
+    expected = Pet(id=1, name="Rex", photoUrls=[], status=PetStatus.sold)
+    repo.update.return_value = expected
+
+    service = make_service(repo)
+    result = await service.update_pet(pet_update)
+
+    repo.update.assert_called_once_with(pet_update)
+    assert result.name == "Rex"
+
+
+@pytest.mark.asyncio
+async def test_update_pet_raises_404_when_not_found() -> None:
+    """update_pet raises HTTPException 404 when the pet does not exist."""
+    from fastapi import HTTPException
+
+    repo = AsyncMock()
+    repo.update.side_effect = KeyError("Pet 1 not found")
+
+    service = make_service(repo)
+    with pytest.raises(HTTPException) as exc_info:
+        await service.update_pet(PetUpdate(id=1, name="Rex", photoUrls=[]))
+
+    assert exc_info.value.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_delete_pet_calls_repo() -> None:
+    """delete_pet calls repository delete."""
+    repo = AsyncMock()
+    repo.delete.return_value = None
+
+    service = make_service(repo)
+    await service.delete_pet(1)
+
+    repo.delete.assert_called_once_with(1)
+
+
+@pytest.mark.asyncio
+async def test_delete_pet_raises_404_when_not_found() -> None:
+    """delete_pet raises HTTPException 404 when not found."""
+    from fastapi import HTTPException
+
+    repo = AsyncMock()
+    repo.delete.side_effect = KeyError("Pet 1 not found")
+
+    service = make_service(repo)
+    with pytest.raises(HTTPException) as exc_info:
+        await service.delete_pet(1)
+
+    assert exc_info.value.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_find_by_status_delegates_to_repo() -> None:
+    """find_by_status calls repository list_by_status."""
+    repo = AsyncMock()
+    pets = [Pet(id=1, name="Fido", photoUrls=[], status=PetStatus.available)]
+    repo.list_by_status.return_value = pets
+
+    service = make_service(repo)
+    result = await service.find_by_status("available")
+
+    repo.list_by_status.assert_called_once_with("available")
+    assert len(result) == 1
+
+
+@pytest.mark.asyncio
+async def test_find_by_tags_delegates_to_repo() -> None:
+    """find_by_tags calls repository list_by_tags."""
+    repo = AsyncMock()
+    repo.list_by_tags.return_value = []
+
+    service = make_service(repo)
+    result = await service.find_by_tags(["cute"])
+
+    repo.list_by_tags.assert_called_once_with(["cute"])
+    assert result == []
