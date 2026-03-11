@@ -63,6 +63,7 @@ jobs:
     env:
       STORAGE_MODE: memory
       API_KEY: test-api-key
+      EXPECTED_PYTHON_VERSIONS: "3.14"
     steps:
       - uses: actions/checkout@v4
 
@@ -83,6 +84,35 @@ jobs:
           pytest tests/unit/ tests/integration/ tests/system/ \
             --cov=app --cov-report=xml \
             -p allure_pytest --alluredir=allure-results/
+
+      - name: Write Allure executor and environment metadata
+        if: always()
+        run: |
+          mkdir -p allure-meta-results allure-results
+
+          cat > allure-meta-results/executor.json <<EOF
+          {
+            "name": "GitHub Actions",
+            "type": "github",
+            "buildName": "${{ github.workflow }} #${{ github.run_number }}",
+            "buildOrder": ${{ github.run_number }},
+            "buildUrl": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }
+          EOF
+
+          cat > allure-meta-results/environment.properties <<EOF
+          Python Versions=${EXPECTED_PYTHON_VERSIONS}
+          Workflow=${{ github.workflow }}
+          Repository=${{ github.repository }}
+          Branch=${{ github.ref_name }}
+          Commit=${{ github.sha }}
+          Run ID=${{ github.run_id }}
+          Run Number=${{ github.run_number }}
+          Storage Mode=${STORAGE_MODE}
+          EOF
+
+          cp allure-meta-results/executor.json allure-results/executor.json
+          cp allure-meta-results/environment.properties allure-results/environment.properties
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4

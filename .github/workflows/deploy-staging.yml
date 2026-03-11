@@ -17,6 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      EXPECTED_PYTHON_VERSIONS: "3.14"
+      STORAGE_MODE: remote-staging
     environment: staging
     steps:
       - uses: actions/checkout@v4
@@ -62,6 +65,36 @@ jobs:
           API_KEY: ${{ secrets.STAGING_API_KEY }}
         run: |
           pytest tests/e2e/ --alluredir=allure-results/ -p allure_pytest
+
+      - name: Write Allure executor and environment metadata
+        if: always()
+        run: |
+          mkdir -p allure-meta-results allure-results
+
+          cat > allure-meta-results/executor.json <<EOF
+          {
+            "name": "GitHub Actions",
+            "type": "github",
+            "buildName": "${{ github.workflow }} #${{ github.run_number }}",
+            "buildOrder": ${{ github.run_number }},
+            "buildUrl": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }
+          EOF
+
+          cat > allure-meta-results/environment.properties <<EOF
+          Python Versions=${EXPECTED_PYTHON_VERSIONS}
+          Workflow=${{ github.workflow }}
+          Repository=${{ github.repository }}
+          Branch=${{ github.ref_name }}
+          Commit=${{ github.sha }}
+          Run ID=${{ github.run_id }}
+          Run Number=${{ github.run_number }}
+          Storage Mode=${STORAGE_MODE}
+          Environment=staging
+          EOF
+
+          cp allure-meta-results/executor.json allure-results/executor.json
+          cp allure-meta-results/environment.properties allure-results/environment.properties
 
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
