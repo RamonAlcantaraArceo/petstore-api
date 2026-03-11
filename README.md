@@ -18,21 +18,53 @@ curl http://localhost:8000/health
 curl -H "X-API-Key: dev-api-key" http://localhost:8000/api/v1/pet/findByStatus?status=available
 ```
 
+## UV Workflow
+
+This project uses [**uv**](https://docs.astral.sh/uv/) for fast dependency management and Python version handling.
+
+```bash
+# Install uv (one-time)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Clone and set up the project
+git clone https://github.com/RamonAlcantaraArceo/petstore-api.git
+cd petstore-api
+uv sync --python 3.14 --extra dev
+
+# Run the dev server
+uv run uvicorn app.main:app --reload
+
+# Add a new dependency (e.g., requests)
+uv add requests
+
+# Add a dev-only dependency (e.g., ipython)
+uv add --dev ipython
+
+# Run any project command
+uv run <command>  # e.g., uv run pytest, uv run ruff check .
+```
+
 ## Environment Variables
 
-| Variable | Default | Description |
-|---|---|---|
-| `STORAGE_MODE` | `memory` | Runtime mode: `memory` \| `local` \| `cloud` |
-| `API_KEY` | `dev-api-key` | API key for authentication |
-| `DATABASE_URL` | — | PostgreSQL connection URL |
-| `APP_ENV` | `dev` | Environment: `dev` \| `staging` \| `prod` |
-| `LOG_LEVEL` | `INFO` | Log level |
+| Variable       | Default       | Description                                  |
+|----------------|---------------|----------------------------------------------|
+| `STORAGE_MODE` | `memory`      | Runtime mode: `memory` \| `local` \| `cloud` |
+| `API_KEY`      | `dev-api-key` | API key for authentication                   |
+| `DATABASE_URL` | —             | PostgreSQL connection URL                    |
+| `APP_ENV`      | `dev`         | Environment: `dev` \| `staging` \| `prod`    |
+| `LOG_LEVEL`    | `INFO`        | Log level                                    |
 
 ## Running Tests
 
 ```bash
-pip install -e ".[dev]"
-pytest tests/unit/ tests/integration/ tests/system/ --cov=app
+# Install uv if needed
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Use Python 3.14 and install dev dependencies
+uv sync --python 3.14 --extra dev
+
+# Run test suites
+uv run pytest tests/unit/ tests/integration/ tests/system/ --cov=app
 ```
 
 ## Building and Deploying

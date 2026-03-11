@@ -15,9 +15,14 @@ jobs:
   deploy-staging:
     name: Deploy to Staging EKS
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      EXPECTED_PYTHON_VERSIONS: "3.14"
+      STORAGE_MODE: remote-staging
     environment: staging
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -44,19 +49,52 @@ jobs:
             --wait --timeout 5m
 
       - name: Set up Python for e2e tests
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
 
       - name: Install test dependencies
-        run: pip install -e ".[dev]"
+        run: uv pip install --system -e ".[dev]"
 
       - name: Run e2e tests against staging
         env:
           E2E_BASE_URL: ${{ secrets.STAGING_URL }}
           API_KEY: ${{ secrets.STAGING_API_KEY }}
         run: |
-          pytest tests/e2e/ --alluredir=allure-results/ -p no:allure_pytest
+          pytest tests/e2e/ --alluredir=allure-results/ -p allure_pytest
+
+      - name: Write Allure executor and environment metadata
+        if: always()
+        run: |
+          mkdir -p allure-meta-results allure-results
+
+          cat > allure-meta-results/executor.json <<EOF
+          {
+            "name": "GitHub Actions",
+            "type": "github",
+            "buildName": "${{ github.workflow }} #${{ github.run_number }}",
+            "buildOrder": ${{ github.run_number }},
+            "buildUrl": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }
+          EOF
+
+          cat > allure-meta-results/environment.properties <<EOF
+          Python Versions=${EXPECTED_PYTHON_VERSIONS}
+          Workflow=${{ github.workflow }}
+          Repository=${{ github.repository }}
+          Branch=${{ github.ref_name }}
+          Commit=${{ github.sha }}
+          Run ID=${{ github.run_id }}
+          Run Number=${{ github.run_number }}
+          Storage Mode=${STORAGE_MODE}
+          Environment=staging
+          EOF
+
+          cp allure-meta-results/executor.json allure-results/executor.json
+          cp allure-meta-results/environment.properties allure-results/environment.properties
 
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
@@ -65,3 +103,45 @@ jobs:
           name: allure-results-staging
           path: allure-results/
         continue-on-error: true
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v6
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Prepare Allure history workspace (staging)
+        if: always()
+        run: |
+          mkdir -p allure-history
+          if [ -d gh-pages ]; then
+            cp -R gh-pages/. allure-history/
+          fi
+          if [ -d allure-history/staging/history ]; then
+            mkdir -p allure-results/history
+            cp -R allure-history/staging/history/. allure-results/history/
+          fi
+
+      - name: Install Allure CLI
+        if: always()
+        run: |
+          ALLURE_VERSION=2.34.1
+          curl -sSL -o allure.tgz "https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz"
+          tar -xzf allure.tgz
+          echo "$PWD/allure-${ALLURE_VERSION}/bin" >> "$GITHUB_PATH"
+
+      - name: Build Allure report with staging-only history
+        if: always()
+        run: |
+          mkdir -p allure-history/staging
+          allure generate allure-results --clean -o allure-history/staging
+
+      - name: Publish staging Allure report
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history

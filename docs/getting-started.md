@@ -2,9 +2,15 @@
 
 ## Prerequisites
 
-- Python 3.12+
+- Python 3.14+
 - Docker & Docker Compose
-- `uv` package manager (optional)
+- `uv` package manager
+
+Install `uv`:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
 
 ## Local Development (In-Memory Mode)
 
@@ -27,33 +33,29 @@ curl http://localhost:8000/health
 ## Local Development (Python)
 
 ```bash
-# Create virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install dependencies
-pip install -e ".[dev]"
+# Create a Python 3.14 environment and install dependencies
+uv sync --python 3.14 --extra dev
 
 # Set environment variables
 export STORAGE_MODE=memory
 export API_KEY=dev-api-key
 
 # Start the server
-uvicorn app.main:app --reload
+uv run uvicorn app.main:app --reload
 ```
 
 ## Running Tests
 
 ```bash
 # Unit tests
-pytest tests/unit/
+uv run pytest tests/unit/
 
 # Integration tests
-pytest tests/integration/
+uv run pytest tests/integration/
 
 # System tests
-pytest tests/system/
+uv run pytest tests/system/
 
 # All tests with coverage
-pytest tests/unit/ tests/integration/ tests/system/ --cov=app
+uv run pytest tests/unit/ tests/integration/ tests/system/ --cov=app
 ```
