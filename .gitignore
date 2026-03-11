@@ -28,6 +28,7 @@ htmlcov/
 .pytest_cache/
 allure-results/
 allure-report/
+junit.xml
 
 # mypy
 .mypy_cache/

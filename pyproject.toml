@@ -55,7 +55,7 @@ python_version = "3.14"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-addopts = "-p no:allure_pytest"
+addopts = "-p no:allure_pytest --junitxml=junit.xml"
 testpaths = ["tests"]
 markers = [
   "memory_only: tests intended for in-memory app/repository execution",
