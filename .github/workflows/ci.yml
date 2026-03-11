@@ -58,6 +58,8 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       STORAGE_MODE: memory
       API_KEY: test-api-key
@@ -80,7 +82,7 @@ jobs:
         run: |
           pytest tests/unit/ tests/integration/ tests/system/ \
             --cov=app --cov-report=xml \
-            -p no:allure_pytest
+            -p allure_pytest --alluredir=allure-results/
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -96,6 +98,30 @@ jobs:
           name: allure-results
           path: allure-results/
         continue-on-error: true
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build Allure report with CI-only history
+        uses: simple-elf/allure-report-action@v1.9
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+          subfolder: ci
+
+      - name: Publish CI Allure report
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
 
   build:
     name: Build & Push

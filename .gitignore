@@ -27,6 +27,7 @@ htmlcov/
 # pytest
 .pytest_cache/
 allure-results/
+allure-report/
 
 # mypy
 .mypy_cache/

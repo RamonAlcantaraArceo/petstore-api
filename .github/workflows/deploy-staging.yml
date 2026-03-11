@@ -15,6 +15,8 @@ jobs:
   deploy-staging:
     name: Deploy to Staging EKS
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     environment: staging
     steps:
       - uses: actions/checkout@v4
@@ -59,7 +61,7 @@ jobs:
           E2E_BASE_URL: ${{ secrets.STAGING_URL }}
           API_KEY: ${{ secrets.STAGING_API_KEY }}
         run: |
-          pytest tests/e2e/ --alluredir=allure-results/ -p no:allure_pytest
+          pytest tests/e2e/ --alluredir=allure-results/ -p allure_pytest
 
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
@@ -68,3 +70,27 @@ jobs:
           name: allure-results-staging
           path: allure-results/
         continue-on-error: true
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build Allure report with staging-only history
+        uses: simple-elf/allure-report-action@v1.9
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+          subfolder: staging
+
+      - name: Publish staging Allure report
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
