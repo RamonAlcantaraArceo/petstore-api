@@ -28,9 +28,14 @@ def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
     remote_base_url = _remote_base_url()
     for item in items:
         path = str(item.fspath)
-        if "tests/e2e/" in path:
+        e2e_norm_path = os.sep.join(["tests", "e2e"])
+        integration_norm_path = os.sep.join(["tests", "integration"])
+        system_norm_path = os.sep.join(["tests", "system"])
+        if e2e_norm_path in os.path.normpath(path):
             item.add_marker(pytest.mark.remote_only)
-        elif "tests/integration/" in path or "tests/system/" in path:
+        elif integration_norm_path in os.path.normpath(
+            path
+        ) or system_norm_path in os.path.normpath(path):
             item.add_marker(pytest.mark.memory_only)
 
     if not remote_base_url:

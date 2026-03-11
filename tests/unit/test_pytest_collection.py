@@ -23,7 +23,7 @@ def test_collection_marks_windows_style_paths(monkeypatch: pytest.MonkeyPatch) -
     """Collection hook marks Windows-style test paths consistently."""
     monkeypatch.delenv("TEST_BASE_URL", raising=False)
     monkeypatch.delenv("E2E_BASE_URL", raising=False)
-
+    monkeypatch.setattr("os.sep", "\\")
     remote_item = DummyItem(r"C:\repo\tests\e2e\test_petstore_e2e.py")
     integration_item = DummyItem(r"C:\repo\tests\integration\test_petstore_integration.py")
     system_item = DummyItem(r"C:\repo\tests\system\test_petstore_system.py")
