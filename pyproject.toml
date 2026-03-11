@@ -57,6 +57,11 @@ python_version = "3.14"
 asyncio_mode = "auto"
 addopts = "-p no:allure_pytest"
 testpaths = ["tests"]
+markers = [
+  "memory_only: tests intended for in-memory app/repository execution",
+  "remote_only: tests intended for deployed/live instances via TEST_BASE_URL or E2E_BASE_URL",
+  "backend_agnostic: tests expected to pass on both memory and remote backends",
+]
 
 [tool.coverage.run]
 source = ["app"]
