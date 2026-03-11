@@ -9,17 +9,13 @@ Thank you for contributing to Petstore API!
 git clone https://github.com/RamonAlcantaraArceo/petstore-api.git
 cd petstore-api
 
-# 2. Create a virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
+# 2. Create a Python 3.14 environment and install dependencies
+uv sync --python 3.14 --extra dev
 
-# 3. Install dependencies (including dev extras)
-pip install -e ".[dev]"
+# 3. Set up pre-commit hooks
+uv run pre-commit install
 
-# 4. Set up pre-commit hooks
-pre-commit install
-
-# 5. Copy env file
+# 4. Copy env file
 cp .env.example .env
 # Edit .env and set API_KEY
 ```
@@ -42,7 +38,7 @@ cp .env.example .env
 
 ```bash
 # Unit, integration, and system tests with coverage
-pytest tests/unit/ tests/integration/ tests/system/ \
+uv run pytest tests/unit/ tests/integration/ tests/system/ \
   --cov=app --cov-report=html
 
 # View coverage report
@@ -59,5 +55,5 @@ open htmlcov/index.html
 Run all checks:
 
 ```bash
-ruff check . && black --check . && mypy app/
+uv run ruff check . && uv run black --check . && uv run mypy app/
 ```

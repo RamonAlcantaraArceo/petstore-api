@@ -19,11 +19,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
 
       - name: Install dependencies
         run: |
-          pip install ruff black
+          uv pip install --system ruff black
 
       - name: ruff check
         run: ruff check .
@@ -40,11 +43,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
 
       - name: Install dependencies
         run: |
-          pip install -e ".[dev]"
+          uv pip install --system -e ".[dev]"
 
       - name: mypy
         run: mypy app/
@@ -61,11 +67,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
 
       - name: Install dependencies
         run: |
-          pip install -e ".[dev]"
+          uv pip install --system -e ".[dev]"
 
       - name: Run tests
         run: |

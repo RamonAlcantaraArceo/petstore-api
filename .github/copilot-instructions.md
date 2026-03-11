@@ -3,7 +3,7 @@
 This is a production-ready Python backend API implementing the Petstore OpenAPI 3.0 spec.
 
 ## Stack
-- **Python 3.12**, FastAPI, Uvicorn
+- **Python 3.14**, FastAPI, Uvicorn
 - **Storage**: In-memory dict (default), local PostgreSQL, or AWS RDS (via `STORAGE_MODE` env var)
 - **ORM**: SQLAlchemy 2.x async with asyncpg driver
 - **Config**: Pydantic Settings (env vars, `.env` file)
