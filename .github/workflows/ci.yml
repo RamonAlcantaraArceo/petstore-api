@@ -107,13 +107,31 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Build Allure report with CI-only history
-        uses: simple-elf/allure-report-action@v1.9
+      - name: Prepare Allure history workspace (CI)
         if: always()
-        with:
-          allure_results: allure-results
-          allure_history: allure-history
-          subfolder: ci
+        run: |
+          mkdir -p allure-history
+          if [ -d gh-pages ]; then
+            cp -R gh-pages/. allure-history/
+          fi
+          if [ -d allure-history/ci/history ]; then
+            mkdir -p allure-results/history
+            cp -R allure-history/ci/history/. allure-results/history/
+          fi
+
+      - name: Install Allure CLI
+        if: always()
+        run: |
+          ALLURE_VERSION=2.34.1
+          curl -sSL -o allure.tgz "https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz"
+          tar -xzf allure.tgz
+          echo "$PWD/allure-${ALLURE_VERSION}/bin" >> "$GITHUB_PATH"
+
+      - name: Build Allure report with CI-only history
+        if: always()
+        run: |
+          mkdir -p allure-history/ci
+          allure generate allure-results --clean -o allure-history/ci
 
       - name: Publish CI Allure report
         uses: peaceiris/actions-gh-pages@v3
