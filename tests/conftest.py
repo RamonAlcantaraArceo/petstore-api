@@ -51,7 +51,7 @@ def reset_repos(request: pytest.FixtureRequest) -> None:
 
 
 @pytest_asyncio.fixture
-async def memory_client() -> AsyncGenerator[AsyncClient, None]:
+async def memory_client() -> AsyncGenerator[AsyncClient]:
     """Return an async HTTPX client targeting the in-memory FastAPI test app.
 
     Yields:
@@ -73,7 +73,7 @@ async def memory_client() -> AsyncGenerator[AsyncClient, None]:
 
 
 @pytest_asyncio.fixture
-async def remote_client() -> AsyncGenerator[AsyncClient, None]:
+async def remote_client() -> AsyncGenerator[AsyncClient]:
     """Return an async HTTPX client pointing at a remote/live test environment."""
     async with AsyncClient(base_url=_remote_base_url(), timeout=30) as client:
         yield client

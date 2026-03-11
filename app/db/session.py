@@ -30,7 +30,7 @@ def init_db(settings: Settings) -> None:
     _session_factory = async_sessionmaker(engine, expire_on_commit=False)
 
 
-async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
+async def get_db_session() -> AsyncGenerator[AsyncSession]:
     """Yield an async database session for use in FastAPI dependencies.
 
     Yields:
