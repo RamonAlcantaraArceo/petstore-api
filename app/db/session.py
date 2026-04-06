@@ -7,8 +7,12 @@ from collections.abc import AsyncIterator
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.config import Settings
+from app.models.order import Base as OrderBase
+from app.models.pet import Base as PetBase
+from app.models.user import Base as UserBase
 
 _session_factory: async_sessionmaker[AsyncSession] | None = None
+_engine = None
 
 
 def init_db(settings: Settings) -> None:
@@ -19,15 +23,44 @@ def init_db(settings: Settings) -> None:
     Args:
         settings: Application settings containing the database URL and pool config.
     """
-    global _session_factory
-    engine = create_async_engine(
+    global _engine, _session_factory
+    _engine = create_async_engine(
         settings.database_url,
         pool_size=settings.db_pool_size,
         max_overflow=settings.db_max_overflow,
         pool_timeout=settings.db_pool_timeout,
         echo=settings.debug,
     )
-    _session_factory = async_sessionmaker(engine, expire_on_commit=False)
+    _session_factory = async_sessionmaker(_engine, expire_on_commit=False)
+
+
+async def ensure_db_schema() -> None:
+    """Create required tables when running in DB-backed mode.
+
+    Raises:
+        RuntimeError: If the engine has not been initialised.
+    """
+    if _engine is None:
+        raise RuntimeError("Database engine not initialised. Call init_db() first.")
+
+    async with _engine.begin() as conn:
+        await conn.run_sync(PetBase.metadata.create_all)
+        await conn.run_sync(OrderBase.metadata.create_all)
+        await conn.run_sync(UserBase.metadata.create_all)
+
+
+def get_session_factory() -> async_sessionmaker[AsyncSession]:
+    """Return initialised async session factory.
+
+    Returns:
+        Initialised async sessionmaker instance.
+
+    Raises:
+        RuntimeError: If the session factory has not been initialised.
+    """
+    if _session_factory is None:
+        raise RuntimeError("Database session factory not initialised. Call init_db() first.")
+    return _session_factory
 
 
 async def get_db_session() -> AsyncIterator[AsyncSession]:

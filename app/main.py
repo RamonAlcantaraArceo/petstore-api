@@ -87,6 +87,15 @@ def create_app() -> FastAPI:
     # Routes
     app.include_router(v1_router)
 
+    @app.on_event("startup")
+    async def startup_event() -> None:
+        """Initialise database engine and tables for DB-backed modes."""
+        if settings.storage_mode != "memory":
+            from app.db.session import ensure_db_schema, init_db
+
+            init_db(settings)
+            await ensure_db_schema()
+
     @app.get("/health", tags=["health"])
     async def health_check() -> JSONResponse:
         """Return service health status.

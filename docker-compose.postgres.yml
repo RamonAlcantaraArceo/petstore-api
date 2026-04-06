@@ -30,8 +30,11 @@ services:
       API_KEY: ${API_KEY:-dev-api-key}
       APP_ENV: dev
       LOG_LEVEL: INFO
-    command: >
-      sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import sys,urllib.request; sys.exit(0) if urllib.request.urlopen(\"http://localhost:8000/health\").status==200 else sys.exit(1)' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
 volumes:
   postgres_data:
