@@ -132,3 +132,36 @@ async def test_get_inventory_delegates_to_repo() -> None:
 
     assert result["placed"] == 3
     assert result["delivered"] == 10
+
+
+@pytest.mark.asyncio
+async def test_place_order_commits_when_callback_is_configured() -> None:
+    """place_order calls commit callback after successful write."""
+    repo = AsyncMock()
+    order_data = OrderCreateFactory()
+    expected = Order(id=1, pet_id=order_data.pet_id, quantity=order_data.quantity)
+    repo.create.return_value = expected
+    commit = AsyncMock()
+    rollback = AsyncMock()
+
+    service = OrderService(repo, commit=commit, rollback=rollback)
+    await service.place_order(order_data)
+
+    commit.assert_awaited_once()
+    rollback.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_delete_order_rolls_back_on_unexpected_error() -> None:
+    """delete_order rolls back and re-raises for non-domain repository errors."""
+    repo = AsyncMock()
+    repo.delete.side_effect = RuntimeError("db down")
+    commit = AsyncMock()
+    rollback = AsyncMock()
+
+    service = OrderService(repo, commit=commit, rollback=rollback)
+    with pytest.raises(RuntimeError, match="db down"):
+        await service.delete_order(1)
+
+    commit.assert_not_called()
+    rollback.assert_awaited_once()

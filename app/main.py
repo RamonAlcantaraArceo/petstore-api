@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from contextlib import asynccontextmanager
 
 import structlog
 from fastapi import FastAPI
@@ -72,12 +73,24 @@ def create_app() -> FastAPI:
     settings = get_settings()
     configure_logging(settings.log_level, settings.app_env)
 
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        # Startup logic
+        if settings.storage_mode != "memory":
+            from app.db.session import ensure_db_schema, init_db
+
+            init_db(settings)
+            await ensure_db_schema()
+        yield
+        # (Optional) Add shutdown logic here if needed
+
     app = FastAPI(
         title="Petstore API",
         description="A production-ready Petstore API built with FastAPI.",
         version=settings.api_version,
         docs_url="/docs",
         redoc_url="/redoc",
+        lifespan=lifespan,
     )
 
     # Middleware (outermost first)
@@ -86,15 +99,6 @@ def create_app() -> FastAPI:
 
     # Routes
     app.include_router(v1_router)
-
-    @app.on_event("startup")
-    async def startup_event() -> None:
-        """Initialise database engine and tables for DB-backed modes."""
-        if settings.storage_mode != "memory":
-            from app.db.session import ensure_db_schema, init_db
-
-            init_db(settings)
-            await ensure_db_schema()
 
     @app.get("/health", tags=["health"])
     async def health_check() -> JSONResponse:

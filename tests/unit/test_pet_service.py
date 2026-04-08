@@ -161,3 +161,36 @@ async def test_find_by_tags_delegates_to_repo() -> None:
 
     repo.list_by_tags.assert_called_once_with(["cute"])
     assert result == []
+
+
+@pytest.mark.asyncio
+async def test_add_pet_commits_when_callback_is_configured() -> None:
+    """add_pet calls commit callback after successful write."""
+    repo = AsyncMock()
+    pet_data = PetCreateFactory()
+    expected = Pet(id=1, name=pet_data.name, photoUrls=pet_data.photo_urls, status=pet_data.status)
+    repo.create.return_value = expected
+    commit = AsyncMock()
+    rollback = AsyncMock()
+
+    service = PetService(repo, commit=commit, rollback=rollback)
+    await service.add_pet(pet_data)
+
+    commit.assert_awaited_once()
+    rollback.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_update_pet_rolls_back_on_unexpected_error() -> None:
+    """update_pet rolls back and re-raises for non-domain repository errors."""
+    repo = AsyncMock()
+    repo.update.side_effect = RuntimeError("db down")
+    commit = AsyncMock()
+    rollback = AsyncMock()
+
+    service = PetService(repo, commit=commit, rollback=rollback)
+    with pytest.raises(RuntimeError, match="db down"):
+        await service.update_pet(PetUpdate(id=1, name="Rex", photoUrls=[]))
+
+    commit.assert_not_called()
+    rollback.assert_awaited_once()

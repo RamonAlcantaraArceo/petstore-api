@@ -99,12 +99,11 @@ async def get_pet_service(
 
     session_factory = get_session_factory()
     async with session_factory() as session:
-        try:
-            yield PetService(PostgresPetRepository(session))
-            await session.commit()
-        except Exception:
-            await session.rollback()
-            raise
+        yield PetService(
+            PostgresPetRepository(session),
+            commit=session.commit,
+            rollback=session.rollback,
+        )
 
 
 async def get_order_service(
@@ -126,12 +125,11 @@ async def get_order_service(
 
     session_factory = get_session_factory()
     async with session_factory() as session:
-        try:
-            yield OrderService(PostgresOrderRepository(session))
-            await session.commit()
-        except Exception:
-            await session.rollback()
-            raise
+        yield OrderService(
+            PostgresOrderRepository(session),
+            commit=session.commit,
+            rollback=session.rollback,
+        )
 
 
 async def get_user_service(
@@ -153,9 +151,8 @@ async def get_user_service(
 
     session_factory = get_session_factory()
     async with session_factory() as session:
-        try:
-            yield UserService(PostgresUserRepository(session))
-            await session.commit()
-        except Exception:
-            await session.rollback()
-            raise
+        yield UserService(
+            PostgresUserRepository(session),
+            commit=session.commit,
+            rollback=session.rollback,
+        )

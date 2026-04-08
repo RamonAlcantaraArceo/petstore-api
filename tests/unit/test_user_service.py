@@ -165,7 +165,7 @@ async def test_login_raises_400_for_invalid_user() -> None:
 async def test_create_users_with_list() -> None:
     """create_users_with_list delegates to repository create_many."""
     repo = AsyncMock()
-    users = [UserCreateFactory() for _ in range(3)]
+    users: list[UserCreate] = [UserCreateFactory() for _ in range(3)]
     expected = [User(id=i + 1, username=u.username) for i, u in enumerate(users)]
     repo.create_many.return_value = expected
 
@@ -173,3 +173,36 @@ async def test_create_users_with_list() -> None:
     result = await service.create_users_with_list(users)
 
     assert len(result) == 3
+
+
+@pytest.mark.asyncio
+async def test_create_user_commits_when_callback_is_configured() -> None:
+    """create_user calls commit callback after successful write."""
+    repo = AsyncMock()
+    user_data = UserCreateFactory()
+    expected = User(id=1, username=user_data.username)
+    repo.create.return_value = expected
+    commit = AsyncMock()
+    rollback = AsyncMock()
+
+    service = UserService(repo, commit=commit, rollback=rollback)
+    await service.create_user(user_data)
+
+    commit.assert_awaited_once()
+    rollback.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_update_user_rolls_back_on_unexpected_error() -> None:
+    """update_user rolls back and re-raises for non-domain repository errors."""
+    repo = AsyncMock()
+    repo.update.side_effect = RuntimeError("db down")
+    commit = AsyncMock()
+    rollback = AsyncMock()
+
+    service = UserService(repo, commit=commit, rollback=rollback)
+    with pytest.raises(RuntimeError, match="db down"):
+        await service.update_user("johndoe", UserUpdate(first_name="Jane"))
+
+    commit.assert_not_called()
+    rollback.assert_awaited_once()
