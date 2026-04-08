@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator
 
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
 from app.config import Settings
 from app.models.order import Base as OrderBase
@@ -12,7 +12,7 @@ from app.models.pet import Base as PetBase
 from app.models.user import Base as UserBase
 
 _session_factory: async_sessionmaker[AsyncSession] | None = None
-_engine = None
+_engine: AsyncEngine | None = None
 
 
 def init_db(settings: Settings) -> None:

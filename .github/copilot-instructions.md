@@ -27,4 +27,4 @@ This is a production-ready Python backend API implementing the Petstore OpenAPI 
 	- A version bump in the appropriate file (unless it is a pre-release commit)
 	- The version in pyproject.toml must match the expected version for the release
 	- Updated documentation reflecting the changes, if applicable
-	- If the change is a pre-release commit, changelog, version, and docs updates may be skipped (type "custom")
+	- If the change is a pre-release commit, changelog, version, and docs updates may be skipped
