@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
 import structlog
 from fastapi import FastAPI
@@ -75,7 +75,7 @@ def create_app() -> FastAPI:
     configure_logging(settings.log_level, settings.app_env)
 
     @asynccontextmanager
-    async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
         # Startup logic
         if settings.storage_mode != "memory":
             from app.db.session import ensure_db_schema, init_db
