@@ -20,3 +20,11 @@ This is a production-ready Python backend API implementing the Petstore OpenAPI 
 - Google-style docstrings on all public functions/classes
 - Tests in `tests/unit/`, `tests/integration/`, `tests/system/`, `tests/e2e/`
 - Performance tests in `performance/` — NOT run in CI
+
+## Pull Request Requirements
+- Every pull request **must** include:
+	- An updated changelog entry describing the change (unless it is a pre-release commit)
+	- A version bump in the appropriate file (unless it is a pre-release commit)
+	- The version in pyproject.toml must match the expected version for the release
+	- Updated documentation reflecting the changes, if applicable
+	- If the change is a pre-release commit, changelog, version, and docs updates may be skipped
