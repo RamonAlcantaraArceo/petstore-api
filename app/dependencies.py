@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
 from functools import lru_cache
 from typing import Annotated
 
@@ -81,7 +82,7 @@ def _cached_settings() -> Settings:
 
 async def get_pet_service(
     settings: Annotated[Settings, Depends(_cached_settings)],
-) -> PetService:
+) -> AsyncIterator[PetService]:
     """Provide a PetService backed by the configured repository.
 
     Args:
@@ -91,20 +92,23 @@ async def get_pet_service(
         A configured PetService instance.
     """
     if settings.storage_mode == "memory":
-        return PetService(get_memory_pet_repo())
-    from app.db.session import get_db_session
+        yield PetService(get_memory_pet_repo())
+        return
+    from app.db.session import get_session_factory
     from app.repositories.postgres.pet import PostgresPetRepository
 
-    # For postgres mode, we need to get a session — this is a simplified version
-    # In real usage the session would be injected via Depends
-    async for session in get_db_session():
-        return PetService(PostgresPetRepository(session))
-    raise RuntimeError("Could not obtain DB session")  # pragma: no cover
+    session_factory = get_session_factory()
+    async with session_factory() as session:
+        yield PetService(
+            PostgresPetRepository(session),
+            commit=session.commit,
+            rollback=session.rollback,
+        )
 
 
 async def get_order_service(
     settings: Annotated[Settings, Depends(_cached_settings)],
-) -> OrderService:
+) -> AsyncIterator[OrderService]:
     """Provide an OrderService backed by the configured repository.
 
     Args:
@@ -114,18 +118,23 @@ async def get_order_service(
         A configured OrderService instance.
     """
     if settings.storage_mode == "memory":
-        return OrderService(get_memory_order_repo())
-    from app.db.session import get_db_session
+        yield OrderService(get_memory_order_repo())
+        return
+    from app.db.session import get_session_factory
     from app.repositories.postgres.order import PostgresOrderRepository
 
-    async for session in get_db_session():
-        return OrderService(PostgresOrderRepository(session))
-    raise RuntimeError("Could not obtain DB session")  # pragma: no cover
+    session_factory = get_session_factory()
+    async with session_factory() as session:
+        yield OrderService(
+            PostgresOrderRepository(session),
+            commit=session.commit,
+            rollback=session.rollback,
+        )
 
 
 async def get_user_service(
     settings: Annotated[Settings, Depends(_cached_settings)],
-) -> UserService:
+) -> AsyncIterator[UserService]:
     """Provide a UserService backed by the configured repository.
 
     Args:
@@ -135,10 +144,15 @@ async def get_user_service(
         A configured UserService instance.
     """
     if settings.storage_mode == "memory":
-        return UserService(get_memory_user_repo())
-    from app.db.session import get_db_session
+        yield UserService(get_memory_user_repo())
+        return
+    from app.db.session import get_session_factory
     from app.repositories.postgres.user import PostgresUserRepository
 
-    async for session in get_db_session():
-        return UserService(PostgresUserRepository(session))
-    raise RuntimeError("Could not obtain DB session")  # pragma: no cover
+    session_factory = get_session_factory()
+    async with session_factory() as session:
+        yield UserService(
+            PostgresUserRepository(session),
+            commit=session.commit,
+            rollback=session.rollback,
+        )

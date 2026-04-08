@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
+
 from fastapi import HTTPException, status
 
 from app.repositories.base import PetRepository
@@ -15,13 +17,32 @@ class PetService:
         repo: A PetRepository implementation.
     """
 
-    def __init__(self, repo: PetRepository) -> None:
+    def __init__(
+        self,
+        repo: PetRepository,
+        commit: Callable[[], Awaitable[None]] | None = None,
+        rollback: Callable[[], Awaitable[None]] | None = None,
+    ) -> None:
         """Initialize the service with a repository.
 
         Args:
             repo: Repository implementation to delegate to.
+            commit: Optional async transaction commit callback.
+            rollback: Optional async transaction rollback callback.
         """
         self._repo = repo
+        self._commit_callback = commit
+        self._rollback_callback = rollback
+
+    async def _commit(self) -> None:
+        """Commit the current transaction when a callback is configured."""
+        if self._commit_callback is not None:
+            await self._commit_callback()
+
+    async def _rollback(self) -> None:
+        """Rollback the current transaction when a callback is configured."""
+        if self._rollback_callback is not None:
+            await self._rollback_callback()
 
     async def get_pet(self, pet_id: int) -> Pet:
         """Retrieve a pet by ID.
@@ -81,7 +102,13 @@ class PetService:
         """
         if not pet.name or not pet.name.strip():
             raise ValueError("Pet name cannot be empty")
-        return await self._repo.create(pet)
+        try:
+            created = await self._repo.create(pet)
+            await self._commit()
+            return created
+        except Exception:
+            await self._rollback()
+            raise
 
     async def update_pet(self, pet: PetUpdate) -> Pet:
         """Update an existing pet.
@@ -96,11 +123,17 @@ class PetService:
             HTTPException: 404 if pet not found.
         """
         try:
-            return await self._repo.update(pet)
+            updated = await self._repo.update(pet)
+            await self._commit()
+            return updated
         except KeyError as exc:
+            await self._rollback()
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Pet not found"
             ) from exc
+        except Exception:
+            await self._rollback()
+            raise
 
     async def delete_pet(self, pet_id: int) -> None:
         """Delete a pet by ID.
@@ -113,10 +146,15 @@ class PetService:
         """
         try:
             await self._repo.delete(pet_id)
+            await self._commit()
         except KeyError as exc:
+            await self._rollback()
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Pet not found"
             ) from exc
+        except Exception:
+            await self._rollback()
+            raise
 
     async def update_pet_with_form(
         self,

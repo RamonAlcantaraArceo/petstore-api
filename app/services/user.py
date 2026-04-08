@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
+
 from fastapi import HTTPException, status
 
 from app.repositories.base import UserRepository
@@ -15,13 +17,32 @@ class UserService:
         repo: A UserRepository implementation.
     """
 
-    def __init__(self, repo: UserRepository) -> None:
+    def __init__(
+        self,
+        repo: UserRepository,
+        commit: Callable[[], Awaitable[None]] | None = None,
+        rollback: Callable[[], Awaitable[None]] | None = None,
+    ) -> None:
         """Initialize the service with a repository.
 
         Args:
             repo: Repository implementation to delegate to.
+            commit: Optional async transaction commit callback.
+            rollback: Optional async transaction rollback callback.
         """
         self._repo = repo
+        self._commit_callback = commit
+        self._rollback_callback = rollback
+
+    async def _commit(self) -> None:
+        """Commit the current transaction when a callback is configured."""
+        if self._commit_callback is not None:
+            await self._commit_callback()
+
+    async def _rollback(self) -> None:
+        """Rollback the current transaction when a callback is configured."""
+        if self._rollback_callback is not None:
+            await self._rollback_callback()
 
     async def create_user(self, user: UserCreate) -> User:
         """Create a new user.
@@ -42,7 +63,13 @@ class UserService:
         """
         if not user.username or not user.username.strip():
             raise ValueError("Username cannot be empty")
-        return await self._repo.create(user)
+        try:
+            created = await self._repo.create(user)
+            await self._commit()
+            return created
+        except Exception:
+            await self._rollback()
+            raise
 
     async def create_users_with_list(self, users: list[UserCreate]) -> list[User]:
         """Create multiple users at once.
@@ -53,7 +80,13 @@ class UserService:
         Returns:
             List of created users.
         """
-        return await self._repo.create_many(users)
+        try:
+            created = await self._repo.create_many(users)
+            await self._commit()
+            return created
+        except Exception:
+            await self._rollback()
+            raise
 
     async def get_user(self, username: str) -> User:
         """Retrieve a user by username.
@@ -86,11 +119,17 @@ class UserService:
             HTTPException: 404 if user not found.
         """
         try:
-            return await self._repo.update(username, user)
+            updated = await self._repo.update(username, user)
+            await self._commit()
+            return updated
         except KeyError as exc:
+            await self._rollback()
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             ) from exc
+        except Exception:
+            await self._rollback()
+            raise
 
     async def delete_user(self, username: str) -> None:
         """Delete a user.
@@ -103,10 +142,15 @@ class UserService:
         """
         try:
             await self._repo.delete(username)
+            await self._commit()
         except KeyError as exc:
+            await self._rollback()
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             ) from exc
+        except Exception:
+            await self._rollback()
+            raise
 
     async def login(self, username: str, password: str) -> str:
         """Authenticate a user and return a session token.
