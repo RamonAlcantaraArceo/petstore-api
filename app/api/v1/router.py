@@ -23,6 +23,7 @@ def require_api_key(_: str = Depends(api_key_scheme)) -> None:
     """
     pass
 
+
 router = APIRouter(prefix="/api/v1")
 
 router.include_router(pets_router, dependencies=[Depends(require_api_key)])
