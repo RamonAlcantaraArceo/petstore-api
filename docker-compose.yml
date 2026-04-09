@@ -3,6 +3,10 @@ services:
     build:
       context: .
       target: runtime
+      args:
+        BUILD_DATE: ${BUILD_DATE:-2026-04-09T00:00:00Z}
+        VERSION: ${VERSION:-0.1.0}
+        GIT_SHA: ${GIT_SHA:-dev}
     ports:
       - "8000:8000"
     environment:
@@ -10,8 +14,12 @@ services:
       API_KEY: ${API_KEY:-dev-api-key}
       APP_ENV: dev
       LOG_LEVEL: INFO
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp/app:mode=1777,size=100M
+      - /tmp:mode=1777,size=10M
+    restart: unless-stopped
