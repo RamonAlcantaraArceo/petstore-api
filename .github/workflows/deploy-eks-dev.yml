@@ -1,33 +1,30 @@
-name: Deploy to Dev
+name: Deploy to EKS Dev
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  deploy-dev:
-    name: Deploy to Dev EKS
+  deploy-eks-dev:
+    name: Deploy to EKS Dev
     runs-on: ubuntu-latest
     environment: dev
     steps:
       - uses: actions/checkout@v6
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ vars.OIDC_ROLE_NAME }}
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Update kubeconfig
         run: |
           aws eks update-kubeconfig \
-            --name ${{ secrets.EKS_CLUSTER_NAME }} \
-            --region us-east-1
+            --name ${{ vars.EKS_CLUSTER_NAME }} \
+            --region ${{ vars.AWS_REGION }}
 
       - name: Install Helm
         uses: azure/setup-helm@v4
@@ -37,5 +34,5 @@ jobs:
           helm upgrade --install petstore-api ./helm/petstore-api \
             -f ./helm/petstore-api/values-dev.yaml \
             --set image.tag=${{ github.sha }} \
-            --set image.repository=${{ secrets.ECR_REGISTRY }}/petstore-api \
+            --set image.repository=${{ vars.AWS_ACCOUNT_ID }}:.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/python/petstore-api \
             --wait --timeout 5m
