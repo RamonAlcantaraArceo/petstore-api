@@ -1,0 +1,38 @@
+#
+name: Create and publish a Docker image to Elastic Container Registry
+
+# Configures this workflow to run every time a change is pushed to the branch called `release`.
+on:
+  # Uncomment the following lines when ready to trigger on push to release branches
+  # push:
+    #   branches: ['release-ecr/*']
+    workflow_dispatch:
+
+# Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+# There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
+jobs:
+  build-push-ecr:
+    name: Build & Push ECR Image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ vars.OIDC_ROLE_NAME }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Docker image
+        run: |
+          IMAGE_URI="${{ vars.AWS_ACCOUNT_ID }}:.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/python/petstore-api:${{ github.sha }}" 
+          docker build --target runtime -t "${IMAGE_URI}" .
+          docker push "${IMAGE_URI}"

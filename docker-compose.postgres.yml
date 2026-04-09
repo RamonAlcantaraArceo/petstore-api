@@ -2,39 +2,48 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: petstore
       POSTGRES_USER: petstore
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-localpassword}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      POSTGRES_DB: petstore
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U petstore"]
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
   api:
     build:
       context: .
       target: runtime
+      args:
+        BUILD_DATE: ${BUILD_DATE:-2026-04-09T00:00:00Z}
+        VERSION: ${VERSION:-0.1.0}
+        GIT_SHA: ${GIT_SHA:-dev}
     ports:
       - "8000:8000"
-    depends_on:
-      postgres:
-        condition: service_healthy
     environment:
       STORAGE_MODE: local
       DATABASE_URL: postgresql+asyncpg://petstore:${POSTGRES_PASSWORD:-localpassword}@postgres:5432/petstore
       API_KEY: ${API_KEY:-dev-api-key}
       APP_ENV: dev
       LOG_LEVEL: INFO
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp/app:mode=1777,size=100M
+      - /tmp:mode=1777,size=10M
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   postgres_data:
