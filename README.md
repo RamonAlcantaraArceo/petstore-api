@@ -7,6 +7,7 @@ A **production-ready Python backend API** implementing the [Petstore OpenAPI 3.0
 
 ## Quick Start
 
+
 ```bash
 # Start the API in in-memory mode (no external dependencies required)
 docker compose up
