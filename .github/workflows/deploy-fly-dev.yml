@@ -1,0 +1,49 @@
+name: Deploy to Fly.io
+
+
+on:
+  push:
+    tags:
+      - "v*.*.*"   # deploy only on semver tags
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Image version to deploy (e.g. v1.2.3)"
+        required: false
+        type: string
+
+jobs:
+  deploy:
+    name: Deploy to Fly.io
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Install flyctl
+      - uses: superfly/flyctl-actions/setup-flyctl@v1
+
+      # Authenticate to Fly.io
+      - name: Fly.io Auth
+        run: flyctl auth token "${{ secrets.FLY_API_TOKEN }}"
+
+      # Create the Fly app if it doesn't exist (idempotent)
+      - name: Ensure Fly app exists
+        run: flyctl apps create petstore-api --yes || true
+
+      # Determine image tag
+      - name: Set image tag
+        id: set_tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "tag=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
+      # Deploy using the pre-built GHCR image
+      - name: Deploy to Fly.io
+        run: |
+          flyctl deploy \
+            --image "ghcr.io/${{ github.repository_owner }}/petstore-api:${{ steps.set_tag.outputs.tag }}" \
+            --remote-only
