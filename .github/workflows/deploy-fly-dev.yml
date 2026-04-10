@@ -1,0 +1,43 @@
+name: Deploy to Fly.io
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Image version to deploy (e.g. v1.2.3)"
+        required: false
+        type: string
+
+jobs:
+  deploy:
+    name: Deploy to Fly.io
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # Install flyctl
+      - uses: superfly/flyctl-actions/setup-flyctl@v1
+
+      # Determine image tag
+      - name: Set image tag
+        id: set_tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "tag=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          fi
+
+      # Deploy using the pre-built GHCR image
+      - name: Deploy to Fly.io
+        run: |
+          fly deploy \
+            --config .fly/dev/fly.toml \
+            --image ghcr.io/ramonalcantaraarceo/petstore-api:${{ steps.set_tag.outputs.tag }} \
+            --remote-only \
+            --debug \
+            --verbose
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

@@ -1,0 +1,45 @@
+name: Deploy Review App
+on:
+  # Run this workflow on every PR. The job will filter for head branches starting with 'fly/'.
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  # Set these to your Fly.io organization and preferred region.
+  FLY_REGION: iad
+  FLY_ORG: personal
+
+jobs:
+  review_app:
+    if: startsWith(github.head_ref, 'fly/')
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
+    # Only run one deployment at a time per PR.
+    concurrency:
+      group: pr-${{ github.event.number }}
+
+    # Create a GitHub deployment environment per review app.
+    environment:
+      name: pr-${{ github.event.number }}
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Get code
+        uses: actions/checkout@v6
+
+      - name: Deploy PR app to Fly.io
+        id: deploy
+        uses: superfly/fly-pr-review-apps@1.5.0
+        with:
+          config: .fly/pr/fly.toml
+          secrets: API_KEY=${{ secrets.PR_API_KEY }}
+
+      - name: Clean up GitHub environment
+        uses: strumwolf/delete-deployment-environment@v2
+        if: ${{ github.event.action == 'closed' }}
+        with:
+          # ⚠️ The provided token needs permission for admin write:org
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: pr-${{ github.event.number }}
