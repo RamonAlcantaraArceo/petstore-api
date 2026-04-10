@@ -33,7 +33,7 @@ jobs:
       # Deploy using the pre-built GHCR image
       - name: Deploy to Fly.io
         run: |
-          fly deploy \
+          flyctl deploy \
             --config .fly/dev/fly.toml \
             --image ghcr.io/ramonalcantaraarceo/petstore-api:${{ steps.set_tag.outputs.tag }} \
             --remote-only \
