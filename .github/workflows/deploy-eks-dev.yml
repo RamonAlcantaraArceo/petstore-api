@@ -2,37 +2,78 @@ name: Deploy to EKS Dev
 
 on:
   workflow_dispatch:
-
-permissions:
-  contents: read
+    inputs:
+      version:
+        description: "Image version to deploy (e.g. v1.2.3)"
+        required: false
+        type: string
 
 jobs:
-  deploy-eks-dev:
-    name: Deploy to EKS Dev
+  deploy:
+    name: Deploy to Fly.io
     runs-on: ubuntu-latest
-    environment: dev
+
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
-      - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ vars.OIDC_ROLE_NAME }}
-          aws-region: ${{ vars.AWS_REGION }}
+      # Install flyctl
+      - uses: superfly/flyctl-actions/setup-flyctl@v1
 
-      - name: Update kubeconfig
+      # Authenticate to Fly.io
+      - name: Fly.io Auth
+        run: flyctl auth token "${{ secrets.FLY_API_TOKEN }}"
+
+      # Create the Fly app if it doesn't exist (idempotent)
+      - name: Ensure Fly app exists
+        run: flyctl apps create petstore-api --yes || true
+
+      # Determine image tag
+      - name: Set image tag
+        id: set_tag
         run: |
-          aws eks update-kubeconfig \
-            --name ${{ vars.EKS_CLUSTER_NAME }} \
-            --region ${{ vars.AWS_REGION }}
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "tag=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Install Helm
-        uses: azure/setup-helm@v4
-
-      - name: Deploy with Helm
+      # Deploy using the pre-built GHCR image
+      - name: Deploy to Fly.io
         run: |
-          helm upgrade --install petstore-api ./helm/petstore-api \
-            -f ./helm/petstore-api/values-dev.yaml \
-            --set image.tag=${{ github.sha }} \
-            --set image.repository=${{ vars.AWS_ACCOUNT_ID }}:.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/python/petstore-api \
-            --wait --timeout 5m
+          flyctl deploy \
+            --image "ghcr.io/${{ github.repository_owner }}/petstore-api:${{ steps.set_tag.outputs.tag }}" \
+            --remote-only
+
+# permissions:
+#   contents: read
+
+# jobs:
+#   deploy-eks-dev:
+#     name: Deploy to EKS Dev
+#     runs-on: ubuntu-latest
+#     environment: dev
+#     steps:
+#       - uses: actions/checkout@v6
+
+#       - name: Configure AWS credentials (OIDC)
+#         uses: aws-actions/configure-aws-credentials@v4
+#         with:
+#           role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ vars.OIDC_ROLE_NAME }}
+#           aws-region: ${{ vars.AWS_REGION }}
+
+#       - name: Update kubeconfig
+#         run: |
+#           aws eks update-kubeconfig \
+#             --name ${{ vars.EKS_CLUSTER_NAME }} \
+#             --region ${{ vars.AWS_REGION }}
+
+#       - name: Install Helm
+#         uses: azure/setup-helm@v4
+
+#       - name: Deploy with Helm
+#         run: |
+#           helm upgrade --install petstore-api ./helm/petstore-api \
+#             -f ./helm/petstore-api/values-dev.yaml \
+#             --set image.tag=${{ github.sha }} \
+#             --set image.repository=${{ vars.AWS_ACCOUNT_ID }}:.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/python/petstore-api \
+#             --wait --timeout 5m

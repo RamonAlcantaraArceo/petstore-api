@@ -2,7 +2,9 @@ name: Deploy to Fly.io
 
 
 on:
+  
   push:
+    branches: ['deploy-fly-dev']  # deploy on pushes to the deploy-fly-dev branch
     tags:
       - "v*.*.*"   # deploy only on semver tags
   workflow_dispatch:
