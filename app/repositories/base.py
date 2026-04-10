@@ -24,11 +24,20 @@ class PetRepository(Protocol):
         """
         ...
 
-    async def list_by_status(self, status: str) -> list[Pet]:
-        """List pets filtered by status.
+    async def list_by_status(
+        self,
+        status: str | None,
+        skip: int = 0,
+        limit: int | None = None,
+    ) -> list[Pet]:
+        """List pets filtered by status with optional pagination.
 
         Args:
-            status: Availability status to filter by.
+            status: Availability status to filter by. When ``None``, all pets
+                are returned regardless of status.
+            skip: Number of records to skip (offset). Defaults to 0.
+            limit: Maximum number of records to return. When ``None``, all
+                matching records are returned.
 
         Returns:
             List of matching pets.

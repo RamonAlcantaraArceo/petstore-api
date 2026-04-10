@@ -107,6 +107,49 @@ async def test_find_by_status(app_client: AsyncClient, api_key_header: dict[str,
 
 
 @pytest.mark.asyncio
+async def test_find_by_status_default_returns_all(
+    app_client: AsyncClient, api_key_header: dict[str, str]
+) -> None:
+    """GET /api/v1/pet/findByStatus without status returns all pets."""
+    for name, status in [("Pet A", "available"), ("Pet B", "pending"), ("Pet C", "sold")]:
+        await app_client.post(
+            "/api/v1/pet",
+            json={"name": name, "photoUrls": [], "status": status},
+            headers=api_key_header,
+        )
+    response = await app_client.get("/api/v1/pet/findByStatus", headers=api_key_header)
+    assert response.status_code == 200
+    pets = response.json()
+    statuses = {p["status"] for p in pets}
+    assert statuses >= {"available", "pending", "sold"}
+
+
+@pytest.mark.asyncio
+async def test_find_by_status_pagination(
+    app_client: AsyncClient, api_key_header: dict[str, str]
+) -> None:
+    """GET /api/v1/pet/findByStatus supports skip/limit pagination."""
+    for i in range(5):
+        await app_client.post(
+            "/api/v1/pet",
+            json={"name": f"PaginationPet{i}", "photoUrls": [], "status": "available"},
+            headers=api_key_header,
+        )
+    all_resp = await app_client.get(
+        "/api/v1/pet/findByStatus?status=available", headers=api_key_header
+    )
+    all_pets = all_resp.json()
+
+    page_resp = await app_client.get(
+        "/api/v1/pet/findByStatus?status=available&skip=0&limit=2", headers=api_key_header
+    )
+    assert page_resp.status_code == 200
+    page_pets = page_resp.json()
+    assert len(page_pets) == 2
+    assert len(all_pets) > len(page_pets)
+
+
+@pytest.mark.asyncio
 async def test_correlation_id_in_response(
     app_client: AsyncClient,
     api_key_header: dict[str, str],

@@ -14,3 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Comprehensive test suite (unit, integration, system, e2e)
   - Performance test scaffolding
   - Pydantic-based configuration
+- `GET /api/v1/pet/findByStatus`: `status` query parameter is now optional;
+  omitting it returns all pets regardless of status. Pagination via `skip`
+  (offset, default 0) and `limit` (max 100, default unlimited) query
+  parameters is now supported.

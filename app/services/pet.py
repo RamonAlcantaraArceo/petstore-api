@@ -61,16 +61,25 @@ class PetService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pet not found")
         return pet
 
-    async def find_by_status(self, pet_status: str) -> list[Pet]:
-        """Find pets by availability status.
+    async def find_by_status(
+        self,
+        pet_status: str | None,
+        skip: int = 0,
+        limit: int | None = None,
+    ) -> list[Pet]:
+        """Find pets by availability status with optional pagination.
 
         Args:
-            pet_status: The status to filter by.
+            pet_status: The status to filter by. When ``None``, all pets are
+                returned regardless of status.
+            skip: Number of records to skip (offset). Defaults to 0.
+            limit: Maximum number of records to return. When ``None``, all
+                matching records are returned.
 
         Returns:
             List of matching pets.
         """
-        return await self._repo.list_by_status(pet_status)
+        return await self._repo.list_by_status(pet_status, skip=skip, limit=limit)
 
     async def find_by_tags(self, tags: list[str]) -> list[Pet]:
         """Find pets by tag names.
