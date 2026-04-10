@@ -34,6 +34,7 @@ jobs:
         uses: superfly/fly-pr-review-apps@1.5.0
         with:
           config: .fly/pr/fly.toml
+          name: pr-${{ github.event.number }}-ramonalcantaraarceo-${{ github.event.repository.name }}
           secrets: API_KEY=${{ secrets.PR_API_KEY }}
 
       - name: Clean up GitHub environment
