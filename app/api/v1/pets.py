@@ -49,19 +49,31 @@ async def update_pet(
 
 @router.get("/findByStatus", response_model=list[Pet])
 async def find_pets_by_status(
-    status: Annotated[str, Query(description="Status values to filter by")] = "available",
+    status: Annotated[
+        str | None,
+        Query(description="Status value to filter by. Omit to return all pets."),
+    ] = None,
+    skip: Annotated[int, Query(ge=0, description="Number of records to skip")] = 0,
+    limit: Annotated[
+        int | None,
+        Query(ge=1, le=100, description="Maximum number of records to return (1–100)"),
+    ] = None,
     service: PetService = Depends(get_pet_service),
 ) -> list[Pet]:
-    """Find pets by status.
+    """Find pets by status with optional pagination.
 
     Args:
-        status: Availability status to filter by.
         service: Injected PetService.
+        status: Availability status to filter by. When omitted, all pets are
+            returned.
+        skip: Number of records to skip (offset).
+        limit: Maximum number of records to return.
 
     Returns:
-        List of pets matching the given status.
+        List of pets matching the given status (or all pets when status is
+        not provided).
     """
-    return await service.find_by_status(status)
+    return await service.find_by_status(status, skip=skip, limit=limit)
 
 
 @router.get("/findByTags", response_model=list[Pet])
