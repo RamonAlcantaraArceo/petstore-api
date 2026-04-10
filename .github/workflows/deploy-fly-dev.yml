@@ -15,7 +15,7 @@ jobs:
     environment: dev
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # Install flyctl
       - uses: superfly/flyctl-actions/setup-flyctl@v1
