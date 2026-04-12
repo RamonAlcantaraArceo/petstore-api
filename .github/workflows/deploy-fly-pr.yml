@@ -34,7 +34,6 @@ jobs:
       - name: Deploy PR app to Fly.io
         id: deploy
         uses: superfly/fly-pr-review-apps@1.5.0
-        if: ${{ github.event.action != 'closed' }}
         with:
           config: .fly/pr/fly.toml
           name: pr-${{ github.event.number }}-ramonalcantaraarceo-${{ github.event.repository.name }}
@@ -43,7 +42,7 @@ jobs:
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v3
         id: app-token
-        if: ${{ github.event.action == 'closed' }}
+        # if: ${{ github.event.action == 'closed' }}
         with:
           client-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
