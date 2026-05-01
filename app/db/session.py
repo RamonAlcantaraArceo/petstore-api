@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator
 
+import structlog
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -18,6 +20,7 @@ from app.models.user import Base as UserBase
 
 _session_factory: async_sessionmaker[AsyncSession] | None = None
 _engine: AsyncEngine | None = None
+_logger = structlog.get_logger(__name__)
 
 
 def init_db(settings: Settings) -> None:
@@ -30,10 +33,11 @@ def init_db(settings: Settings) -> None:
     """
     global _engine, _session_factory
     _engine = create_async_engine(
-        settings.database_url,
+        settings.async_database_url,
         pool_size=settings.db_pool_size,
         max_overflow=settings.db_max_overflow,
         pool_timeout=settings.db_pool_timeout,
+        connect_args=settings.async_database_connect_args,
         echo=settings.debug,
     )
     _session_factory = async_sessionmaker(_engine, expire_on_commit=False)
@@ -49,6 +53,26 @@ async def ensure_db_schema() -> None:
         raise RuntimeError("Database engine not initialised. Call init_db() first.")
 
     async with _engine.begin() as conn:
+        result = await conn.execute(
+            text(
+                """
+                SELECT
+                    current_database(),
+                    current_user,
+                    inet_server_addr()::text,
+                    inet_server_port()
+                """
+            )
+        )
+        database, user, server_address, server_port = result.one()
+        _logger.info(
+            "db_connection_established",
+            database=database,
+            user=user,
+            server_address=server_address,
+            server_port=server_port,
+        )
+
         await conn.run_sync(PetBase.metadata.create_all)
         await conn.run_sync(OrderBase.metadata.create_all)
         await conn.run_sync(UserBase.metadata.create_all)

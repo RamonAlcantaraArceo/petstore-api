@@ -1,5 +1,7 @@
 """Configuration settings for the Petstore API."""
 
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
+
 from pydantic_settings import BaseSettings
 
 
@@ -9,6 +11,7 @@ class Settings(BaseSettings):
     Attributes:
         storage_mode: Runtime mode - "memory" | "local" | "cloud".
         database_url: PostgreSQL connection URL (used when storage_mode != "memory").
+        database_pooler_url: Optional PostgreSQL pooler URL for cloud mode.
         api_key: Required API key for authentication.
         app_env: Application environment - "dev" | "staging" | "prod".
         debug: Enable debug mode.
@@ -25,6 +28,7 @@ class Settings(BaseSettings):
 
     storage_mode: str = "memory"
     database_url: str = ""
+    database_pooler_url: str = ""
     api_key: str = "dev-api-key"
     app_env: str = "dev"
     debug: bool = False
@@ -35,6 +39,73 @@ class Settings(BaseSettings):
     db_pool_timeout: int = 30
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+
+    @property
+    def async_database_url(self) -> str:
+        """Return a SQLAlchemy async-compatible PostgreSQL URL.
+
+        Accepts direct PostgreSQL URLs (for example, Supabase direct connection
+        strings) and converts them to the asyncpg dialect expected by
+        ``create_async_engine``.
+
+        Returns:
+            Async-compatible PostgreSQL connection URL.
+        """
+        raw_url = self.resolved_database_url
+        if raw_url.startswith("postgresql+asyncpg://"):
+            async_url = raw_url
+        elif raw_url.startswith("postgresql://"):
+            async_url = raw_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        elif raw_url.startswith("postgres://"):
+            async_url = raw_url.replace("postgres://", "postgresql+asyncpg://", 1)
+        else:
+            async_url = raw_url
+        return self._ensure_cloud_ssl_query(async_url)
+
+    @property
+    def async_database_connect_args(self) -> dict[str, str]:
+        """Return async driver connect arguments based on runtime mode.
+
+        Returns:
+            Driver connect args for create_async_engine.
+        """
+        if self.storage_mode == "cloud":
+            return {"ssl": "require"}
+        return {}
+
+    def _ensure_cloud_ssl_query(self, url: str) -> str:
+        """Ensure SSL is required for cloud DB URLs when not explicitly set.
+
+        Args:
+            url: Candidate PostgreSQL URL.
+
+        Returns:
+            URL with a cloud-appropriate SSL query parameter when needed.
+        """
+        if self.storage_mode != "cloud" or not url:
+            return url
+
+        parsed = urlparse(url)
+        query_items = dict(parse_qsl(parsed.query, keep_blank_values=True))
+        if "ssl" in query_items or "sslmode" in query_items:
+            return url
+
+        query_items["ssl"] = "require"
+        new_query = urlencode(query_items)
+        return urlunparse(parsed._replace(query=new_query))
+
+    @property
+    def resolved_database_url(self) -> str:
+        """Return the effective DB URL for the current runtime mode.
+
+        In cloud mode, an explicit pooler URL is preferred when provided.
+
+        Returns:
+            Effective PostgreSQL connection URL.
+        """
+        if self.storage_mode == "cloud" and self.database_pooler_url.strip():
+            return self.database_pooler_url.strip()
+        return self.database_url.strip()
 
 
 def get_settings() -> Settings:

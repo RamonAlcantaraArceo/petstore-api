@@ -17,7 +17,9 @@ env/
 
 # Environment files
 .env
+.env.staging
 !.env.example
+!.env.staging.example
 
 # Coverage
 .coverage
