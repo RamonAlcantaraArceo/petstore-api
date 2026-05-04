@@ -4,11 +4,6 @@ on:
   pull_request:
     types: [opened, reopened, synchronize, closed]
 
-permissions:
-  actions: write
-  contents: write
-  deployments: write
-
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   # Set these to your Fly.io organization and preferred region.
@@ -31,14 +26,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Deploy PR app to Fly.io
+      - name: Remove PR app from Fly.io
         id: deploy
         uses: superfly/fly-pr-review-apps@1.5.0
         with:
           config: .fly/pr/fly.toml
           name: pr-${{ github.event.number }}-ramonalcantaraarceo-${{ github.event.repository.name }}
           secrets: API_KEY=${{ secrets.PR_API_KEY }}
-      
+
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v3
         id: app-token
@@ -53,8 +48,8 @@ jobs:
           environment: pr-${{ github.event.number }}
 
   review_app:
-    name: Deploy PR App
-    if: startsWith(github.head_ref, 'fly/') &&  github.event.action != 'closed'
+    name: Deploy PR App to Fly.io
+    if: startsWith(github.head_ref, 'fly/') &&  github.event.action == 'closed'
     runs-on: ubuntu-latest
     outputs:
       url: ${{ steps.deploy.outputs.url }}
@@ -75,7 +70,6 @@ jobs:
 
       - name: Deploy PR app to Fly.io
         id: deploy
-        if: ${{ github.event.action != 'closed' }}
         uses: superfly/fly-pr-review-apps@1.5.0
         with:
           config: .fly/pr/fly.toml
