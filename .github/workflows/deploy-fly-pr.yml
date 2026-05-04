@@ -16,8 +16,46 @@ env:
   FLY_ORG: personal
 
 jobs:
-  review_app:
+  remove_environment_app:
+    name: Remove GH Environment
     if: startsWith(github.head_ref, 'fly/') &&  github.event.action == 'closed'
+    runs-on: ubuntu-latest
+
+    # Only run one deployment at a time per PR.
+    concurrency:
+      group: pr-${{ github.event.number }}
+
+    steps:
+      - name: Get code
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      # - name: Deploy PR app to Fly.io
+      #   id: deploy
+      #   if: ${{ github.event.action != 'closed' }}
+      #   uses: superfly/fly-pr-review-apps@1.5.0
+      #   with:
+      #     config: .fly/pr/fly.toml
+      #     name: pr-${{ github.event.number }}-ramonalcantaraarceo-${{ github.event.repository.name }}
+      #     secrets: API_KEY=${{ secrets.PR_API_KEY }}
+      
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v3
+        id: app-token
+        with:
+          client-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
+      - name: Clean up GitHub environment
+        uses: strumwolf/delete-deployment-environment@v3.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          environment: pr-${{ github.event.number }}
+
+  review_app:
+    name: Deploy PR App
+    if: startsWith(github.head_ref, 'fly/') &&  github.event.action != 'closed'
     runs-on: ubuntu-latest
     outputs:
       url: ${{ steps.deploy.outputs.url }}
@@ -45,18 +83,18 @@ jobs:
           name: pr-${{ github.event.number }}-ramonalcantaraarceo-${{ github.event.repository.name }}
           secrets: API_KEY=${{ secrets.PR_API_KEY }}
       
-      - name: Create GitHub App token
-        uses: actions/create-github-app-token@v3
-        id: app-token
-        if: ${{ github.event.action == 'closed' }}
-        with:
-          client-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+      # - name: Create GitHub App token
+      #   uses: actions/create-github-app-token@v3
+      #   id: app-token
+      #   if: ${{ github.event.action == 'closed' }}
+      #   with:
+      #     client-id: ${{ secrets.GH_APP_ID }}
+      #     private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
 
-      - name: Clean up GitHub environment
-        uses: strumwolf/delete-deployment-environment@v3.0.0
-        if: ${{ github.event.action == 'closed' }}
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-          environment: pr-${{ github.event.number }}
-          # ref: ${{ github.ref_name }}
+      # - name: Clean up GitHub environment
+      #   uses: strumwolf/delete-deployment-environment@v3.0.0
+      #   if: ${{ github.event.action == 'closed' }}
+      #   with:
+      #     token: ${{ steps.app-token.outputs.token }}
+      #     environment: pr-${{ github.event.number }}
+      #     # ref: ${{ github.ref_name }}
