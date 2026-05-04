@@ -1,0 +1,27 @@
+services:
+  api:
+    build:
+      context: .
+      target: runtime
+      args:
+        BUILD_DATE: ${BUILD_DATE:-2026-04-09T00:00:00Z}
+        VERSION: ${VERSION:-0.1.0}
+        GIT_SHA: ${GIT_SHA:-dev}
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.staging
+    environment:
+      STORAGE_MODE: cloud
+      API_KEY: ${API_KEY}
+      APP_ENV: staging
+      LOG_LEVEL: INFO
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp/app:mode=1777,size=100M
+      - /tmp:mode=1777,size=10M
+    restart: unless-stopped

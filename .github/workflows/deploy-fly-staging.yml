@@ -1,0 +1,67 @@
+name: Deploy to Fly.io Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Image version to deploy (e.g. v1.2.3)"
+        required: false
+        type: string
+
+jobs:
+  deploy:
+    name: Deploy to Fly.io
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@v1
+
+      - name: Set image tag
+        id: set_tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "tag=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          fi
+
+      # Create Fly.io app if it doesn't exist
+      - name: Create App and Set Secrets
+        run: |
+          if ! flyctl apps list | grep -q petstore-api-staging; then
+            flyctl apps create --name petstore-api-staging --auto-confirm
+          else
+            flyctl apps list
+            echo "App petstore-api-staging already exists, skipping creation."
+          fi
+
+          flyctl secrets set --stage API_KEY=${{ secrets.API_KEY }} DATABASE_POOLER_URL=${{ secrets.DATABASE_POOLER_URL }} DATABASE_URL=${{ secrets.DATABASE_URL }} -c .fly/staging/fly.toml
+
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      # Deploy using the pre-built GHCR image
+      - name: Deploy App to Fly.io
+        run: |
+          flyctl deploy \
+            --config .fly/staging/fly.toml \
+            --image ghcr.io/ramonalcantaraarceo/petstore-api:${{ steps.set_tag.outputs.tag }} \
+            --remote-only \
+            --debug \
+            --verbose
+
+          flyctl scale count 1 -y -c .fly/staging/fly.toml
+
+          if ! flyctl certs list -c .fly/staging/fly.toml | grep -q petstore-api-staging.ramon-alcantara.work; then
+            flyctl certs create petstore-api-staging.ramon-alcantara.work --app petstore-api-staging
+
+          else
+            echo "App petstore-api-staging already has certificate defined, skipping creation."
+          fi
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
