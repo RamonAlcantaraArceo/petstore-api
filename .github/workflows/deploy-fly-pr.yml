@@ -49,7 +49,7 @@ jobs:
 
   review_app:
     name: Deploy PR App to Fly.io
-    if: startsWith(github.head_ref, 'fly/') &&  github.event.action == 'closed'
+    if: startsWith(github.head_ref, 'fly/') &&  github.event.action != 'closed'
     runs-on: ubuntu-latest
     outputs:
       url: ${{ steps.deploy.outputs.url }}
