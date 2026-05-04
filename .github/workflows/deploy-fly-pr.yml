@@ -31,14 +31,13 @@ jobs:
         with:
           persist-credentials: false
 
-      # - name: Deploy PR app to Fly.io
-      #   id: deploy
-      #   if: ${{ github.event.action != 'closed' }}
-      #   uses: superfly/fly-pr-review-apps@1.5.0
-      #   with:
-      #     config: .fly/pr/fly.toml
-      #     name: pr-${{ github.event.number }}-ramonalcantaraarceo-${{ github.event.repository.name }}
-      #     secrets: API_KEY=${{ secrets.PR_API_KEY }}
+      - name: Deploy PR app to Fly.io
+        id: deploy
+        uses: superfly/fly-pr-review-apps@1.5.0
+        with:
+          config: .fly/pr/fly.toml
+          name: pr-${{ github.event.number }}-ramonalcantaraarceo-${{ github.event.repository.name }}
+          secrets: API_KEY=${{ secrets.PR_API_KEY }}
       
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v3
@@ -82,19 +81,3 @@ jobs:
           config: .fly/pr/fly.toml
           name: pr-${{ github.event.number }}-ramonalcantaraarceo-${{ github.event.repository.name }}
           secrets: API_KEY=${{ secrets.PR_API_KEY }}
-      
-      # - name: Create GitHub App token
-      #   uses: actions/create-github-app-token@v3
-      #   id: app-token
-      #   if: ${{ github.event.action == 'closed' }}
-      #   with:
-      #     client-id: ${{ secrets.GH_APP_ID }}
-      #     private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-
-      # - name: Clean up GitHub environment
-      #   uses: strumwolf/delete-deployment-environment@v3.0.0
-      #   if: ${{ github.event.action == 'closed' }}
-      #   with:
-      #     token: ${{ steps.app-token.outputs.token }}
-      #     environment: pr-${{ github.event.number }}
-      #     # ref: ${{ github.ref_name }}
