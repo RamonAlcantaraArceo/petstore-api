@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from logging.config import fileConfig
+from typing import Any
 
 from alembic import context
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -25,13 +26,19 @@ if config.config_file_name is not None:
 target_metadata = [PetBase.metadata, OrderBase.metadata, UserBase.metadata]
 
 
+def _get_migration_db_config() -> tuple[str, dict[str, Any]]:
+    """Return the resolved async DB URL and connect args for migrations."""
+    settings = get_settings()
+    connect_args = dict(getattr(settings, "async_database_connect_args", {}) or {})
+    return settings.async_database_url, connect_args
+
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
     This configures the context with just a URL and not an Engine.
     """
-    settings = get_settings()
-    url = settings.database_url
+    url, _ = _get_migration_db_config()
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -58,8 +65,11 @@ def do_run_migrations(connection: object) -> None:
 
 async def run_async_migrations() -> None:
     """Run migrations in async mode."""
-    settings = get_settings()
-    engine = create_async_engine(settings.async_database_url)
+    database_url, connect_args = _get_migration_db_config()
+    engine = create_async_engine(
+        database_url,
+        connect_args=connect_args,
+    )
     async with engine.connect() as connection:
         await connection.run_sync(do_run_migrations)
     await engine.dispose()
