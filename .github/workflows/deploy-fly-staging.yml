@@ -1,8 +1,6 @@
 name: Deploy to Fly.io Staging
 
 on:
-  push:
-    branches: ["deploy-staging"]
   workflow_dispatch:
     inputs:
       version:
