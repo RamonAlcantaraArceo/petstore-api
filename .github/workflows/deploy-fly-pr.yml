@@ -17,7 +17,7 @@ env:
 
 jobs:
   review_app:
-    if: startsWith(github.head_ref, 'fly/')
+    if: startsWith(github.head_ref, 'fly/') &&  github.event.action == 'closed'
     runs-on: ubuntu-latest
     outputs:
       url: ${{ steps.deploy.outputs.url }}
