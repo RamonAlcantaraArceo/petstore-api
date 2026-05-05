@@ -5,6 +5,7 @@ on:
     inputs:
       version:
         description: "Image version to deploy (e.g. v1.2.3)"
+        default: "latest"
         required: false
         type: string
 
