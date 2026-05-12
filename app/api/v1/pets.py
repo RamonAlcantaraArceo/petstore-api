@@ -7,7 +7,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Form, Query, UploadFile
 
 from app.dependencies import get_pet_service
-from app.schemas.pet import Pet, PetCreate, PetUpdate
+from app.schemas.pet import Pet, PetCreate, PetStatus, PetUpdate
 from app.services.pet import PetService
 
 router = APIRouter(prefix="/pet", tags=["pet"])
@@ -49,7 +49,7 @@ async def update_pet(
 
 @router.get("/findByStatus", response_model=list[Pet])
 async def find_pets_by_status(
-    status: Annotated[str, Query(description="Status values to filter by")] = "available",
+    status: Annotated[PetStatus, Query(description="Status values to filter by")] = PetStatus.available,
     service: PetService = Depends(get_pet_service),
 ) -> list[Pet]:
     """Find pets by status.
