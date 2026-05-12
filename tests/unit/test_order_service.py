@@ -60,17 +60,28 @@ async def test_get_order_raises_404_when_not_found() -> None:
     assert exc_info.value.status_code == 404
 
 
+
 @pytest.mark.asyncio
-async def test_get_order_raises_404_for_invalid_id() -> None:
-    """get_order raises HTTPException 404 when order_id is out of range."""
+async def test_get_order_raises_400_for_id_less_than_1() -> None:
+    """get_order raises HTTPException 400 when order_id < 1."""
     from fastapi import HTTPException
 
     repo = AsyncMock()
+    service = make_service(repo)
+    with pytest.raises(HTTPException) as exc_info:
+        await service.get_order(0)
+    assert exc_info.value.status_code == 400
 
+@pytest.mark.asyncio
+async def test_get_order_raises_404_for_id_greater_than_10() -> None:
+    """get_order raises HTTPException 404 when order_id > 10."""
+    from fastapi import HTTPException
+
+    repo = AsyncMock()
+    repo.get.return_value = None
     service = make_service(repo)
     with pytest.raises(HTTPException) as exc_info:
         await service.get_order(11)
-
     assert exc_info.value.status_code == 404
 
 
