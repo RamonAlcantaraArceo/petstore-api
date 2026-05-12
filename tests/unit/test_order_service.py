@@ -61,16 +61,27 @@ async def test_get_order_raises_404_when_not_found() -> None:
 
 
 @pytest.mark.asyncio
-async def test_get_order_raises_404_for_invalid_id() -> None:
-    """get_order raises HTTPException 404 when order_id is out of range."""
+async def test_get_order_raises_400_for_id_less_than_1() -> None:
+    """get_order raises HTTPException 400 when order_id < 1."""
     from fastapi import HTTPException
 
     repo = AsyncMock()
+    service = make_service(repo)
+    with pytest.raises(HTTPException) as exc_info:
+        await service.get_order(0)
+    assert exc_info.value.status_code == 400
 
+
+@pytest.mark.asyncio
+async def test_get_order_raises_404_for_id_greater_than_10() -> None:
+    """get_order raises HTTPException 404 when order_id > 10."""
+    from fastapi import HTTPException
+
+    repo = AsyncMock()
+    repo.get.return_value = None
     service = make_service(repo)
     with pytest.raises(HTTPException) as exc_info:
         await service.get_order(11)
-
     assert exc_info.value.status_code == 404
 
 
@@ -119,13 +130,13 @@ async def test_delete_order_raises_404_when_not_found() -> None:
 async def test_get_inventory_delegates_to_repo() -> None:
     """get_inventory calls repository get_inventory."""
     repo = AsyncMock()
-    repo.get_inventory.return_value = {"placed": 3, "delivered": 10}
+    expected = [Order(id=1, pet_id=1, quantity=2), Order(id=2, pet_id=3, quantity=1)]
+    repo.get_inventory.return_value = expected
 
     service = make_service(repo)
     result = await service.get_inventory()
 
-    assert result["placed"] == 3
-    assert result["delivered"] == 10
+    assert result == expected
 
 
 @pytest.mark.asyncio

@@ -78,8 +78,8 @@ class OrderService:
         Raises:
             HTTPException: 404 if order not found.
         """
-        if order_id < 1 or order_id > 10:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
+        if order_id < 1:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid order ID")
         order = await self._repo.get(order_id)
         if order is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
@@ -108,10 +108,10 @@ class OrderService:
             await self._rollback()
             raise
 
-    async def get_inventory(self) -> dict[str, int]:
-        """Return inventory counts grouped by pet status.
+    async def get_inventory(self) -> list[Order]:
+        """Return all orders in the store.
 
         Returns:
-            Dict mapping status string to count.
+            List of all orders.
         """
         return await self._repo.get_inventory()

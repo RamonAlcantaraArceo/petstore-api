@@ -92,6 +92,8 @@ def create_app() -> FastAPI:
         docs_url="/docs",
         redoc_url="/redoc",
         lifespan=lifespan,
+        servers=[{"url": "http://localhost:8000", "description": "Local development server"}],
+        contact={"name": "Ramon Alcantara Arceo", "email": "ramalc.ms@outlook.com"},
     )
 
     # Middleware (outermost first)

@@ -52,6 +52,7 @@ async def ensure_db_schema() -> None:
     if _engine is None:
         raise RuntimeError("Database engine not initialised. Call init_db() first.")
 
+    # fmt: off
     async with _engine.begin() as conn:
         result = await conn.execute(text("""
                 SELECT
@@ -72,6 +73,7 @@ async def ensure_db_schema() -> None:
         await conn.run_sync(PetBase.metadata.create_all)
         await conn.run_sync(OrderBase.metadata.create_all)
         await conn.run_sync(UserBase.metadata.create_all)
+    # fmt: on
 
 
 def get_session_factory() -> async_sessionmaker[AsyncSession]:

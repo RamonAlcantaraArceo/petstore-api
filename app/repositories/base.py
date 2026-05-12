@@ -120,11 +120,11 @@ class OrderRepository(Protocol):
         """
         ...
 
-    async def get_inventory(self) -> dict[str, int]:
-        """Return inventory counts grouped by pet status.
+    async def get_inventory(self) -> list[Order]:
+        """Return all orders.
 
         Returns:
-            Dict mapping status string to count of pets with that status.
+            List of all orders in the store.
         """
         ...
 

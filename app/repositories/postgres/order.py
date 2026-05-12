@@ -101,16 +101,11 @@ class PostgresOrderRepository:
         await self._session.delete(model)
         await self._session.flush()
 
-    async def get_inventory(self) -> dict[str, int]:
-        """Return inventory counts grouped by order status.
+    async def get_inventory(self) -> list[Order]:
+        """Return all orders.
 
         Returns:
-            Dict mapping status string to count.
+            List of all orders in the store.
         """
         result = await self._session.execute(select(OrderModel))
-        counts: dict[str, int] = {}
-        for model in result.scalars().all():
-            status_val: Any = model.status
-            if status_val:
-                counts[str(status_val)] = counts.get(str(status_val), 0) + 1
-        return counts
+        return [_model_to_schema(model) for model in result.scalars().all()]
