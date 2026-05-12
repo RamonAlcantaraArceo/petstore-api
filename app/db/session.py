@@ -53,13 +53,15 @@ async def ensure_db_schema() -> None:
         raise RuntimeError("Database engine not initialised. Call init_db() first.")
 
     async with _engine.begin() as conn:
-        result = await conn.execute(text("""
+        result = await conn.execute(
+            text("""
                 SELECT
                     current_database(),
                     current_user,
                     inet_server_addr()::text,
                     inet_server_port()
-                """))
+                """)
+        )
         database, user, server_address, server_port = result.one()
         _logger.info(
             "db_connection_established",

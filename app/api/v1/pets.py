@@ -49,7 +49,9 @@ async def update_pet(
 
 @router.get("/findByStatus", response_model=list[Pet])
 async def find_pets_by_status(
-    status: Annotated[PetStatus, Query(description="Status values to filter by")] = PetStatus.available,
+    status: Annotated[
+        PetStatus, Query(description="Status values to filter by")
+    ] = PetStatus.available,
     service: PetService = Depends(get_pet_service),
 ) -> list[Pet]:
     """Find pets by status.
