@@ -119,13 +119,13 @@ async def test_delete_order_raises_404_when_not_found() -> None:
 async def test_get_inventory_delegates_to_repo() -> None:
     """get_inventory calls repository get_inventory."""
     repo = AsyncMock()
-    repo.get_inventory.return_value = {"placed": 3, "delivered": 10}
+    expected = [Order(id=1, pet_id=1, quantity=2), Order(id=2, pet_id=3, quantity=1)]
+    repo.get_inventory.return_value = expected
 
     service = make_service(repo)
     result = await service.get_inventory()
 
-    assert result["placed"] == 3
-    assert result["delivered"] == 10
+    assert result == expected
 
 
 @pytest.mark.asyncio

@@ -108,10 +108,10 @@ class OrderService:
             await self._rollback()
             raise
 
-    async def get_inventory(self) -> dict[str, int]:
-        """Return inventory counts grouped by pet status.
+    async def get_inventory(self) -> list[Order]:
+        """Return all orders in the store.
 
         Returns:
-            Dict mapping status string to count.
+            List of all orders.
         """
         return await self._repo.get_inventory()

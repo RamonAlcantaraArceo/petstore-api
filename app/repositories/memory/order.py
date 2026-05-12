@@ -67,15 +67,10 @@ class MemoryOrderRepository:
                 raise KeyError(f"Order {order_id} not found")
             del self._store[order_id]
 
-    async def get_inventory(self) -> dict[str, int]:
-        """Return inventory counts grouped by order status.
+    async def get_inventory(self) -> list[Order]:
+        """Return all orders.
 
         Returns:
-            Dict mapping status string to count.
+            List of all orders in the store.
         """
-        counts: dict[str, int] = {}
-        for order in self._store.values():
-            if order.status:
-                key = order.status.value
-                counts[key] = counts.get(key, 0) + 1
-        return counts
+        return list(self._store.values())

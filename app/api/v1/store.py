@@ -13,17 +13,17 @@ from app.services.order import OrderService
 router = APIRouter(prefix="/store", tags=["store"])
 
 
-@router.get("/inventory", response_model=dict[str, int])
+@router.get("/inventory", response_model=list[Order])
 async def get_inventory(
     service: Annotated[OrderService, Depends(get_order_service)],
-) -> dict[str, int]:
-    """Return pet inventories by status.
+) -> list[Order]:
+    """Return all orders in the store.
 
     Args:
         service: Injected OrderService.
 
     Returns:
-        Dict mapping status to count of pets with that status.
+        List of all orders.
     """
     return await service.get_inventory()
 

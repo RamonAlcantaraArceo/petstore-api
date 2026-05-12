@@ -8,10 +8,10 @@ from httpx import AsyncClient
 
 @pytest.mark.asyncio
 async def test_get_inventory(app_client: AsyncClient, api_key_header: dict[str, str]) -> None:
-    """GET /api/v1/store/inventory returns a dict."""
+    """GET /api/v1/store/inventory returns a list of orders."""
     response = await app_client.get("/api/v1/store/inventory", headers=api_key_header)
     assert response.status_code == 200
-    assert isinstance(response.json(), dict)
+    assert isinstance(response.json(), list)
 
 
 @pytest.mark.asyncio
