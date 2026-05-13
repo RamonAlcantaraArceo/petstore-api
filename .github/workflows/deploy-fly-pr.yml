@@ -77,5 +77,5 @@ jobs:
           secrets: API_KEY=${{ secrets.PR_API_KEY }}
           build_args: |
             GIT_SHA=${{ github.sha }}
-            BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            BUILD_DATE=${{ github.event.head_commit.timestamp || github.event.pull_request.updated_at || github.run_started_at }}
             VERSION=${{ github.event.number }}
