@@ -69,6 +69,13 @@ def configure_logging(log_level: str, app_env: str) -> None:
     )
 
 
+def _first_forwarded_value(value: str | None) -> str | None:
+    """Return first value from a comma-separated forwarded header."""
+    if not value:
+        return None
+    return value.split(",", 1)[0].strip() or None
+
+
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application.
 
@@ -110,8 +117,15 @@ def create_app() -> FastAPI:
             routes=app.routes,
         )
         schema = deepcopy(schema)
-        host = request.headers.get("host", request.url.netloc)
-        schema["servers"] = [{"url": f"{request.url.scheme}://{host}"}]
+        forwarded_proto = _first_forwarded_value(
+            request.headers.get("x-forwarded-proto")
+        )
+        forwarded_host = _first_forwarded_value(
+            request.headers.get("x-forwarded-host")
+        )
+        scheme = forwarded_proto or request.url.scheme
+        host = forwarded_host or request.headers.get("host", request.url.netloc)
+        schema["servers"] = [{"url": f"{scheme}://{host}"}]
         return JSONResponse(schema)
 
     @app.get("/docs", include_in_schema=False)
