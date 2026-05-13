@@ -16,12 +16,16 @@ jobs:
     environment: dev
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
-      # Install flyctl
-      - uses: superfly/flyctl-actions/setup-flyctl@v1
+      - name: Compute build date
+        id: vars
+        run: echo "date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
 
-      # Determine image tag
+      - name: Install flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@v1
+
       - name: Set image tag
         id: set_tag
         run: |
@@ -39,7 +43,7 @@ jobs:
             --image ghcr.io/ramonalcantaraarceo/petstore-api:${{ steps.set_tag.outputs.tag }} \
             --remote-only \
             --env GIT_SHA=${{ github.sha }} \
-            --env BUILD_DATE=${{ github.event.head_commit.timestamp || github.event.pull_request.updated_at || github.run_started_at }} \
+            --env BUILD_DATE=${{ steps.vars.outputs.date }} \
             --env VERSION=${{ github.event.inputs.version }} \
             --debug \
             --verbose
