@@ -9,9 +9,9 @@ from copy import deepcopy
 
 import structlog
 from fastapi import FastAPI, Request
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
-from fastapi.openapi.docs import get_swagger_ui_html
 
 from app.api.v1.health import router as health_router
 from app.api.v1.router import router as v1_router
@@ -117,12 +117,8 @@ def create_app() -> FastAPI:
             routes=app.routes,
         )
         schema = deepcopy(schema)
-        forwarded_proto = _first_forwarded_value(
-            request.headers.get("x-forwarded-proto")
-        )
-        forwarded_host = _first_forwarded_value(
-            request.headers.get("x-forwarded-host")
-        )
+        forwarded_proto = _first_forwarded_value(request.headers.get("x-forwarded-proto"))
+        forwarded_host = _first_forwarded_value(request.headers.get("x-forwarded-host"))
         scheme = forwarded_proto or request.url.scheme
         host = forwarded_host or request.headers.get("host", request.url.netloc)
         schema["servers"] = [{"url": f"{scheme}://{host}"}]
