@@ -9,13 +9,14 @@ from httpx import AsyncClient
 @pytest.mark.asyncio
 @pytest.mark.remote_only
 @pytest.mark.backend_agnostic
-async def test_e2e_health(remote_client: AsyncClient) -> None:
-    """Smoke test: GET /health returns 200.
+@pytest.mark.parametrize("path", ["/health", "/api/v1/health"])
+async def test_e2e_health(remote_client: AsyncClient, path: str) -> None:
+    """Smoke test: health returns 200 from both routes.
 
     Args:
         remote_client: Client pointing at the live service.
     """
-    response = await remote_client.get("/health")
+    response = await remote_client.get(path)
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
 

@@ -9,13 +9,19 @@ from tests.factories.pet import PetCreateFactory
 
 
 @pytest.mark.asyncio
-async def test_health_check(app_client: AsyncClient) -> None:
-    """GET /health returns 200 with status ok."""
-    response = await app_client.get("/health")
+@pytest.mark.parametrize("path", ["/health", "/api/v1/health"])
+async def test_health_check(app_client: AsyncClient, path: str) -> None:
+    """GET health returns a typed payload from both public and versioned routes."""
+    response = await app_client.get(path)
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "ok"
     assert data["mode"] == "memory"
+    assert data["details"] == {
+        "version": "local",
+        "build_date": "N/A",
+        "git_commit_sha": "N/A",
+    }
 
 
 @pytest.mark.asyncio

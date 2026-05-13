@@ -5,11 +5,15 @@ from __future__ import annotations
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from copy import deepcopy
 
 import structlog
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
+from app.api.v1.health import router as health_router
 from app.api.v1.router import router as v1_router
 from app.config import get_settings
 from app.middleware.auth import ApiKeyMiddleware
@@ -65,6 +69,13 @@ def configure_logging(log_level: str, app_env: str) -> None:
     )
 
 
+def _first_forwarded_value(value: str | None) -> str | None:
+    """Return first value from a comma-separated forwarded header."""
+    if not value:
+        return None
+    return value.split(",", 1)[0].strip() or None
+
+
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application.
 
@@ -89,28 +100,45 @@ def create_app() -> FastAPI:
         title="Petstore API",
         description="A production-ready Petstore API built with FastAPI.",
         version=settings.api_version,
-        docs_url="/docs",
-        redoc_url="/redoc",
+        docs_url=None,
+        redoc_url=None,
+        openapi_url=None,
         lifespan=lifespan,
-        servers=[{"url": "http://localhost:8000", "description": "Local development server"}],
         contact={"name": "Ramon Alcantara Arceo", "email": "ramalc.ms@outlook.com"},
     )
+
+    @app.get("/openapi.json", include_in_schema=False)
+    async def openapi_json(request: Request) -> JSONResponse:
+        """Serve OpenAPI schema with dynamic server URL from the current request."""
+        schema = get_openapi(
+            title=app.title,
+            version=app.version,
+            description=app.description,
+            routes=app.routes,
+        )
+        schema = deepcopy(schema)
+        forwarded_proto = _first_forwarded_value(request.headers.get("x-forwarded-proto"))
+        forwarded_host = _first_forwarded_value(request.headers.get("x-forwarded-host"))
+        scheme = forwarded_proto or request.url.scheme
+        host = forwarded_host or request.headers.get("host", request.url.netloc)
+        schema["servers"] = [{"url": f"{scheme}://{host}"}]
+        return JSONResponse(schema)
+
+    @app.get("/docs", include_in_schema=False)
+    async def swagger_ui_html() -> object:
+        """Serve Swagger UI pointing to the custom OpenAPI endpoint."""
+        return get_swagger_ui_html(
+            openapi_url="/openapi.json",
+            title=f"{app.title} - Swagger UI",
+        )
 
     # Middleware (outermost first)
     app.add_middleware(ApiKeyMiddleware, api_key=settings.api_key)
     app.add_middleware(CorrelationIdMiddleware)
 
     # Routes
+    app.include_router(health_router)
     app.include_router(v1_router)
-
-    @app.get("/health", tags=["health"])
-    async def health_check() -> JSONResponse:
-        """Return service health status.
-
-        Returns:
-            JSON response with status and storage mode.
-        """
-        return JSONResponse({"status": "ok", "mode": settings.storage_mode})
 
     return app
 

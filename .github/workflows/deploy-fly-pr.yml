@@ -75,3 +75,7 @@ jobs:
           config: .fly/pr/fly.toml
           name: pr-${{ github.event.number }}-ramonalcantaraarceo-${{ github.event.repository.name }}
           secrets: API_KEY=${{ secrets.PR_API_KEY }}
+          build_args: |
+            GIT_SHA=${{ github.sha }}
+            BUILD_DATE=${{ github.event.head_commit.timestamp || github.event.pull_request.updated_at || github.run_started_at }}
+            VERSION=${{ github.event.number }}

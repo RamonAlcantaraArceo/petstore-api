@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import APIKeyHeader
 
+from app.api.v1.health import router as health_router
 from app.api.v1.pets import router as pets_router
 from app.api.v1.store import router as store_router
 from app.api.v1.users import router as users_router
@@ -26,6 +27,7 @@ def require_api_key(_: str = Depends(api_key_scheme)) -> None:
 
 router = APIRouter(prefix="/api/v1")
 
+router.include_router(health_router)
 router.include_router(pets_router, dependencies=[Depends(require_api_key)])
 router.include_router(store_router, dependencies=[Depends(require_api_key)])
 router.include_router(users_router, dependencies=[Depends(require_api_key)])
