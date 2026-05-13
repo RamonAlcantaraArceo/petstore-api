@@ -38,6 +38,9 @@ jobs:
             --config .fly/dev/fly.toml \
             --image ghcr.io/ramonalcantaraarceo/petstore-api:${{ steps.set_tag.outputs.tag }} \
             --remote-only \
+            --env GIT_SHA=${{ github.sha }} \
+            --env BUILD_DATE=${{ github.event.head_commit.timestamp || github.event.pull_request.updated_at || github.run_started_at }} \
+            --env VERSION=${{ github.event.inputs.version }} \
             --debug \
             --verbose
         env:
