@@ -1,5 +1,7 @@
 """Configuration settings for the Petstore API."""
 
+import os
+
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from pydantic_settings import BaseSettings
@@ -106,6 +108,46 @@ class Settings(BaseSettings):
         if self.storage_mode == "cloud" and self.database_pooler_url.strip():
             return self.database_pooler_url.strip()
         return self.database_url.strip()
+
+    @property
+    def version(self) -> str:
+        """Return the version from VERSION environment variable.
+
+        Returns:
+            Version value or "local" if not set.
+        """
+        return os.getenv("VERSION", "local")
+    
+    @property
+    def build_date(self) -> str:
+        """Return the build date from BUILD_DATE environment variable.
+
+        Returns:
+            Build date value or "N/A" if not set.
+        """
+        return os.getenv("BUILD_DATE", "N/A")
+    
+    @property
+    def git_sha(self) -> str:
+        """Return the Git commit SHA from GIT_SHA environment variable.
+
+        Returns:
+            Git commit SHA value or "N/A" if not set.
+        """
+        return os.getenv("GIT_SHA", "N/A")
+    
+    @property
+    def details(self) -> dict[str, str]:
+        """Return a dictionary of application details for health checks and metadata.
+
+        Returns:
+            A dictionary containing version, build date, and Git commit SHA.
+        """
+        return {
+            "version": self.version,
+            "build_date": self.build_date,
+            "git_commit_sha": self.git_sha,
+        }
 
 
 def get_settings() -> Settings:
