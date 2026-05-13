@@ -123,7 +123,10 @@ USER appuser
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     TMPDIR=/tmp/app \
-    PATH="/usr/local/bin:$PATH"
+    PATH="/usr/local/bin:$PATH"\
+    VERSION=${VERSION} \
+    GIT_SHA=${GIT_SHA} \
+    BUILD_DATE=${BUILD_DATE}
 
 # Expose application port
 EXPOSE 8000
