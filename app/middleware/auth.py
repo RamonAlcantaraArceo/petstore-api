@@ -10,7 +10,7 @@ from starlette.responses import JSONResponse, Response
 from starlette.types import ASGIApp
 
 #: Paths that are exempt from API key validation.
-EXEMPT_PATHS = {"/health", "/docs", "/redoc", "/openapi.json"}
+EXEMPT_PATHS = {"/health", "/api/v1/health", "/docs", "/redoc", "/openapi.json"}
 
 
 def verify_credentials(token: str, expected: str) -> bool:

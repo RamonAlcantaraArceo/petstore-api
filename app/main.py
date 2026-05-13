@@ -8,8 +8,8 @@ from contextlib import asynccontextmanager
 
 import structlog
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
 
+from app.api.v1.health import router as health_router
 from app.api.v1.router import router as v1_router
 from app.config import get_settings
 from app.middleware.auth import ApiKeyMiddleware
@@ -101,16 +101,8 @@ def create_app() -> FastAPI:
     app.add_middleware(CorrelationIdMiddleware)
 
     # Routes
+    app.include_router(health_router)
     app.include_router(v1_router)
-
-    @app.get("/health", tags=["health"])
-    async def health_check() -> JSONResponse:
-        """Return service health status.
-
-        Returns:
-            JSON response with status and storage mode.
-        """
-        return JSONResponse({"status": "ok", "mode": settings.storage_mode})
 
     return app
 
