@@ -5,9 +5,13 @@ from __future__ import annotations
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from copy import deepcopy
 
 import structlog
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.openapi.utils import get_openapi
+from fastapi.responses import JSONResponse
+from fastapi.openapi.docs import get_swagger_ui_html
 
 from app.api.v1.health import router as health_router
 from app.api.v1.router import router as v1_router
@@ -89,12 +93,34 @@ def create_app() -> FastAPI:
         title="Petstore API",
         description="A production-ready Petstore API built with FastAPI.",
         version=settings.api_version,
-        docs_url="/docs",
-        redoc_url="/redoc",
+        docs_url=None,
+        redoc_url=None,
+        openapi_url=None,
         lifespan=lifespan,
-        servers=[{"url": "http://localhost:8000", "description": "Local development server"}],
         contact={"name": "Ramon Alcantara Arceo", "email": "ramalc.ms@outlook.com"},
     )
+
+    @app.get("/openapi.json", include_in_schema=False)
+    async def openapi_json(request: Request) -> JSONResponse:
+        """Serve OpenAPI schema with dynamic server URL from the current request."""
+        schema = get_openapi(
+            title=app.title,
+            version=app.version,
+            description=app.description,
+            routes=app.routes,
+        )
+        schema = deepcopy(schema)
+        host = request.headers.get("host", request.url.netloc)
+        schema["servers"] = [{"url": f"{request.url.scheme}://{host}"}]
+        return JSONResponse(schema)
+
+    @app.get("/docs", include_in_schema=False)
+    async def swagger_ui_html() -> object:
+        """Serve Swagger UI pointing to the custom OpenAPI endpoint."""
+        return get_swagger_ui_html(
+            openapi_url="/openapi.json",
+            title=f"{app.title} - Swagger UI",
+        )
 
     # Middleware (outermost first)
     app.add_middleware(ApiKeyMiddleware, api_key=settings.api_key)
