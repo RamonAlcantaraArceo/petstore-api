@@ -7,7 +7,6 @@ from fastapi import APIRouter
 from app.config import get_settings
 from app.schemas.health import HealthDetails, HealthResponse
 
-
 router = APIRouter(tags=["health"])
 
 
