@@ -5,6 +5,7 @@ on:
     inputs:
       version:
         description: "Image version to deploy (e.g. v1.2.3)"
+        default: "latest"
         required: false
         type: string
 
@@ -17,6 +18,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+
+      - name: Compute build date
+        id: vars
+        run: echo "date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
 
       - name: Install flyctl
         uses: superfly/flyctl-actions/setup-flyctl@v1
@@ -52,6 +57,9 @@ jobs:
             --config .fly/staging/fly.toml \
             --image ghcr.io/ramonalcantaraarceo/petstore-api:${{ steps.set_tag.outputs.tag }} \
             --remote-only \
+            --env GIT_SHA=${{ github.sha }} \
+            --env BUILD_DATE=${{ steps.vars.outputs.date }} \
+            --env VERSION=${{ github.event.inputs.version }} \
             --debug \
             --verbose
 
