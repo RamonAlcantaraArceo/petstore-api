@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import warnings
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from copy import deepcopy
@@ -18,6 +19,8 @@ from app.api.v1.router import router as v1_router
 from app.config import get_settings
 from app.middleware.auth import ApiKeyMiddleware
 from app.middleware.correlation_id import CorrelationIdMiddleware
+
+warnings.filterwarnings("error", message="Duplicate Operation ID")
 
 
 def configure_logging(log_level: str, app_env: str) -> None:
@@ -112,9 +115,10 @@ def create_app() -> FastAPI:
         """Serve OpenAPI schema with dynamic server URL from the current request."""
         schema = get_openapi(
             title=app.title,
-            version=app.version,
             description=app.description,
+            version=app.version,
             routes=app.routes,
+            contact=app.contact,
         )
         schema = deepcopy(schema)
         forwarded_proto = _first_forwarded_value(request.headers.get("x-forwarded-proto"))

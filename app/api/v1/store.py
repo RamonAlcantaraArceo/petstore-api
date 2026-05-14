@@ -13,7 +13,7 @@ from app.services.order import OrderService
 router = APIRouter(prefix="/store", tags=["store"])
 
 
-@router.get("/inventory", response_model=list[Order])
+@router.get("/inventory", response_model=list[Order], operation_id="get_inventory")
 async def get_inventory(
     service: Annotated[OrderService, Depends(get_order_service)],
 ) -> list[Order]:
@@ -28,7 +28,7 @@ async def get_inventory(
     return await service.get_inventory()
 
 
-@router.post("/order", response_model=Order, status_code=200)
+@router.post("/order", response_model=Order, status_code=200, operation_id="place_order")
 async def place_order(
     order: OrderCreate,
     service: Annotated[OrderService, Depends(get_order_service)],
@@ -45,7 +45,7 @@ async def place_order(
     return await service.place_order(order)
 
 
-@router.get("/order/{order_id}", response_model=Order)
+@router.get("/order/{order_id}", response_model=Order, operation_id="get_order_by_id")
 async def get_order_by_id(
     order_id: int,
     service: Annotated[OrderService, Depends(get_order_service)],
@@ -62,7 +62,7 @@ async def get_order_by_id(
     return await service.get_order(order_id)
 
 
-@router.delete("/order/{order_id}", status_code=200)
+@router.delete("/order/{order_id}", status_code=200, operation_id="delete_order")
 async def delete_order(
     order_id: int,
     service: Annotated[OrderService, Depends(get_order_service)],
