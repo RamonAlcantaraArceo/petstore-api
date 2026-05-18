@@ -1,0 +1,1 @@
+{"id":"77a1f06f73c3c7a3942532dab7ede8fd","fullName":"tests.unit.test_user_service#test_delete_user_raises_404_on_keyerror","name":"test_delete_user_raises_404_on_keyerror","status":"passed","testResultsByEnv":{"default":"3b60b223ed1304e421347a36d8a72d42"}}
