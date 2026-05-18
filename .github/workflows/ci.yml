@@ -132,15 +132,30 @@ jobs:
         if: always()
         run: |
           mkdir -p allure-history/ci
-          allure generate allure-results --clean -o allure-history/ci
+          allure generate allure-results --output allure-history/ci
 
       - name: Publish CI Allure report
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4.1.0
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
+
+      - name: Post Allure summary to PR and job summary
+        uses: allure-framework/allure-action@v0
+        with:
+          report-directory: "./allure-history"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          remote-href: "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ci"
+
+      - name: Notice Allure Report URL
+        # if: inputs.publish-report
+        run: |
+          REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ci"
+          echo "::notice title=Allure Report::${REPORT_URL}"
+          echo "### 🚀 Allure Report Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "[🔗 View Report](${REPORT_URL})" >> $GITHUB_STEP_SUMMARY
 
   build-image:
     name: Build Image
