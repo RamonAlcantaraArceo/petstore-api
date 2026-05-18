@@ -133,6 +133,7 @@ jobs:
       - name: Build Allure report with CI-only history
         if: always()
         run: |
+          rm -rf allure-history/ci
           mkdir -p allure-history/ci
           allure generate allure-results --output allure-history/ci
 
@@ -149,7 +150,7 @@ jobs:
         if: always()
         continue-on-error: true
         with:
-          report-directory: "./allure-history"
+          report-directory: "./allure-history/ci"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           remote-href: "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ci"
 
