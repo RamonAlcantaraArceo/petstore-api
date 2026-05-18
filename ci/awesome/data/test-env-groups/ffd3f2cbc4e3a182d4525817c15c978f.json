@@ -1,1 +1,1 @@
-{"id":"ffd3f2cbc4e3a182d4525817c15c978f","fullName":"tests.unit.test_user_service#test_delete_user_calls_commit_on_success","name":"test_delete_user_calls_commit_on_success","status":"passed","testResultsByEnv":{"default":"3776d73087434922497cf3e3ed2ac88c"}}
+{"id":"ffd3f2cbc4e3a182d4525817c15c978f","fullName":"tests.unit.test_user_service#test_delete_user_calls_commit_on_success","name":"test_delete_user_calls_commit_on_success","status":"passed","testResultsByEnv":{"default":"c3a18bb78310a3ab3f5c984c87d148c6"}}
