@@ -24,10 +24,10 @@ jobs:
           python-version: "3.14"
 
       - name: ruff check
-        run: ruff check .
+        run: uv run ruff check .
 
       - name: black check
-        run: black --check .
+        run: uv run black --check .
 
   type-check:
     name: Type Check
@@ -42,7 +42,7 @@ jobs:
           python-version: "3.14"
 
       - name: mypy
-        run: mypy app/
+        run: uv run mypy app/
 
   test:
     name: Test
@@ -65,7 +65,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/unit/ tests/integration/ tests/system/ \
+          uv run pytest tests/unit/ tests/integration/ tests/system/ \
             --cov=app --cov-report=xml \
             -p allure_pytest --alluredir=allure-results/
 
