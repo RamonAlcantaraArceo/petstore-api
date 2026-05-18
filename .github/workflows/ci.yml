@@ -8,11 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
-  pull-requests: write
-  checks: write
+  contents: read
 
 jobs:
   lint:
@@ -53,6 +49,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
+      issues: write
     env:
       STORAGE_MODE: memory
       API_KEY: test-api-key
@@ -148,6 +146,8 @@ jobs:
 
       - name: Post Allure summary to PR and job summary
         uses: allure-framework/allure-action@v0
+        if: always()
+        continue-on-error: true
         with:
           report-directory: "./allure-history"
           github-token: ${{ secrets.GITHUB_TOKEN }}
