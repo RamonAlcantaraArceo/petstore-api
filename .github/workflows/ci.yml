@@ -99,7 +99,7 @@ jobs:
           cp allure-meta-results/environment.properties allure-results/environment.properties
 
       - name: Upload API test results and coverage
-        uses: ./.github/actions/upload-results
+        uses: RamonAlcantaraArceo/petstore-test-python/.github/actions/upload-results@main
         with:
           codecov-token: ${{ secrets.CODECOV_TOKEN }}
           junit-file: junit.xml
