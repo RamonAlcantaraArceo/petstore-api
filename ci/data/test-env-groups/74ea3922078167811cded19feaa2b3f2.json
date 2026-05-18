@@ -1,0 +1,1 @@
+{"id":"74ea3922078167811cded19feaa2b3f2","fullName":"tests.unit.test_user_service#test_create_user_raises_value_error_for_empty_username","name":"test_create_user_raises_value_error_for_empty_username","status":"passed","testResultsByEnv":{"default":"aebcd46f53598b8978a449bed8de6520"}}

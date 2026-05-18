@@ -1,1 +1,0 @@
-{"id":"bd8d850b30afcda2634fd024bef7a490","fullName":"tests.unit.test_user_service#test_delete_user_calls_rollback_and_reraises_on_other_exception","name":"test_delete_user_calls_rollback_and_reraises_on_other_exception","status":"passed","testResultsByEnv":{"default":"efe8ebe56f5088810b3ecfac0dc63de8"}}

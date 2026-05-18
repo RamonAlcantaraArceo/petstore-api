@@ -1,1 +1,0 @@
-{"id":"b60b92b51bcdbb4f9f877ee3ad3314f4","fullName":"tests.unit.test_config#test_async_database_url_cloud_does_not_override_existing_ssl","name":"test_async_database_url_cloud_does_not_override_existing_ssl[postgresql://user:pass@host/db?sslmode=require]","status":"passed","testResultsByEnv":{"default":"2d8ca89e4387e432e7000dcc253339e5"}}

@@ -1,1 +1,0 @@
-{"id":"ffd3f2cbc4e3a182d4525817c15c978f","fullName":"tests.unit.test_user_service#test_delete_user_calls_commit_on_success","name":"test_delete_user_calls_commit_on_success","status":"passed","testResultsByEnv":{"default":"35279a7c1fba0db750b5b5e13d7eaa0b"}}
