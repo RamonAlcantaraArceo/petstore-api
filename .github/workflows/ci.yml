@@ -5,6 +5,7 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,19 +15,13 @@ jobs:
     name: Lint & Format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
         with:
           python-version: "3.14"
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
-      - name: Install dependencies
-        run: |
-          uv pip install --system ruff black
 
       - name: ruff check
         run: ruff check .
@@ -38,19 +33,13 @@ jobs:
     name: Type Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
         with:
           python-version: "3.14"
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
-      - name: Install dependencies
-        run: |
-          uv pip install --system -e ".[dev]"
 
       - name: mypy
         run: mypy app/
@@ -65,19 +54,14 @@ jobs:
       API_KEY: test-api-key
       EXPECTED_PYTHON_VERSIONS: "3.14"
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
         with:
           python-version: "3.14"
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
-      - name: Install dependencies
-        run: |
-          uv pip install --system -e ".[dev]"
+          install-allure: true
 
       - name: Run tests
         run: |
@@ -114,30 +98,15 @@ jobs:
           cp allure-meta-results/executor.json allure-results/executor.json
           cp allure-meta-results/environment.properties allure-results/environment.properties
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+      - name: Upload API test results and coverage
+        uses: ./.github/actions/upload-results
         with:
-          file: coverage.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-        continue-on-error: true
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./junit.xml
-          report_type: test_results
-          verbose: true
-          fail_ci_if_error: false
-
-      - name: Upload Allure results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-results
-          path: allure-results/
-        continue-on-error: true
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          junit-file: junit.xml
+          coverage-file: coverage.xml
+          codecov-flags: api
+          allure-results-path: allure-results/
+          allure-artifact-name: allure-results
 
       - name: Checkout gh-pages branch
         uses: actions/checkout@v6
@@ -158,14 +127,6 @@ jobs:
             mkdir -p allure-results/history
             cp -R allure-history/ci/history/. allure-results/history/
           fi
-
-      - name: Install Allure CLI
-        if: always()
-        run: |
-          ALLURE_VERSION=2.34.1
-          curl -sSL -o allure.tgz "https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz"
-          tar -xzf allure.tgz
-          echo "$PWD/allure-${ALLURE_VERSION}/bin" >> "$GITHUB_PATH"
 
       - name: Build Allure report with CI-only history
         if: always()
