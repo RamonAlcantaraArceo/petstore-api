@@ -71,7 +71,7 @@ jobs:
 
       - name: Post PR comment with docs URL
         if: always()
-        uses: actions/github-script@v6
+        uses: actions/github-script@v9
         with:
           script: |
             const owner = context.repo.owner;
