@@ -1,1 +1,1 @@
-{"id":"db180807e16543d8f80898a5c7d35aa8","fullName":"tests.unit.test_order_service#test_place_order_rolls_back_and_reraises_on_exception","name":"test_place_order_rolls_back_and_reraises_on_exception","status":"passed","testResultsByEnv":{"default":"d83ccba9f39614b61533200774624e8e"}}
+{"id":"db180807e16543d8f80898a5c7d35aa8","fullName":"tests.unit.test_order_service#test_place_order_rolls_back_and_reraises_on_exception","name":"test_place_order_rolls_back_and_reraises_on_exception","status":"passed","testResultsByEnv":{"default":"60b738838375b36c7c8c1bb29fd34ea9"}}
