@@ -110,57 +110,27 @@ jobs:
           allure-results-path: allure-results/
           allure-artifact-name: allure-results
 
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v6
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
-
-      - name: Prepare Allure history workspace (CI)
-        if: always()
-        run: |
-          mkdir -p allure-history
-          if [ -d gh-pages ]; then
-            cp -R gh-pages/. allure-history/
-          fi
-          if [ -d allure-history/ci/history ]; then
-            mkdir -p allure-results/history
-            cp -R allure-history/ci/history/. allure-results/history/
-          fi
-
-      - name: Build Allure report with CI-only history
-        if: always()
-        run: |
-          rm -rf allure-history/ci
-          mkdir -p allure-history/ci
-          allure generate allure-results --output allure-history/ci
-
-      - name: Publish CI Allure report
-        uses: peaceiris/actions-gh-pages@v4.1.0
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
-
-      - name: Post Allure summary to PR and job summary
-        uses: allure-framework/allure-action@v0
-        if: always()
-        continue-on-error: true
-        with:
-          report-directory: "./allure-history/ci"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          remote-href: "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ci"
-
-      - name: Notice Allure Report URL
-        # if: inputs.publish-report
-        run: |
-          REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ci"
-          echo "::notice title=Allure Report::${REPORT_URL}"
-          echo "### 🚀 Allure Report Deployed" >> $GITHUB_STEP_SUMMARY
-          echo "[🔗 View Report](${REPORT_URL})" >> $GITHUB_STEP_SUMMARY
+  # --------------------------------------------------------------------------
+  # Publish Allure Report
+  # --------------------------------------------------------------------------
+  allure-report:
+    name: Publish Allure Report
+    needs: [test]
+    if: always()
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+      pull-requests: write
+      checks: write
+    uses: RamonAlcantaraArceo/petstore-test-python/.github/workflows/allure-report.yml@composite-allure
+    with:
+      artifact-pattern: "allure-results"
+      report-subpath: "ci"
+      allure-report-name: "Petstore API Test Report"
+      publish-report: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.publish_report == 'true' }}
+    secrets:
+      GH_PAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-image:
     name: Build Image
