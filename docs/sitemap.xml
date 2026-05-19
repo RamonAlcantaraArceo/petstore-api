@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/</loc>
+         <lastmod>2026-05-19</lastmod>
+    </url>
+    <url>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/api-reference/</loc>
+         <lastmod>2026-05-19</lastmod>
+    </url>
+    <url>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/architecture/</loc>
+         <lastmod>2026-05-19</lastmod>
+    </url>
+    <url>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/changelog/</loc>
+         <lastmod>2026-05-19</lastmod>
+    </url>
+    <url>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/configuration/</loc>
+         <lastmod>2026-05-19</lastmod>
+    </url>
+    <url>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/deployment/</loc>
+         <lastmod>2026-05-19</lastmod>
+    </url>
+    <url>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/getting-started/</loc>
+         <lastmod>2026-05-19</lastmod>
+    </url>
+    <url>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/testing/</loc>
+         <lastmod>2026-05-19</lastmod>
+    </url>
+</urlset>
