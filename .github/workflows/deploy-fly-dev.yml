@@ -1,3 +1,4 @@
+# .github/workflows/deploy-fly-dev.yml
 name: Deploy to Fly.io Dev
 
 on:
@@ -7,6 +8,13 @@ on:
         description: "Image version to deploy (e.g. v1.2.3)"
         default: "latest"
         required: false
+        type: string
+  workflow_call:
+    inputs:
+      version:
+        description: "Image version to deploy (e.g. v1.2.3)"
+        required: false
+        default: "latest"
         type: string
 
 jobs:
@@ -26,16 +34,10 @@ jobs:
       - name: Install flyctl
         uses: superfly/flyctl-actions/setup-flyctl@v1
 
-      - name: Set image tag
+      - name: Resolve image tag
         id: set_tag
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ]; then
-            echo "tag=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-          else
-            echo "tag=latest" >> $GITHUB_OUTPUT
-          fi
+        run: echo "tag=${{ inputs.version || 'latest' }}" >> "$GITHUB_OUTPUT"
 
-      # Deploy using the pre-built GHCR image
       - name: Deploy to Fly.io
         run: |
           flyctl deploy \
@@ -44,7 +46,7 @@ jobs:
             --remote-only \
             --env GIT_SHA=${{ github.sha }} \
             --env BUILD_DATE=${{ steps.vars.outputs.date }} \
-            --env VERSION=${{ github.event.inputs.version }} \
+            --env VERSION=${{ steps.set_tag.outputs.tag }} \
             --debug \
             --verbose
         env:

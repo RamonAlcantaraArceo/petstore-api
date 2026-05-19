@@ -14,6 +14,8 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
+    outputs:
+      git_tag: ${{ steps.release.outputs.git_tag }}
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
       contents: read
@@ -97,3 +99,11 @@ jobs:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+
+  deploy-dev:
+    name: Deploy Dev with published image tag
+    needs: build-and-push-image
+    uses: ./.github/workflows/deploy-fly-dev.yml
+    with:
+      version: ${{ needs.build-and-push-image.outputs.git_tag }}
+    secrets: inherit
