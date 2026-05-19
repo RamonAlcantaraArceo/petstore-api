@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 ### Added
+- Dependabot configuration to automatically update GitHub Actions, Python (pip), and Docker base image dependencies on a weekly schedule.
 - Initial pre-release of Petstore API implementing the OpenAPI 3.0 spec.
 - FastAPI backend with async SQLAlchemy support.
 - In-memory, PostgreSQL, and AWS RDS storage options.
