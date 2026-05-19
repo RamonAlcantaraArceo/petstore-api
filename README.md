@@ -79,6 +79,29 @@ helm upgrade --install petstore-api ./helm/petstore-api \
   -f ./helm/petstore-api/values-dev.yaml
 ```
 
+## Releases & Versioning
+
+- Package version is derived from Git tags via Hatchling VCS (`vX.Y.Z` -> `X.Y.Z`).
+- Docker images published to GHCR are tagged from the same Git tag (`vX.Y.Z`).
+- We keep Python artifact release and GHCR image publishing as separate workflows for clearer logs and independent failure isolation.
+
+### Cut a release
+
+```bash
+git tag vX.Y.Z
+git push origin vX.Y.Z
+```
+
+### Prereleases
+
+```bash
+git tag vX.Y.Z-beta.1
+git push origin vX.Y.Z-beta.1
+
+git tag vX.Y.Z-rc.1
+git push origin vX.Y.Z-rc.1
+```
+
 ## Documentation
 
 📖 [Full documentation](https://ramonalcantaraarceo.github.io/petstore-api/)

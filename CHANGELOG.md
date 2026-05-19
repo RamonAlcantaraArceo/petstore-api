@@ -14,3 +14,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Comprehensive test suite (unit, integration, system, e2e)
   - Performance test scaffolding
   - Pydantic-based configuration
+- Switched project versioning to Hatchling VCS with Git tags as the release source of truth.
+- Added tag-triggered Python artifact release workflow and aligned GHCR publishing to `v*` tags.
