@@ -50,7 +50,6 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=${{ steps.release.outputs.git_tag }}
-            type=raw,value=latest,enable=${{ !contains(steps.release.outputs.git_tag, '-') }}
           labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
             org.opencontainers.image.description=${{ github.event.repository.description }}
