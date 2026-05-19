@@ -63,42 +63,12 @@ jobs:
         uses: RamonAlcantaraArceo/petstore-test-python/.github/actions/setup-env@main
         with:
           python-version: "3.14"
-          install-allure: true
 
       - name: Run tests
         run: |
           uv run pytest tests/unit/ tests/integration/ tests/system/ \
             --cov=app --cov-report=xml \
             -p allure_pytest --alluredir=allure-results/
-
-      - name: Write Allure executor and environment metadata
-        if: always()
-        run: |
-          mkdir -p allure-meta-results allure-results
-
-          cat > allure-meta-results/executor.json <<EOF
-          {
-            "name": "GitHub Actions",
-            "type": "github",
-            "buildName": "${{ github.workflow }} #${{ github.run_number }}",
-            "buildOrder": ${{ github.run_number }},
-            "buildUrl": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          }
-          EOF
-
-          cat > allure-meta-results/environment.properties <<EOF
-          Python Versions=${EXPECTED_PYTHON_VERSIONS}
-          Workflow=${{ github.workflow }}
-          Repository=${{ github.repository }}
-          Branch=${{ github.ref_name }}
-          Commit=${{ github.sha }}
-          Run ID=${{ github.run_id }}
-          Run Number=${{ github.run_number }}
-          Storage Mode=${STORAGE_MODE}
-          EOF
-
-          cp allure-meta-results/executor.json allure-results/executor.json
-          cp allure-meta-results/environment.properties allure-results/environment.properties
 
       - name: Upload API test results and coverage
         uses: RamonAlcantaraArceo/petstore-test-python/.github/actions/upload-results@main
