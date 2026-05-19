@@ -742,7 +742,6 @@ wheels = [
 
 [[package]]
 name = "petstore-api"
-version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "alembic" },
@@ -810,7 +809,7 @@ requires-dist = [
     { name = "testcontainers", extras = ["postgres"], marker = "extra == 'dev'", specifier = ">=4.7.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.30.0" },
 ]
-provides-extras = ["dev", "perf", "docs"]
+provides-extras = ["dev", "docs", "perf"]
 
 [[package]]
 name = "platformdirs"

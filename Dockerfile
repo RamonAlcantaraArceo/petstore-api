@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1
 
-# ═══════════════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
 # Petstore API - Production-Optimized Dockerfile
-# ═══════════════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
 #
 # Multi-stage build with security hardening and minimal footprint
 # Base image: python:3.14-slim
@@ -12,7 +12,7 @@
 # Build: docker build --target runtime -t petstore-api:latest .
 # Run:   docker run -p 8000:8000 -e STORAGE_MODE=memory petstore-api:latest
 #
-# ═══════════════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
 
 # Build arguments
 ARG PYTHON_VERSION=3.14
@@ -21,9 +21,9 @@ ARG BUILD_DATE
 ARG VERSION=0.1.0
 ARG GIT_SHA=unknown
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────────────────
 # Stage 1: Builder - Install dependencies
-# ─────────────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────────────────
 FROM python:${PYTHON_VERSION}-slim AS builder
 
 # Install system build dependencies (gcc needed for some Python packages)
@@ -44,11 +44,12 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 # Copy only dependency files for layer caching
 COPY pyproject.toml ./
+COPY requirements-runtime.txt ./
 RUN touch README.md
 
 # Install production dependencies (no dev extras) with cache mount
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system --no-cache-dir -e .
+    uv pip install --system --no-cache-dir -r requirements-runtime.txt
 
 # Verify critical runtime dependencies are present
 RUN python -c "import sys; \
@@ -66,9 +67,9 @@ RUN find /usr/local/lib/python3.14 -type d -name "tests" -exec rm -rf {} + 2>/de
     find /usr/local/lib/python3.14 -type f -name "*.pyo" -delete && \
     find /usr/local/lib/python3.14 -type d -name "__pycache__" -delete 2>/dev/null || true
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────────────────
 # Stage 2: Runtime - Minimal production image
-# ─────────────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────────────────
 FROM python:${PYTHON_VERSION}-slim AS runtime
 
 # Metadata labels (OCI Image Spec)
