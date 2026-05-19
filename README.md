@@ -74,10 +74,17 @@ uv run pytest tests/unit/ tests/integration/ tests/system/ --cov=app
 # Build Docker image
 docker build --target runtime -t petstore-api:latest .
 
-# Deploy with Helm
-helm upgrade --install petstore-api ./helm/petstore-api \
-  -f ./helm/petstore-api/values-dev.yaml
+# Deploy to Fly.io dev (uses latest GHCR image)
+gh workflow run deploy-fly-dev.yml
+
+# Deploy a specific version to Fly.io dev
+gh workflow run deploy-fly-dev.yml -f version=v1.2.3
+
+# Deploy to Fly.io staging
+gh workflow run "Deploy to Fly.io Staging" -f version=v1.2.3
 ```
+
+See [docs/deployment.md](docs/deployment.md) for full details, including PR review apps.
 
 ## Releases & Versioning
 
