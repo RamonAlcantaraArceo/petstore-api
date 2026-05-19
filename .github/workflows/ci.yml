@@ -93,7 +93,7 @@ jobs:
       id-token: write
       pull-requests: write
       checks: write
-    uses: RamonAlcantaraArceo/petstore-test-python/.github/workflows/allure-report.yml@composite-allure
+    uses: RamonAlcantaraArceo/petstore-test-python/.github/workflows/allure-report.yml@main
     with:
       artifact-pattern: "allure-results"
       report-subpath: "ci"
