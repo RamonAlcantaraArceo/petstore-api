@@ -1,1 +1,1 @@
-{"id":"9315e81e2c89f4975ea6b16e97d2cd91","fullName":"tests.unit.test_user_service#test_delete_user_calls_rollback_on_keyerror","name":"test_delete_user_calls_rollback_on_keyerror","status":"passed","testResultsByEnv":{"default":"3ccbceccb59dc722979b8f37c26aa588"}}
+{"id":"9315e81e2c89f4975ea6b16e97d2cd91","fullName":"tests.unit.test_user_service#test_delete_user_calls_rollback_on_keyerror","name":"test_delete_user_calls_rollback_on_keyerror","status":"passed","testResultsByEnv":{"default":"8f9996ff86a5c3b42150cdbdb199803f"}}
