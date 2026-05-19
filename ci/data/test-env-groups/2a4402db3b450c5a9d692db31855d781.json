@@ -1,1 +1,1 @@
-{"id":"2a4402db3b450c5a9d692db31855d781","fullName":"tests.unit.test_user_service#test_update_user_rolls_back_on_unexpected_error","name":"test_update_user_rolls_back_on_unexpected_error","status":"passed","testResultsByEnv":{"default":"9e48abdd19fd56dd705123c811172f10"}}
+{"id":"2a4402db3b450c5a9d692db31855d781","fullName":"tests.unit.test_user_service#test_update_user_rolls_back_on_unexpected_error","name":"test_update_user_rolls_back_on_unexpected_error","status":"passed","testResultsByEnv":{"default":"5cd0f18745cd6436d48bb96fc27b220d"}}
