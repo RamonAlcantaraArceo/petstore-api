@@ -1,1 +1,1 @@
-{"id":"8cac20fd95a5a3be22d026dfc3038543","fullName":"tests.unit.test_user_service#test_create_user_commits_when_callback_is_configured","name":"test_create_user_commits_when_callback_is_configured","status":"passed","testResultsByEnv":{"default":"da131701dc6e05ff262ab2f75c324319"}}
+{"id":"8cac20fd95a5a3be22d026dfc3038543","fullName":"tests.unit.test_user_service#test_create_user_commits_when_callback_is_configured","name":"test_create_user_commits_when_callback_is_configured","status":"passed","testResultsByEnv":{"default":"9488a4f72f834370fa07d665e38d3475"}}
