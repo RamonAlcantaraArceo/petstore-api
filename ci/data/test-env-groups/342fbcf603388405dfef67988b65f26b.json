@@ -1,1 +1,1 @@
-{"id":"342fbcf603388405dfef67988b65f26b","fullName":"tests.unit.test_user_service#test_login_raises_400_for_invalid_user","name":"test_login_raises_400_for_invalid_user","status":"passed","testResultsByEnv":{"default":"78de7aff0d38ba11dc394af89a77230f"}}
+{"id":"342fbcf603388405dfef67988b65f26b","fullName":"tests.unit.test_user_service#test_login_raises_400_for_invalid_user","name":"test_login_raises_400_for_invalid_user","status":"passed","testResultsByEnv":{"default":"a7b95df2d1e2b22b8a4dec49d6261c07"}}
