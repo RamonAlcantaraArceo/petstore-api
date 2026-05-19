@@ -6,7 +6,7 @@
 - Docker & Docker Compose
 - `uv` package manager
 
-Install `uv`:
+### Install `uv`:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
