@@ -77,7 +77,7 @@ class MemoryPetRepository:
             new_pet = Pet(
                 id=new_id,
                 name=pet.name,
-                photoUrls=pet.photo_urls,
+                photo_urls=pet.photo_urls,
                 category=category,
                 tags=tags,
                 status=pet.status or PetStatus.available,
@@ -107,7 +107,7 @@ class MemoryPetRepository:
             updated = Pet(
                 id=pet.id,
                 name=pet.name,
-                photoUrls=pet.photo_urls,
+                photo_urls=pet.photo_urls,
                 category=category,
                 tags=tags,
                 status=pet.status or PetStatus.available,

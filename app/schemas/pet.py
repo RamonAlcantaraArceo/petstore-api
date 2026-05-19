@@ -56,7 +56,7 @@ class PetBase(BaseModel):
     tags: list[Tag] | None = None
     status: PetStatus | None = PetStatus.available
 
-    model_config = {"populate_by_name": True}
+    model_config = {"populate_by_name": True, "extra": "forbid"}
 
 
 class PetCreate(PetBase):

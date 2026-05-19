@@ -7,13 +7,24 @@ repo_name: petstore-api
 theme:
   name: material
   palette:
-    scheme: slate
-    primary: indigo
-    accent: blue
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
   features:
-    - navigation.tabs
     - navigation.sections
-    - toc.integrate
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+    # - toc.integrate
     - search.suggest
 
 plugins:
@@ -36,6 +47,7 @@ nav:
   - Changelog: changelog.md
 
 markdown_extensions:
+  - codehilite
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid

@@ -181,7 +181,7 @@ class PetService:
         updated = PetUpdate(
             id=pet_id,
             name=name if name is not None else pet.name,
-            photoUrls=pet.photo_urls,
+            photo_urls=pet.photo_urls,
             category=pet.category,
             tags=pet.tags,
             status=PetStatus(status) if status else pet.status,

@@ -13,7 +13,7 @@ from app.services.user import UserService
 router = APIRouter(prefix="/user", tags=["user"])
 
 
-@router.post("", response_model=User, status_code=200)
+@router.post("", response_model=User, status_code=200, operation_id="create_user")
 async def create_user(
     user: UserCreate,
     service: Annotated[UserService, Depends(get_user_service)],
@@ -30,7 +30,12 @@ async def create_user(
     return await service.create_user(user)
 
 
-@router.post("/createWithList", response_model=list[User], status_code=200)
+@router.post(
+    "/createWithList",
+    response_model=list[User],
+    status_code=200,
+    operation_id="create_users_with_list",
+)
 async def create_users_with_list(
     users: list[UserCreate],
     service: Annotated[UserService, Depends(get_user_service)],
@@ -47,7 +52,7 @@ async def create_users_with_list(
     return await service.create_users_with_list(users)
 
 
-@router.get("/login")
+@router.get("/login", operation_id="login_user")
 async def login_user(
     username: Annotated[str, Query(description="The username for login")],
     password: Annotated[str, Query(description="The password for login")],
@@ -67,7 +72,7 @@ async def login_user(
     return {"token": token}
 
 
-@router.get("/logout", status_code=200)
+@router.get("/logout", status_code=200, operation_id="logout_user")
 async def logout_user(
     service: Annotated[UserService, Depends(get_user_service)],
 ) -> dict[str, str]:
@@ -83,7 +88,7 @@ async def logout_user(
     return {"message": "User logged out"}
 
 
-@router.get("/{username}", response_model=User)
+@router.get("/{username}", response_model=User, operation_id="get_user_by_name")
 async def get_user_by_name(
     username: str,
     service: Annotated[UserService, Depends(get_user_service)],
@@ -100,7 +105,7 @@ async def get_user_by_name(
     return await service.get_user(username)
 
 
-@router.put("/{username}", response_model=User)
+@router.put("/{username}", response_model=User, operation_id="update_user")
 async def update_user(
     username: str,
     user: UserUpdate,
@@ -119,7 +124,7 @@ async def update_user(
     return await service.update_user(username, user)
 
 
-@router.delete("/{username}", status_code=200)
+@router.delete("/{username}", status_code=200, operation_id="delete_user")
 async def delete_user(
     username: str,
     service: Annotated[UserService, Depends(get_user_service)],

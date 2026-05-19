@@ -31,7 +31,7 @@ def _model_to_schema(model: PetModel) -> Pet:
     return Pet(
         id=model.id,
         name=name_val,
-        photoUrls=photo_val or [],
+        photo_urls=photo_val or [],
         category=category,
         tags=tags,
         status=PetStatus(status_val) if status_val else PetStatus.available,

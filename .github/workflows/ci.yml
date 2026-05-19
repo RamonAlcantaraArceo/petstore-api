@@ -5,6 +5,7 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,172 +15,92 @@ jobs:
     name: Lint & Format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Setup environment
+        uses: RamonAlcantaraArceo/petstore-test-python/.github/actions/setup-env@main
         with:
           python-version: "3.14"
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
-      - name: Install dependencies
-        run: |
-          uv pip install --system ruff black
-
       - name: ruff check
-        run: ruff check .
+        run: uv run ruff check .
 
       - name: black check
-        run: black --check .
+        run: uv run black --check .
 
   type-check:
     name: Type Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Setup environment
+        uses: RamonAlcantaraArceo/petstore-test-python/.github/actions/setup-env@main
         with:
           python-version: "3.14"
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
-      - name: Install dependencies
-        run: |
-          uv pip install --system -e ".[dev]"
-
       - name: mypy
-        run: mypy app/
+        run: uv run mypy app/
 
   test:
     name: Test
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
+      issues: write
     env:
       STORAGE_MODE: memory
       API_KEY: test-api-key
       EXPECTED_PYTHON_VERSIONS: "3.14"
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Setup environment
+        uses: RamonAlcantaraArceo/petstore-test-python/.github/actions/setup-env@main
         with:
           python-version: "3.14"
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
-      - name: Install dependencies
-        run: |
-          uv pip install --system -e ".[dev]"
-
       - name: Run tests
         run: |
-          pytest tests/unit/ tests/integration/ tests/system/ \
+          uv run pytest tests/unit/ tests/integration/ tests/system/ \
             --cov=app --cov-report=xml \
             -p allure_pytest --alluredir=allure-results/
 
-      - name: Write Allure executor and environment metadata
-        if: always()
-        run: |
-          mkdir -p allure-meta-results allure-results
-
-          cat > allure-meta-results/executor.json <<EOF
-          {
-            "name": "GitHub Actions",
-            "type": "github",
-            "buildName": "${{ github.workflow }} #${{ github.run_number }}",
-            "buildOrder": ${{ github.run_number }},
-            "buildUrl": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          }
-          EOF
-
-          cat > allure-meta-results/environment.properties <<EOF
-          Python Versions=${EXPECTED_PYTHON_VERSIONS}
-          Workflow=${{ github.workflow }}
-          Repository=${{ github.repository }}
-          Branch=${{ github.ref_name }}
-          Commit=${{ github.sha }}
-          Run ID=${{ github.run_id }}
-          Run Number=${{ github.run_number }}
-          Storage Mode=${STORAGE_MODE}
-          EOF
-
-          cp allure-meta-results/executor.json allure-results/executor.json
-          cp allure-meta-results/environment.properties allure-results/environment.properties
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+      - name: Upload API test results and coverage
+        uses: RamonAlcantaraArceo/petstore-test-python/.github/actions/upload-results@main
         with:
-          file: coverage.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-        continue-on-error: true
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          junit-file: junit.xml
+          coverage-file: coverage.xml
+          codecov-flags: api
+          allure-results-path: allure-results/
+          allure-artifact-name: allure-results
 
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./junit.xml
-          report_type: test_results
-          verbose: true
-          fail_ci_if_error: false
-
-      - name: Upload Allure results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-results
-          path: allure-results/
-        continue-on-error: true
-
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v6
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
-
-      - name: Prepare Allure history workspace (CI)
-        if: always()
-        run: |
-          mkdir -p allure-history
-          if [ -d gh-pages ]; then
-            cp -R gh-pages/. allure-history/
-          fi
-          if [ -d allure-history/ci/history ]; then
-            mkdir -p allure-results/history
-            cp -R allure-history/ci/history/. allure-results/history/
-          fi
-
-      - name: Install Allure CLI
-        if: always()
-        run: |
-          ALLURE_VERSION=2.34.1
-          curl -sSL -o allure.tgz "https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz"
-          tar -xzf allure.tgz
-          echo "$PWD/allure-${ALLURE_VERSION}/bin" >> "$GITHUB_PATH"
-
-      - name: Build Allure report with CI-only history
-        if: always()
-        run: |
-          mkdir -p allure-history/ci
-          allure generate allure-results --clean -o allure-history/ci
-
-      - name: Publish CI Allure report
-        uses: peaceiris/actions-gh-pages@v3
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
+  # --------------------------------------------------------------------------
+  # Publish Allure Report
+  # --------------------------------------------------------------------------
+  allure-report:
+    name: Publish Allure Report
+    needs: [test]
+    if: always()
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+      pull-requests: write
+      checks: write
+    uses: RamonAlcantaraArceo/petstore-test-python/.github/workflows/allure-report.yml@main
+    with:
+      artifact-pattern: "allure-results"
+      report-subpath: "ci"
+      allure-report-name: "Petstore API Test Report"
+      publish-report: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.publish_report == 'true' }}
+    secrets:
+      GH_PAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-image:
     name: Build Image
