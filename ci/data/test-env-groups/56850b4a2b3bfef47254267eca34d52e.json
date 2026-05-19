@@ -1,1 +1,1 @@
-{"id":"56850b4a2b3bfef47254267eca34d52e","fullName":"tests.unit.test_user_service#test_delete_user_does_not_call_rollback_on_success","name":"test_delete_user_does_not_call_rollback_on_success","status":"passed","testResultsByEnv":{"default":"42338631296e387d32cef4d3aeeffefd"}}
+{"id":"56850b4a2b3bfef47254267eca34d52e","fullName":"tests.unit.test_user_service#test_delete_user_does_not_call_rollback_on_success","name":"test_delete_user_does_not_call_rollback_on_success","status":"passed","testResultsByEnv":{"default":"2e8150b30080513ac594f5ed1c5a4751"}}
