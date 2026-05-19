@@ -50,6 +50,8 @@ source = "vcs"
 tag-pattern = "v(?P<version>.*)"
 
 [tool.hatch.version.raw-options]
+# Use exact tag versions (instead of next-dev guessing) so package versions
+# match release tags directly during tag-driven releases.
 version_scheme = "no-guess-dev"
 
 [tool.hatch.build.targets.wheel]
