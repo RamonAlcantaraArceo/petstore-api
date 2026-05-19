@@ -497,13 +497,52 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kubernetes-helm" class="md-nav__link">
+  <a href="#flyio" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kubernetes (Helm)
+        Fly.io
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Fly.io">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-review-apps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR / Review Apps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#staging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Staging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -591,13 +630,52 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kubernetes-helm" class="md-nav__link">
+  <a href="#flyio" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kubernetes (Helm)
+        Fly.io
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Fly.io">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-review-apps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR / Review Apps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#staging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Staging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -640,24 +718,64 @@ docker<span class="w"> </span>compose<span class="w"> </span>up
 <span class="c1"># With local PostgreSQL</span>
 docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.postgres.yml<span class="w"> </span>up
 </code></pre></div>
-<h2 id="kubernetes-helm">Kubernetes (Helm)<a class="headerlink" href="#kubernetes-helm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Deploy to dev</span>
-helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>petstore-api<span class="w"> </span>./helm/petstore-api<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-f<span class="w"> </span>./helm/petstore-api/values-dev.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--set<span class="w"> </span>image.tag<span class="o">=</span>&lt;commit-sha&gt;
+<h2 id="flyio">Fly.io<a class="headerlink" href="#flyio" title="Permanent link">&para;</a></h2>
+<p>Fly.io is the primary deployment platform.</p>
+<h3 id="pr-review-apps">PR / Review Apps<a class="headerlink" href="#pr-review-apps" title="Permanent link">&para;</a></h3>
+<p>Review apps are deployed automatically for branches prefixed with <code>fly/</code>. The app is torn down when the PR is closed.</p>
+<ul>
+<li>Trigger: open or push to a <code>fly/*</code> branch PR</li>
+<li>Config: <code>.fly/pr/fly.toml</code></li>
+</ul>
+<h3 id="dev">Dev<a class="headerlink" href="#dev" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Manual deploy (uses latest GHCR image by default)</span>
+gh<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>deploy-fly-dev.yml
 
-<span class="c1"># Deploy to staging</span>
-helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>petstore-api<span class="w"> </span>./helm/petstore-api<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-f<span class="w"> </span>./helm/petstore-api/values-staging.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--set<span class="w"> </span>image.tag<span class="o">=</span>&lt;commit-sha&gt;
+<span class="c1"># Deploy a specific version</span>
+gh<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>deploy-fly-dev.yml<span class="w"> </span>-f<span class="w"> </span><span class="nv">version</span><span class="o">=</span>v1.2.3
 </code></pre></div>
+<ul>
+<li>Config: <code>.fly/dev/fly.toml</code></li>
+<li>Auto-triggered after the GHCR image is published on merge to <code>main</code></li>
+</ul>
+<h3 id="staging">Staging<a class="headerlink" href="#staging" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Deploy a specific version to staging</span>
+gh<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span><span class="s2">&quot;Deploy to Fly.io Staging&quot;</span><span class="w"> </span>-f<span class="w"> </span><span class="nv">version</span><span class="o">=</span>v1.2.3
+</code></pre></div>
+<ul>
+<li>Config: <code>.fly/staging/fly.toml</code></li>
+<li>Manual trigger via <code>workflow_dispatch</code></li>
+</ul>
 <h2 id="cicd">CI/CD<a class="headerlink" href="#cicd" title="Permanent link">&para;</a></h2>
 <p>Deployments are managed via GitHub Actions:</p>
-<ul>
-<li><strong>Dev</strong>: Auto-deploy on merge to <code>main</code></li>
-<li><strong>Staging</strong>: Manual trigger via <code>workflow_dispatch</code></li>
-<li><strong>Production</strong>: Manual trigger with environment approval</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Trigger</th>
+<th>Workflow</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PR review app</td>
+<td>Open/push to <code>fly/*</code> PR</td>
+<td><code>deploy-fly-pr.yml</code></td>
+</tr>
+<tr>
+<td>Dev</td>
+<td>Auto after GHCR image publish (main)</td>
+<td><code>deploy-fly-dev.yml</code></td>
+</tr>
+<tr>
+<td>Staging</td>
+<td>Manual <code>workflow_dispatch</code></td>
+<td><code>deploy-fly-staging.yml</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> AWS (ECS/EKS) and Kubernetes (Helm) deployment is planned but not yet active.</p>
+</blockquote>
 
 
 
