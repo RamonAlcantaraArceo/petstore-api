@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import shutil
 import subprocess
 from pathlib import Path
@@ -188,13 +189,11 @@ def run(
         _remove(report_dir)
 
         extra = f" {pytest_args}" if pytest_args else ""
-        try:
+        with contextlib.suppress(typer.Exit):
             _run(
                 f"uv run pytest -q --alluredir={results_dir}{extra}",
                 f"pytest (run {i + 1})",
             )
-        except typer.Exit:
-            pass
 
         _run(
             f"allure generate --config {config_file} --history-limit {history_limit}",
