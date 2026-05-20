@@ -1,3 +1,4 @@
-name: "Petstore API Test Report"
-historyPath: "./.allure/allure-history.jsonl"
+name: Petstore API Test Report
+output: ./allure-report
+historyPath: ./.allure/allure-history.jsonl
 appendHistory: true
