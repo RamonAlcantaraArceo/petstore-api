@@ -5,10 +5,12 @@ from __future__ import annotations
 import importlib
 import importlib.metadata
 
+import allure
 import pytest
 
 import app
 
+pytestmark = [allure.epic("Application"), allure.feature("Configuration"), allure.severity(allure.severity_level.TRIVIAL)]
 
 def test_version_comes_from_distribution_metadata(monkeypatch: pytest.MonkeyPatch) -> None:
     """Expose package version from installed distribution metadata."""
