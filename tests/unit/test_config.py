@@ -45,7 +45,6 @@ def test_resolved_database_url_prefers_pooler_url_in_cloud_mode() -> None:
         database_url="postgresql://user:pass@direct-host/db",
         database_pooler_url="  postgresql://user:pass@pooler-host/db  ",
     )
-    assert False
 
     assert settings.resolved_database_url == "postgresql://user:pass@pooler-host/db"
 
