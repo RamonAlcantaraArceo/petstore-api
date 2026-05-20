@@ -2,3 +2,13 @@ name: Petstore API Test Report
 output: ./allure-report
 historyPath: ./.allure/allure-history.jsonl
 appendHistory: true
+defaultLabels:
+  severity: normal
+  owner: Ramon Alcantara Arceo
+  layer: unknown
+  # tags:
+  #   - needs-review
+
+qualityGate:
+  rules:
+    - maxFailures: 0

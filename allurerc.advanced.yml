@@ -1,0 +1,285 @@
+name: Petstore API Test Report
+output: ./allure-report
+historyPath: ./.allure/allure-history.jsonl
+appendHistory: true
+defaultLabels:
+  severity: normal
+  owner: unassigned
+  layer: unknown
+  tags:
+    - needs-review
+# name: Allure Report
+# output: ./allure-report
+# # history file configuration is required to populate most charts
+# historyPath: ./history.jsonl
+
+plugins:
+  awesome:
+    options:
+      reportName: Allure Report
+      singleFile: false
+      reportLanguage: en
+      # charts configuration used within the Awesome report
+      charts:
+        - type: currentStatus
+          title: Current status
+          statuses:
+            - passed
+            - failed
+            - broken
+            - skipped
+            - unknown
+          # status used to calculate the central percentage value
+          metric: passed
+
+        - type: testResultSeverities
+          title: Test results by severities
+          levels:
+            - blocker
+            - critical
+            - normal
+            - minor
+            - trivial
+          statuses:
+            - passed
+            - failed
+            - broken
+            - skipped
+            - unknown
+          # whether to show the “No severity” section
+          includeUnset: true
+
+        - type: statusDynamics
+          title: Status dynamics
+          # number of shown runs, including the latest
+          limit: 10
+          statuses:
+            - passed
+            - failed
+            - broken
+            - skipped
+            - unknown
+
+        - type: statusTransitions
+          title: Status transitions
+          # number of shown runs, including the latest
+          limit: 10
+
+        - type: testBaseGrowthDynamics
+          title: Test base growth dynamics
+          statuses:
+            - passed
+            - failed
+            - broken
+            - skipped
+            - unknown
+          # number of shown runs, including the latest
+          limit: 10
+
+        - type: coverageDiff
+          title: Coverage diff map
+
+        - type: successRateDistribution
+          title: Success rate distribution
+
+        - type: problemsDistribution
+          title: Problems distribution by environment
+          # can only be grouped by environments
+          by: environment
+
+        - type: stabilityDistribution
+          title: Stability distribution by features
+          # acceptable stability level in %
+          threshold: 90
+          # skipped test statuses
+          skipStatuses:
+            - skipped
+            - unknown
+          # by what label to group the tests together
+          groupBy: feature
+
+        - type: stabilityDistribution
+          title: Stability distribution by epics
+          # acceptable stability level in %
+          threshold: 90
+          # skipped test statuses
+          skipStatuses:
+            - skipped
+            - unknown
+          # by what label to group the tests together
+          groupBy: epic
+
+        - type: stabilityDistribution
+          title: Stability distribution by stories
+          # acceptable stability level in %
+          threshold: 90
+          # skipped test statuses
+          skipStatuses:
+            - skipped
+            - unknown
+          # by what label to group the tests together
+          groupBy: story
+
+        - type: durations
+          title: Durations histogram
+          # whether to group the tests by layer (other labels not supported)
+          groupBy: none
+
+        - type: durations
+          title: Durations by layer histogram
+          # whether to group the tests by layer (other labels not supported)
+          groupBy: layer
+
+        - type: durationDynamics
+          title: Durations dynamics
+          # number of shown runs, including the latest
+          limit: 10
+
+        - type: statusAgePyramid
+          title: Status age pyramid
+          # number of shown runs, including the latest
+          limit: 10
+
+        - type: testingPyramid
+          title: Testing pyramid
+          # layers of the pyramid, bottom to top
+          layers:
+            - unit
+            - system
+            - integration
+            - e2e
+
+  dashboard:
+    options:
+      reportName: Dashboard
+      singleFile: false
+      reportLanguage: en
+      # charts configuration used in a Dashboard report
+      layout:
+        - type: currentStatus
+          title: Current status
+          statuses:
+            - passed
+            - failed
+            - broken
+            - skipped
+            - unknown
+          # status used to calculate the central percentage value
+          metric: passed
+
+        - type: testResultSeverities
+          title: Test results by severities
+          levels:
+            - blocker
+            - critical
+            - normal
+            - minor
+            - trivial
+          statuses:
+            - passed
+            - failed
+            - broken
+            - skipped
+            - unknown
+          # whether to show the “No severity” section
+          includeUnset: true
+
+        - type: statusDynamics
+          title: Status dynamics
+          # number of shown runs, including the latest
+          limit: 10
+          statuses:
+            - passed
+            - failed
+            - broken
+            - skipped
+            - unknown
+
+        - type: statusTransitions
+          title: Status transitions
+          # number of shown runs, including the latest
+          limit: 10
+
+        - type: testBaseGrowthDynamics
+          title: Test base growth dynamics
+          statuses:
+            - passed
+            - failed
+            - broken
+            - skipped
+            - unknown
+          # number of shown runs, including the latest
+          limit: 10
+
+        - type: coverageDiff
+          title: Coverage diff map
+
+        - type: successRateDistribution
+          title: Success rate distribution
+
+        - type: problemsDistribution
+          title: Problems distribution by environment
+          # can only be grouped by environments
+          by: environment
+
+        - type: stabilityDistribution
+          title: Stability distribution by features
+          # acceptable stability level in %
+          threshold: 90
+          # skipped test statuses
+          skipStatuses:
+            - skipped
+            - unknown
+          # by what label to group the tests together
+          groupBy: feature
+
+        - type: stabilityDistribution
+          title: Stability distribution by epics
+          # acceptable stability level in %
+          threshold: 90
+          # skipped test statuses
+          skipStatuses:
+            - skipped
+            - unknown
+          # by what label to group the tests together
+          groupBy: epic
+
+        - type: stabilityDistribution
+          title: Stability distribution by stories
+          # acceptable stability level in %
+          threshold: 90
+          # skipped test statuses
+          skipStatuses:
+            - skipped
+            - unknown
+          # by what label to group the tests together
+          groupBy: story
+
+        - type: durations
+          title: Durations histogram
+          # whether to group the tests by layer (other labels not supported)
+          groupBy: none
+
+        - type: durations
+          title: Durations by layer histogram
+          # whether to group the tests by layer (other labels not supported)
+          groupBy: layer
+
+        - type: durationDynamics
+          title: Durations dynamics
+          # number of shown runs, including the latest
+          limit: 10
+
+        - type: statusAgePyramid
+          title: Status age pyramid
+          # number of shown runs, including the latest
+          limit: 10
+
+        - type: testingPyramid
+          title: Testing pyramid
+          # layers of the pyramid, bottom to top
+          layers:
+            - unit
+            - system
+            - integration
+            - e2e
