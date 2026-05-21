@@ -2,8 +2,15 @@
 
 from __future__ import annotations
 
+import allure
 import pytest
 from httpx import AsyncClient
+
+
+@pytest.fixture(autouse=True)
+def add_allure_layer() -> None:
+    """Add a default 'e2e' layer label to all tests in this module."""
+    allure.dynamic.label("layer", "e2e")
 
 
 @pytest.mark.asyncio

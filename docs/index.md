@@ -1,6 +1,6 @@
 # Petstore API
 
-A **production-ready Python backend API** implementing the [Petstore OpenAPI 3.0 spec](https://petstore3.swagger.io/api/v3/openapi.json), built with FastAPI and deployable to AWS EKS.
+A **production-ready Python backend API** implementing the [Petstore OpenAPI 3.0 spec](https://petstore3.swagger.io/api/v3/openapi.json), built with FastAPI and deployable to the cloud.
 
 ## Quick Start
 

@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/RamonAlcantaraArceo/petstore-api/actions/workflows/ci.yml/badge.svg)](https://github.com/RamonAlcantaraArceo/petstore-api/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![codecov](https://codecov.io/gh/RamonAlcantaraArceo/petstore-api/graph/badge.svg?token=YFYLQ5MLEO)](https://codecov.io/gh/RamonAlcantaraArceo/petstore-api)
 
 A **production-ready Python backend API** implementing the [Petstore OpenAPI 3.0 spec](https://petstore3.swagger.io/api/v3/openapi.json), built with FastAPI.
 
@@ -30,7 +31,10 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Clone and set up the project
 git clone https://github.com/RamonAlcantaraArceo/petstore-api.git
 cd petstore-api
-uv sync --python 3.14 --extra dev
+
+# Create a virtual environment and install dependencies
+uv venv --seed --python 3.14 .venv  # Create a virtual environment
+uv sync --all-extras  # Install all dependencies
 
 # Run the dev server
 uv run uvicorn app.main:app --reload
@@ -58,12 +62,6 @@ uv run <command>  # e.g., uv run pytest, uv run ruff check .
 ## Running Tests
 
 ```bash
-# Install uv if needed
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Use Python 3.14 and install dev dependencies
-uv sync --python 3.14 --extra dev
-
 # Run test suites
 uv run pytest tests/unit/ tests/integration/ tests/system/ --cov=app
 ```

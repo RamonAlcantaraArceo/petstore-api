@@ -28,8 +28,6 @@ htmlcov/
 
 # pytest
 .pytest_cache/
-allure-results/
-allure-report/
 junit.xml
 
 # mypy
@@ -56,3 +54,8 @@ node_modules/
 
 # Prompts
 prompts/
+
+# Allure
+.allure/
+allure-results/
+allure-report/

@@ -2,9 +2,12 @@
 
 from urllib.parse import parse_qs, urlparse
 
+import allure
 import pytest
 
 from app.config import Settings, get_settings
+
+pytestmark = [allure.epic("Application"), allure.feature("Configuration")]
 
 
 def _make_settings(**overrides: object) -> Settings:
@@ -33,6 +36,8 @@ def _make_settings(**overrides: object) -> Settings:
     return Settings(**base)  # type: ignore[arg-type]
 
 
+@allure.story("Database URL Resolution")
+@allure.severity(allure.severity_level.NORMAL)
 def test_resolved_database_url_prefers_pooler_url_in_cloud_mode() -> None:
     """Use pooler URL when cloud mode and pooler URL is provided."""
     settings = _make_settings(
@@ -44,6 +49,8 @@ def test_resolved_database_url_prefers_pooler_url_in_cloud_mode() -> None:
     assert settings.resolved_database_url == "postgresql://user:pass@pooler-host/db"
 
 
+@allure.story("Database URL Resolution")
+@allure.severity(allure.severity_level.NORMAL)
 def test_resolved_database_url_falls_back_to_database_url_when_pooler_blank() -> None:
     """Use database_url when cloud mode has blank pooler URL."""
     settings = _make_settings(
@@ -55,6 +62,8 @@ def test_resolved_database_url_falls_back_to_database_url_when_pooler_blank() ->
     assert settings.resolved_database_url == "postgresql://user:pass@host/db"
 
 
+@allure.story("Database URL Resolution")
+@allure.severity(allure.severity_level.NORMAL)
 def test_resolved_database_url_ignores_pooler_outside_cloud_mode() -> None:
     """Ignore pooler URL when storage mode is not cloud."""
     settings = _make_settings(
@@ -87,6 +96,8 @@ def test_resolved_database_url_ignores_pooler_outside_cloud_mode() -> None:
         ),
     ],
 )
+@allure.story("Async Database URL")
+@allure.severity(allure.severity_level.NORMAL)
 def test_async_database_url_scheme_conversion(raw_url: str, expected: str) -> None:
     """Convert supported PostgreSQL URL schemes to asyncpg dialect."""
     settings = _make_settings(storage_mode="local", database_url=raw_url)
@@ -94,6 +105,8 @@ def test_async_database_url_scheme_conversion(raw_url: str, expected: str) -> No
     assert settings.async_database_url == expected
 
 
+@allure.story("Async Database URL")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_async_database_url_cloud_adds_ssl_when_missing() -> None:
     """Append ssl=require in cloud mode when no SSL query is present."""
     settings = _make_settings(
@@ -104,6 +117,8 @@ def test_async_database_url_cloud_adds_ssl_when_missing() -> None:
     assert settings.async_database_url == "postgresql+asyncpg://user:pass@host/db?ssl=require"
 
 
+@allure.story("Async Database URL")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_async_database_url_cloud_preserves_existing_query_and_adds_ssl() -> None:
     """Keep existing query params and add ssl=require in cloud mode."""
     settings = _make_settings(
@@ -126,6 +141,8 @@ def test_async_database_url_cloud_preserves_existing_query_and_adds_ssl() -> Non
         "postgresql://user:pass@host/db?sslmode=require",
     ],
 )
+@allure.story("Async Database URL")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_async_database_url_cloud_does_not_override_existing_ssl(url_with_ssl: str) -> None:
     """Do not modify SSL query settings when already explicitly present."""
     settings = _make_settings(storage_mode="cloud", database_url=url_with_ssl)
@@ -138,6 +155,8 @@ def test_async_database_url_cloud_does_not_override_existing_ssl(url_with_ssl: s
     assert not ("ssl" in query and "sslmode" in query and query["ssl"] == ["require"])
 
 
+@allure.story("Database Connect Args")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_async_database_connect_args_returns_ssl_require_in_cloud_mode() -> None:
     """Return SSL connect args in cloud mode."""
     settings = _make_settings(storage_mode="cloud")
@@ -145,6 +164,8 @@ def test_async_database_connect_args_returns_ssl_require_in_cloud_mode() -> None
     assert settings.async_database_connect_args == {"ssl": "require"}
 
 
+@allure.story("Database Connect Args")
+@allure.severity(allure.severity_level.NORMAL)
 def test_async_database_connect_args_returns_empty_dict_outside_cloud_mode() -> None:
     """Return empty connect args outside cloud mode."""
     settings = _make_settings(storage_mode="memory")
@@ -152,6 +173,8 @@ def test_async_database_connect_args_returns_empty_dict_outside_cloud_mode() -> 
     assert settings.async_database_connect_args == {}
 
 
+@allure.story("Settings Initialization")
+@allure.severity(allure.severity_level.NORMAL)
 def test_get_settings_reads_environment_values(monkeypatch: pytest.MonkeyPatch) -> None:
     """Build Settings from environment variables via get_settings()."""
     monkeypatch.setenv("STORAGE_MODE", "cloud")
