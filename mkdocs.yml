@@ -38,13 +38,16 @@ plugins:
 
 nav:
   - Home: index.md
+  - Badges: badges.md
   - Getting Started: getting-started.md
   - Architecture: architecture.md
   - Configuration: configuration.md
-  - API Reference: api-reference.md
   - Testing Guide: testing.md
   - Deployment: deployment.md
   - Changelog: changelog.md
+  - Allure:
+    - Allure History: allure-history-design.md
+    - Allure Quick Reference: allure-quick-reference.md
 
 markdown_extensions:
   - codehilite
