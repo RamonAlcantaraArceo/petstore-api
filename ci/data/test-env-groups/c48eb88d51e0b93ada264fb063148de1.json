@@ -1,1 +1,1 @@
-{"id":"c48eb88d51e0b93ada264fb063148de1","fullName":"tests.unit.test_user_service#test_update_user_delegates_to_repo","name":"test_update_user_delegates_to_repo","status":"passed","testResultsByEnv":{"default":"26f35bc125fde3c3138286a11e28916c"}}
+{"id":"c48eb88d51e0b93ada264fb063148de1","fullName":"tests.unit.test_user_service#test_update_user_delegates_to_repo","name":"test_update_user_delegates_to_repo","status":"passed","testResultsByEnv":{"default":"76f73f702a717d9143d44c957ac05291"}}
