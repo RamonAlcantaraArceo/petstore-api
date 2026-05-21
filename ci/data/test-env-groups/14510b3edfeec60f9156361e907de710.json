@@ -1,1 +1,1 @@
-{"id":"14510b3edfeec60f9156361e907de710","fullName":"tests.unit.test_order_service#test_place_order_successful_creation","name":"test_place_order_successful_creation","status":"passed","testResultsByEnv":{"default":"f5899c41c54d2c1773a3b3768b3f899b"}}
+{"id":"14510b3edfeec60f9156361e907de710","fullName":"tests.unit.test_order_service#test_place_order_successful_creation","name":"test_place_order_successful_creation","status":"passed","testResultsByEnv":{"default":"60f88af0dd474109e59fd3351c078256"}}
