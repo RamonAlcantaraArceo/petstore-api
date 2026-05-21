@@ -10,13 +10,9 @@
       
       
       
-        <link rel="canonical" href="https://ramonalcantaraarceo.github.io/petstore-api/api-reference/">
+        <link rel="canonical" href="https://ramonalcantaraarceo.github.io/petstore-api/badges/">
       
       
-        <link rel="prev" href="../configuration/">
-      
-      
-        <link rel="next" href="../testing/">
       
       
         
@@ -27,7 +23,7 @@
     
     
       
-        <title>API Reference - Petstore API</title>
+        <title>Badges and Graphs - Petstore API</title>
       
     
     
@@ -80,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#api-reference" class="md-skip">
+        <a href="#badges-and-graphs" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              API Reference
+              Badges and Graphs
             
           </span>
         </div>
@@ -369,37 +365,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../api-reference.md" class="md-nav__link">
         
   
   
@@ -415,98 +384,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#interactive-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Interactive Documentation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#endpoints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Endpoints
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Endpoints">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pet" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pet
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#store" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Store
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#user" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        User
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#health" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -619,10 +496,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#interactive-documentation" class="md-nav__link">
+  <a href="#grid" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Interactive Documentation
+        Grid
       
     </span>
   </a>
@@ -630,63 +507,24 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#endpoints" class="md-nav__link">
+  <a href="#icicle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Endpoints
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Endpoints">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pet" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pet
+        Icicle
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#store" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#sunburst" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Store
+        Sunburst
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#user" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        User
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#health" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -710,164 +548,19 @@
   
 
 
-<h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
-<p>The Petstore API implements the <a href="https://petstore3.swagger.io/api/v3/openapi.json">Petstore OpenAPI 3.0 spec</a>.</p>
-<h2 id="interactive-documentation">Interactive Documentation<a class="headerlink" href="#interactive-documentation" title="Permanent link">&para;</a></h2>
-<p>When running locally, visit:</p>
-<ul>
-<li><strong>Swagger UI</strong>: <a href="http://localhost:8000/docs">http://localhost:8000/docs</a></li>
-<li><strong>ReDoc</strong>: <a href="http://localhost:8000/redoc">http://localhost:8000/redoc</a></li>
-<li><strong>OpenAPI JSON</strong>: <a href="http://localhost:8000/openapi.json">http://localhost:8000/openapi.json</a></li>
-</ul>
-<h2 id="endpoints">Endpoints<a class="headerlink" href="#endpoints" title="Permanent link">&para;</a></h2>
-<h3 id="pet">Pet<a class="headerlink" href="#pet" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Path</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>POST</td>
-<td><code>/api/v1/pet</code></td>
-<td>Add a new pet</td>
-</tr>
-<tr>
-<td>PUT</td>
-<td><code>/api/v1/pet</code></td>
-<td>Update an existing pet</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/pet/findByStatus</code></td>
-<td>Find pets by status</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/pet/findByTags</code></td>
-<td>Find pets by tags</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/pet/{petId}</code></td>
-<td>Get pet by ID</td>
-</tr>
-<tr>
-<td>POST</td>
-<td><code>/api/v1/pet/{petId}</code></td>
-<td>Update pet with form data</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td><code>/api/v1/pet/{petId}</code></td>
-<td>Delete a pet</td>
-</tr>
-<tr>
-<td>POST</td>
-<td><code>/api/v1/pet/{petId}/uploadFile</code></td>
-<td>Upload pet image</td>
-</tr>
-</tbody>
-</table>
-<h3 id="store">Store<a class="headerlink" href="#store" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Path</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/store/inventory</code></td>
-<td>Returns pet inventories by status</td>
-</tr>
-<tr>
-<td>POST</td>
-<td><code>/api/v1/store/order</code></td>
-<td>Place an order</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/store/order/{orderId}</code></td>
-<td>Find order by ID</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td><code>/api/v1/store/order/{orderId}</code></td>
-<td>Delete order</td>
-</tr>
-</tbody>
-</table>
-<h3 id="user">User<a class="headerlink" href="#user" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Path</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>POST</td>
-<td><code>/api/v1/user</code></td>
-<td>Create user</td>
-</tr>
-<tr>
-<td>POST</td>
-<td><code>/api/v1/user/createWithList</code></td>
-<td>Create users with list</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/user/login</code></td>
-<td>Log user in</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/user/logout</code></td>
-<td>Log user out</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/user/{username}</code></td>
-<td>Get user by username</td>
-</tr>
-<tr>
-<td>PUT</td>
-<td><code>/api/v1/user/{username}</code></td>
-<td>Update user</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td><code>/api/v1/user/{username}</code></td>
-<td>Delete user</td>
-</tr>
-</tbody>
-</table>
-<h3 id="health">Health<a class="headerlink" href="#health" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Path</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>GET</td>
-<td><code>/health</code></td>
-<td>Service health check (unauthenticated)</td>
-</tr>
-</tbody>
-</table>
+<h1 id="badges-and-graphs">Badges and Graphs<a class="headerlink" href="#badges-and-graphs" title="Permanent link">&para;</a></h1>
+<p><a href="https://github.com/RamonAlcantaraArceo/petstore-api/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/RamonAlcantaraArceo/petstore-api/actions/workflows/ci.yml/badge.svg" /></a>
+<a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
+<a href="https://codecov.io/gh/RamonAlcantaraArceo/petstore-api"><img alt="codecov" src="https://codecov.io/gh/RamonAlcantaraArceo/petstore-api/graph/badge.svg?token=YFYLQ5MLEO" /></a>
+<a href="https://github.com/RamonAlcantaraArceo/petstore-api/actions/workflows/push-ghcr.yml"><img alt="Create and publish a Docker image to GitHub Container Registry" src="https://github.com/RamonAlcantaraArceo/petstore-api/actions/workflows/push-ghcr.yml/badge.svg" /></a>
+<a href="https://github.com/RamonAlcantaraArceo/petstore-api/actions/workflows/deploy-fly-dev.yml"><img alt="Deploy to Fly.io Dev" src="https://github.com/RamonAlcantaraArceo/petstore-api/actions/workflows/deploy-fly-dev.yml/badge.svg" /></a>
+<a href="https://github.com/RamonAlcantaraArceo/petstore-api/actions/workflows/deploy-fly-staging.yml"><img alt="Deploy to Fly.io Staging" src="https://github.com/RamonAlcantaraArceo/petstore-api/actions/workflows/deploy-fly-staging.yml/badge.svg" /></a></p>
+<h2 id="grid">Grid<a class="headerlink" href="#grid" title="Permanent link">&para;</a></h2>
+<p><a href="https://codecov.io/gh/RamonAlcantaraArceo/petstore-api"><img alt="Grid" src="https://codecov.io/gh/RamonAlcantaraArceo/petstore-api/graphs/tree.svg?token=YFYLQ5MLEO" /></a></p>
+<h2 id="icicle">Icicle<a class="headerlink" href="#icicle" title="Permanent link">&para;</a></h2>
+<p><a href="https://codecov.io/gh/RamonAlcantaraArceo/petstore-api"><img alt="Icicle" src="https://codecov.io/gh/RamonAlcantaraArceo/petstore-api/graphs/icicle.svg?token=YFYLQ5MLEO" /></a></p>
+<h2 id="sunburst">Sunburst<a class="headerlink" href="#sunburst" title="Permanent link">&para;</a></h2>
+<p><a href="https://codecov.io/gh/RamonAlcantaraArceo/petstore-api"><img alt="Sunburst" src="https://codecov.io/gh/RamonAlcantaraArceo/petstore-api/graphs/sunburst.svg?token=YFYLQ5MLEO" /></a></p>
 
 
 

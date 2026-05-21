@@ -2,34 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-05-21</lastmod>
     </url>
     <url>
-         <loc>https://ramonalcantaraarceo.github.io/petstore-api/api-reference/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/allure-history-design/</loc>
+         <lastmod>2026-05-21</lastmod>
+    </url>
+    <url>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/allure-quick-reference/</loc>
+         <lastmod>2026-05-21</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/architecture/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-05-21</lastmod>
+    </url>
+    <url>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/badges/</loc>
+         <lastmod>2026-05-21</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/changelog/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-05-21</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/configuration/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-05-21</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/deployment/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-05-21</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/getting-started/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-05-21</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/testing/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-05-21</lastmod>
     </url>
 </urlset>

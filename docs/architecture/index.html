@@ -452,7 +452,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api-reference/" class="md-nav__link">
+      <a href="../api-reference.md" class="md-nav__link">
         
   
   
@@ -635,8 +635,8 @@
 <h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
 <h2 id="service-layers">Service Layers<a class="headerlink" href="#service-layers" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TD
-    Client --&gt; APIGateway["API Gateway / ALB"]
-    APIGateway --&gt; FastAPI["FastAPI App"]
+    Client --&gt; FlyEdge["Fly.io Edge Proxy"]
+    FlyEdge --&gt; FastAPI["FastAPI App"]
     FastAPI --&gt; CorrelationMiddleware["Correlation ID Middleware"]
     CorrelationMiddleware --&gt; AuthMiddleware["Auth Middleware (X-API-Key)"]
     AuthMiddleware --&gt; Router["API Router /api/v1/"]
@@ -648,15 +648,15 @@
     UserService --&gt; UserRepo["UserRepository (Protocol)"]
     PetRepo --&gt; MemoryImpl["Memory Implementation"]
     PetRepo --&gt; PostgresImpl["PostgreSQL Implementation"]
-    PostgresImpl --&gt; RDS["AWS RDS PostgreSQL"]</code></pre>
+    PostgresImpl --&gt; LocalPostgres["Local PostgreSQL (Dev/Test)"]
+    PostgresImpl --&gt; Supabase["Supabase PostgreSQL (Staging)"]</code></pre>
 <h2 id="cicd-flow">CI/CD Flow<a class="headerlink" href="#cicd-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph LR
     PR["Pull Request"] --&gt; CI["CI: lint + type-check + test"]
-    CI --&gt; Build["Build Docker Image"]
-    Build --&gt; ECR["Push to AWS ECR"]
-    ECR --&gt; Dev["Deploy to Dev EKS"]
-    Dev --&gt; Staging["Deploy to Staging (manual)"]
-    Staging --&gt; Prod["Deploy to Prod (manual + approval)"]</code></pre>
+    ReleaseTag["Release Tag (v*)"] --&gt; GHCR["Build and Publish Image to GHCR"]
+    GHCR --&gt; Dev["Deploy to Fly.io Dev (auto)"]
+    GHCR --&gt; Staging["Deploy to Fly.io Staging (manual)"]
+    Staging --&gt; SupabaseDb["Supabase PostgreSQL (staging data)"]</code></pre>
 <h2 id="component-overview">Component Overview<a class="headerlink" href="#component-overview" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -696,6 +696,16 @@
 <td>ORM</td>
 <td>SQLAlchemy 2.x async</td>
 <td>Database mapping</td>
+</tr>
+<tr>
+<td>Data Stores</td>
+<td>Local PostgreSQL, Supabase PostgreSQL</td>
+<td>Environment-specific persistence backends</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>GitHub Actions, GHCR, Fly.io</td>
+<td>Build, publish, and runtime hosting pipeline</td>
 </tr>
 <tr>
 <td>Config</td>
