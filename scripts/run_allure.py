@@ -36,6 +36,7 @@ RUNS_DEFAULT = 3
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
+
 def _run(command: str, description: str, *, capture: bool = False) -> str:
     """Execute a shell command, streaming output unless *capture* is True."""
     console.print(f"\n  [bold cyan]▶[/bold cyan] [dim]{description}[/dim]")
@@ -113,6 +114,7 @@ def _summary_table(
 
 # ── CLI command ───────────────────────────────────────────────────────────────
 
+
 @app.command()
 def run(
     runs: Annotated[
@@ -149,7 +151,9 @@ def run(
     ] = True,
     clean: Annotated[
         bool,
-        typer.Option("--clean/--no-clean", help="Wipe existing results/report/history before starting."),
+        typer.Option(
+            "--clean/--no-clean", help="Wipe existing results/report/history before starting."
+        ),
     ] = True,
 ) -> None:
     """Run [bold cyan]pytest[/bold cyan] + [bold cyan]allure generate[/bold cyan] in a loop to build trend history."""
@@ -169,9 +173,18 @@ def run(
 
     console.print()
     console.print(Rule("[bold]Configuration[/bold]", style="dim"))
-    console.print(_summary_table(
-        runs, results_dir, report_dir, config_file, history_file, history_limit, pytest_args, open_report,
-    ))
+    console.print(
+        _summary_table(
+            runs,
+            results_dir,
+            report_dir,
+            config_file,
+            history_file,
+            history_limit,
+            pytest_args,
+            open_report,
+        )
+    )
 
     # ── Clean ─────────────────────────────────────────────────────────────────
     if clean:

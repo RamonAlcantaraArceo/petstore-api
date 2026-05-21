@@ -12,6 +12,7 @@ def add_allure_layer() -> None:
     """Add a default 'e2e' layer label to all tests in this module."""
     allure.dynamic.label("layer", "e2e")
 
+
 @pytest.mark.asyncio
 @pytest.mark.remote_only
 @pytest.mark.backend_agnostic
