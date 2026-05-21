@@ -28,7 +28,9 @@ graph LR
     PR["Pull Request"] --> CI["CI: lint + type-check + test"]
     ReleaseTag["Release Tag (v*)"] --> GHCR["Build and Publish Image to GHCR"]
     GHCR --> Dev["Deploy to Fly.io Dev (auto)"]
-    GHCR --> Staging["Deploy to Fly.io Staging (manual)"]
+    Dev --> DevTests["Run external dev test automation"]
+    DevTests --> Hold["90-minute review hold"]
+    Hold --> Staging["Deploy to Fly.io Staging (queued)"]
     Staging --> SupabaseDb["Supabase PostgreSQL (staging data)"]
 ```
 

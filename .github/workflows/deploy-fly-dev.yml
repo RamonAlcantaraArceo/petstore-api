@@ -17,11 +17,26 @@ on:
         default: "latest"
         type: string
 
+permissions:
+  contents: read
+  actions: write
+
+env:
+  DEV_TEST_REPOSITORY: ${{ vars.DEV_TEST_REPOSITORY || '' }}
+  DEV_TEST_WORKFLOW: ${{ vars.DEV_TEST_WORKFLOW || '' }}
+  DEV_TEST_REF: ${{ vars.DEV_TEST_REF || 'main' }}
+  DEV_TEST_WORKFLOW_INPUTS_JSON: ${{ vars.DEV_TEST_WORKFLOW_INPUTS_JSON || '{}' }}
+  DEV_TEST_TIMEOUT_MINUTES: ${{ vars.DEV_TEST_TIMEOUT_MINUTES || '120' }}
+  DEV_TEST_POLL_INTERVAL_SECONDS: ${{ vars.DEV_TEST_POLL_INTERVAL_SECONDS || '30' }}
+  STAGING_DEPLOY_DELAY_MINUTES: ${{ vars.STAGING_DEPLOY_DELAY_MINUTES || '90' }}
+
 jobs:
   deploy:
     name: Deploy to Fly.io
     runs-on: ubuntu-latest
     environment: dev
+    outputs:
+      deployed_tag: ${{ steps.set_tag.outputs.tag }}
 
     steps:
       - name: Checkout repository
@@ -51,3 +66,171 @@ jobs:
             --verbose
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  run-post-deploy-tests:
+    name: Run post-deploy dev tests
+    needs: deploy
+    runs-on: ubuntu-latest
+    outputs:
+      test_run_url: ${{ steps.await_test_run.outputs.test_run_url }}
+
+    steps:
+      - name: Validate test automation configuration
+        env:
+          TEST_AUTOMATION_TOKEN: ${{ secrets.TEST_AUTOMATION_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${DEV_TEST_REPOSITORY}" ]; then
+            echo "Missing repository variable DEV_TEST_REPOSITORY (expected owner/repo)." >&2
+            exit 1
+          fi
+          if [ -z "${DEV_TEST_WORKFLOW}" ]; then
+            echo "Missing repository variable DEV_TEST_WORKFLOW (expected workflow filename or ID)." >&2
+            exit 1
+          fi
+          if [ -z "${TEST_AUTOMATION_TOKEN}" ]; then
+            echo "Missing secret TEST_AUTOMATION_TOKEN (token with Actions access to the test repository)." >&2
+            exit 1
+          fi
+
+      - name: Trigger and await dev tests
+        id: await_test_run
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.TEST_AUTOMATION_TOKEN }}
+          script: |
+            const testRepository = process.env.DEV_TEST_REPOSITORY;
+            const workflowId = process.env.DEV_TEST_WORKFLOW;
+            const ref = process.env.DEV_TEST_REF || "main";
+            const timeoutMinutes = Number.parseInt(process.env.DEV_TEST_TIMEOUT_MINUTES || "120", 10);
+            const pollIntervalSeconds = Number.parseInt(process.env.DEV_TEST_POLL_INTERVAL_SECONDS || "30", 10);
+            const rawInputs = process.env.DEV_TEST_WORKFLOW_INPUTS_JSON || "{}";
+
+            if (!testRepository.includes("/")) {
+              core.setFailed(`DEV_TEST_REPOSITORY must be in 'owner/repo' format. Got: ${testRepository}`);
+              return;
+            }
+            if (!workflowId) {
+              core.setFailed("DEV_TEST_WORKFLOW must be configured.");
+              return;
+            }
+            if (!Number.isFinite(timeoutMinutes) || timeoutMinutes <= 0) {
+              core.setFailed(`DEV_TEST_TIMEOUT_MINUTES must be a positive integer. Got: ${process.env.DEV_TEST_TIMEOUT_MINUTES}`);
+              return;
+            }
+            if (!Number.isFinite(pollIntervalSeconds) || pollIntervalSeconds <= 0) {
+              core.setFailed(`DEV_TEST_POLL_INTERVAL_SECONDS must be a positive integer. Got: ${process.env.DEV_TEST_POLL_INTERVAL_SECONDS}`);
+              return;
+            }
+
+            let workflowInputs = {};
+            try {
+              workflowInputs = JSON.parse(rawInputs);
+            } catch (error) {
+              core.setFailed(`DEV_TEST_WORKFLOW_INPUTS_JSON must be valid JSON. ${error.message}`);
+              return;
+            }
+            if (typeof workflowInputs !== "object" || workflowInputs === null || Array.isArray(workflowInputs)) {
+              core.setFailed("DEV_TEST_WORKFLOW_INPUTS_JSON must deserialize into a JSON object.");
+              return;
+            }
+            workflowInputs = Object.fromEntries(
+              Object.entries(workflowInputs).map(([key, value]) => [key, String(value)]),
+            );
+
+            const [owner, repo] = testRepository.split("/");
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+            const dispatchedAt = Date.now();
+            const dispatchedAtIso = new Date(dispatchedAt).toISOString();
+
+            core.info(`Dispatching workflow '${workflowId}' in ${owner}/${repo} on ref '${ref}'.`);
+            await github.rest.actions.createWorkflowDispatch({
+              owner,
+              repo,
+              workflow_id: workflowId,
+              ref,
+              inputs: workflowInputs,
+            });
+
+            const timeoutAt = Date.now() + timeoutMinutes * 60 * 1000;
+            let trackedRunId = null;
+
+            while (Date.now() <= timeoutAt) {
+              if (!trackedRunId) {
+                const runsResponse = await github.rest.actions.listWorkflowRuns({
+                  owner,
+                  repo,
+                  workflow_id: workflowId,
+                  event: "workflow_dispatch",
+                  branch: ref,
+                  per_page: 50,
+                });
+
+                const candidate = runsResponse.data.workflow_runs
+                  .filter((run) => run.created_at >= dispatchedAtIso)
+                  .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0];
+
+                if (candidate) {
+                  trackedRunId = candidate.id;
+                  core.info(`Tracking test workflow run #${candidate.run_number} (${candidate.id}).`);
+                }
+              }
+
+              if (trackedRunId) {
+                const runResponse = await github.rest.actions.getWorkflowRun({
+                  owner,
+                  repo,
+                  run_id: trackedRunId,
+                });
+
+                const run = runResponse.data;
+                core.info(`Run status: ${run.status}, conclusion: ${run.conclusion ?? "pending"}`);
+
+                if (run.status === "completed") {
+                  core.setOutput("test_run_url", run.html_url);
+                  core.setOutput("test_run_id", String(run.id));
+
+                  if (run.conclusion !== "success") {
+                    core.setFailed(`Post-deploy dev tests failed with conclusion '${run.conclusion}'. ${run.html_url}`);
+                  }
+                  return;
+                }
+              }
+
+              await sleep(pollIntervalSeconds * 1000);
+            }
+
+            core.setFailed(`Timed out waiting for test workflow '${workflowId}' in ${owner}/${repo} after ${timeoutMinutes} minutes.`);
+
+  queue-staging-deploy:
+    name: Queue staging deploy after hold window
+    needs:
+      - deploy
+      - run-post-deploy-tests
+    if: ${{ needs.run-post-deploy-tests.result == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Hold for staging review window
+        run: |
+          set -euo pipefail
+          if ! [[ "${STAGING_DEPLOY_DELAY_MINUTES}" =~ ^[0-9]+$ ]]; then
+            echo "STAGING_DEPLOY_DELAY_MINUTES must be a non-negative integer. Got: ${STAGING_DEPLOY_DELAY_MINUTES}" >&2
+            exit 1
+          fi
+
+          echo "Staging deploy is queued."
+          echo "You have ${STAGING_DEPLOY_DELAY_MINUTES} minute(s) to review dev test results and cancel this workflow run."
+          sleep "$((STAGING_DEPLOY_DELAY_MINUTES * 60))"
+
+      - name: Trigger staging deployment workflow
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${{ github.repository }}/actions/workflows/deploy-fly-staging.yml/dispatches" \
+            -f ref="${{ github.ref_name }}" \
+            -f inputs[version]="${{ needs.deploy.outputs.deployed_tag }}"

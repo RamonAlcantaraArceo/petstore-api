@@ -78,9 +78,12 @@ gh workflow run deploy-fly-dev.yml
 # Deploy a specific version to Fly.io dev
 gh workflow run deploy-fly-dev.yml -f version=v1.2.3
 
-# Deploy to Fly.io staging
+# Deploy to Fly.io staging (manual override)
 gh workflow run "Deploy to Fly.io Staging" -f version=v1.2.3
 ```
+
+By default, release deployments now flow as:
+`publish GHCR image -> deploy dev -> run external dev tests -> 90-minute review hold -> auto-dispatch staging deploy`.
 
 See [docs/deployment.md](docs/deployment.md) for full details, including PR review apps.
 

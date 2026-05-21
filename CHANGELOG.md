@@ -8,11 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 - Dependabot configuration to automatically update GitHub Actions, Python (pip), and Docker base image dependencies on a weekly schedule.
 - Added automatic dev deployment after GHCR image publication by invoking the reusable Fly.io dev workflow with the same image tag.
+- Added post-dev deployment test gating in `deploy-fly-dev.yml` by dispatching and waiting for automation in an external test repository.
+- Added a configurable staging hold window (default: 90 minutes) before `deploy-fly-staging.yml` is auto-dispatched.
 
 ### Changed
 - Updated the release workflow to mark GitHub releases as pre-releases when the tag contains a hyphen (for example, `v0.1.1-rc1`).
 - Updated the GHCR image workflow to expose the produced tag as a job output.
 - Updated the deployment documentation to reflect the new automatic dev deployment and the ability to specify versions for manual deployments.
+- Updated the release deployment flow to: GHCR publish -> dev deploy -> external dev tests -> delayed staging queue.
 
 ## [0.1.1-rc1] - 2026-05-19
 ### Added
