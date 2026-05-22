@@ -1,7 +1,10 @@
 UV ?= uv
-PYTEST_SUITES ?= tests/unit/ tests/integration/ tests/system/
+PYTEST_SUITES ?= tests
+ALLURE_HISTORY_REPORT = allure-history.jsonl
 ALLURE_RESULTS_DIR ?= allure-results
 ALLURE_REPORT_DIR ?= allure-report
+E2E_COVERAGE_DIR ?= .e2e-coverage
+FAIL_UNDER ?= 80
 
 .PHONY: merge-cleanup check lint type-check test reports clean-reports
 
@@ -19,16 +22,19 @@ type-check:
 test:
 	# Preserve pytest's exit code while still generating reports for failed runs.
 	@set +e; \
-	$(UV) run --extra dev pytest $(PYTEST_SUITES) --cov=app --cov-report=xml -p allure_pytest --alluredir=$(ALLURE_RESULTS_DIR); \
+	$(UV) run --extra dev pytest $(PYTEST_SUITES) --cov-fail-under=0 --cov=app --cov-report=xml --alluredir=$(ALLURE_RESULTS_DIR) --clean-alluredir; \
 	status=$$?; \
 	$(MAKE) reports; \
+	reports_status=$$?; \
+	if [ $$status -eq 0 ] && [ $$reports_status -ne 0 ]; then status=$$reports_status; fi; \
 	exit $$status
 
 reports:
 	# Keep report-generation best-effort so merge-cleanup still returns test status.
-	-$(UV) run --extra dev coverage xml --fail-under=0 -o coverage.xml
-	-$(UV) run --extra dev coverage html --fail-under=0 -d htmlcov
-	-allure generate $(ALLURE_RESULTS_DIR) --clean -o $(ALLURE_REPORT_DIR)
+	@-allure generate $(ALLURE_RESULTS_DIR) -o $(ALLURE_REPORT_DIR)
+	@-$(UV) run --extra dev coverage combine --append $(E2E_COVERAGE_DIR)/.coverage.service*
+	@-$(UV) run --extra dev coverage xml --fail-under=0 -o coverage.xml
+	@$(UV) run --extra dev coverage html --fail-under=$(FAIL_UNDER) -d htmlcov
 
 clean-reports:
-	rm -rf $(ALLURE_RESULTS_DIR) $(ALLURE_REPORT_DIR) htmlcov coverage.xml junit.xml
+	rm -rf $(ALLURE_RESULTS_DIR) $(ALLURE_REPORT_DIR) $(E2E_COVERAGE_DIR) .allure/$(ALLURE_HISTORY_REPORT) htmlcov coverage.xml junit.xml

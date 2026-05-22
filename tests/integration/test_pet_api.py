@@ -98,7 +98,9 @@ async def test_delete_pet(app_client: AsyncClient, api_key_header: dict[str, str
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("status", ["available", "pending", "sold"])
-async def test_find_by_status(app_client: AsyncClient, api_key_header: dict[str, str], status: str) -> None:
+async def test_find_by_status(
+    app_client: AsyncClient, api_key_header: dict[str, str], status: str
+) -> None:
     """GET /api/v1/pet/findByStatus returns matching pets."""
     await app_client.post(
         "/api/v1/pet",
