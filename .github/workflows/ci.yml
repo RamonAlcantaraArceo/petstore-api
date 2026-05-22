@@ -66,6 +66,8 @@ jobs:
           python-version: "3.14"
 
       - name: Run tests
+        id: run-tests
+        continue-on-error: true
         run: |
           uv run pytest tests/ \
             --cov=app --cov-fail-under=0 --cov-report=xml \
@@ -75,6 +77,7 @@ jobs:
           uv run coverage report --fail-under=80
 
       - name: Upload API test results and coverage
+        if: always()
         uses: RamonAlcantaraArceo/petstore-test-python/.github/actions/upload-results@main
         with:
           codecov-token: ${{ secrets.CODECOV_TOKEN }}
@@ -83,6 +86,10 @@ jobs:
           codecov-flags: api
           allure-results-path: allure-results/
           allure-artifact-name: allure-results
+
+      - name: Fail if tests failed
+        if: steps.run-tests.outcome == 'failure'
+        run: exit 1
 
   # --------------------------------------------------------------------------
   # Publish Allure Report

@@ -16,11 +16,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 - Dependabot configuration to automatically update GitHub Actions, Python (pip), and Docker base image dependencies on a weekly schedule.
 - Added automatic dev deployment after GHCR image publication by invoking the reusable Fly.io dev workflow with the same image tag.
+- Added a `Makefile` with a `merge-cleanup` target to run linting, type checks, tests, and coverage/Allure report generation in one reproducible command.
 
 ### Changed
 - Updated the release workflow to mark GitHub releases as pre-releases when the tag contains a hyphen (for example, `v0.1.1-rc1`).
 - Updated the GHCR image workflow to expose the produced tag as a job output.
 - Updated the deployment documentation to reflect the new automatic dev deployment and the ability to specify versions for manual deployments.
+- Updated CI test job flow so report upload runs even when tests fail, then explicitly fails the job afterward when test execution failed.
 
 ## [0.1.1-rc1] - 2026-05-19
 ### Added
