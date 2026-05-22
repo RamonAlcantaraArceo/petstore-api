@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.1-rc4] - 2026-05-22
+
+### Added
+- `GET /api/v1/pet/findByStatus`: `status` query parameter is now optional;
+  omitting it returns all pets regardless of status. Pagination via `skip`
+  (offset, default 0) and `limit` (max 100, default unlimited) query
+  parameters is now supported.
+
+## [0.1.1-rc2 and 0.1.1-rc3]
 ### Added
 - Dependabot configuration to automatically update GitHub Actions, Python (pip), and Docker base image dependencies on a weekly schedule.
 - Added automatic dev deployment after GHCR image publication by invoking the reusable Fly.io dev workflow with the same image tag.
