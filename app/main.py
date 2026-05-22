@@ -96,6 +96,12 @@ def create_app() -> FastAPI:
 
             init_db(settings)
             await ensure_db_schema()
+
+        if settings.seed_dataset:
+            from app.fixtures.loader import seed_from_settings
+
+            await seed_from_settings(settings)
+
         yield
         # (Optional) Add shutdown logic here if needed
 

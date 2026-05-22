@@ -21,6 +21,8 @@ class Settings(BaseSettings):
         db_pool_size: SQLAlchemy connection pool size.
         db_max_overflow: SQLAlchemy max overflow connections.
         db_pool_timeout: SQLAlchemy pool timeout in seconds.
+        seed_dataset: Optional fixture dataset name to load at startup
+            (e.g. "basic", "mixed_v1", "mixed_v2"). Empty string disables seeding.
 
     Example:
         >>> settings = Settings(api_key="test-key")
@@ -38,6 +40,7 @@ class Settings(BaseSettings):
     db_pool_size: int = 5
     db_max_overflow: int = 10
     db_pool_timeout: int = 30
+    seed_dataset: str = ""
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

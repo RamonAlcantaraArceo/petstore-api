@@ -37,6 +37,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.1.1-rc2 and 0.1.1-rc3]
 ### Added
+- Fixture datasets for seeding the service with golden data at startup.
+  - Four named datasets: `empty` (clean slate), `basic` (pets + users), `mixed_v1`
+    (all pet statuses, orders, users with contact details), and `mixed_v2` (exotic
+    animals, richer categories/tags, three orders, four users including admin and guest).
+  - New `SEED_DATASET` environment variable (added to `Settings`) that controls which
+    dataset is loaded automatically when the service starts — works for both in-memory
+    and PostgreSQL storage modes.
+  - `app/fixtures/` package exposing `FixtureDataset`, `get_dataset`, and
+    `seed_from_settings` as the public API.
+  - `scripts/load_fixtures.py` rewritten as a full CLI tool with `--dataset` and
+    `--list` flags; supports all storage modes and can be driven by `SEED_DATASET`.
+  - Comprehensive unit tests covering dataset invariants and the async loader logic
+    (`tests/unit/test_fixture_datasets.py`, `tests/unit/test_fixture_loader.py`).
 - Dependabot configuration to automatically update GitHub Actions, Python (pip), and Docker base image dependencies on a weekly schedule.
 - Added automatic dev deployment after GHCR image publication by invoking the reusable Fly.io dev workflow with the same image tag.
 - Added a `Makefile` with a `merge-cleanup` target to run linting, type checks, tests, and coverage/Allure report generation in one reproducible command.
