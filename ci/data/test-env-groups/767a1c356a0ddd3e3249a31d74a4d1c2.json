@@ -1,1 +1,1 @@
-{"id":"767a1c356a0ddd3e3249a31d74a4d1c2","fullName":"tests.integration.test_store_api#test_get_inventory","name":"test_get_inventory","status":"passed","testResultsByEnv":{"default":"983a77c6dcae798b7147b9428ab58ae1"}}
+{"id":"767a1c356a0ddd3e3249a31d74a4d1c2","fullName":"tests.integration.test_store_api#test_get_inventory","name":"test_get_inventory","status":"passed","testResultsByEnv":{"default":"81ceb4ed5e5b070d012c78aed4ef5dce"}}

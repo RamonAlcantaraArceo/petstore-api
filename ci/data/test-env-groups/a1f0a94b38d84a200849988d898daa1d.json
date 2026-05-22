@@ -1,1 +1,1 @@
-{"id":"a1f0a94b38d84a200849988d898daa1d","fullName":"tests.unit.test_user_service#test_create_users_with_list_returns_created_users","name":"test_create_users_with_list_returns_created_users","status":"passed","testResultsByEnv":{"default":"216866845889c19693c22a8f4a2fc617"}}
+{"id":"a1f0a94b38d84a200849988d898daa1d","fullName":"tests.unit.test_user_service#test_create_users_with_list_returns_created_users","name":"test_create_users_with_list_returns_created_users","status":"passed","testResultsByEnv":{"default":"1682cd45c0989d949a2f39945af4ddbe"}}
