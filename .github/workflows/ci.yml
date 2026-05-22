@@ -54,7 +54,6 @@ jobs:
     env:
       STORAGE_MODE: memory
       API_KEY: test-api-key
-      E2E_MODE: docker
       EXPECTED_PYTHON_VERSIONS: "3.14"
     steps:
       - name: Checkout code

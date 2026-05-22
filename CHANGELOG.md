@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- E2E tests now spawn the API as a host-side `uvicorn` subprocess instrumented
+  with `coverage run --parallel-mode` instead of booting a Docker Compose stack.
+  The previous design produced root-owned coverage files in the bind-mounted
+  `.e2e-coverage/` directory, causing `coverage combine` to fail with
+  `PermissionError` in CI. The subprocess approach removes the Docker
+  dependency from E2E execution and ensures coverage files are owned by the
+  same user that runs the merge step.
+
+### Removed
+- `tests/e2e/docker-compose.e2e.yml` and the `pytest-docker` dev dependency are
+  no longer needed and have been removed.
+
 ## [0.1.1-rc4] - 2026-05-22
 
 ### Added
