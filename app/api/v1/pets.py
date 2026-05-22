@@ -52,7 +52,7 @@ async def find_pets_by_status(
     status: Annotated[
         PetStatus | None,
         Query(description="Status value to filter by. Omit to return all pets."),
-    ] = PetStatus.available,
+    ] = None,
     skip: Annotated[int, Query(ge=0, description="Number of records to skip")] = 0,
     limit: Annotated[
         int | None,
