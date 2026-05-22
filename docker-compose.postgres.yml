@@ -29,7 +29,7 @@ services:
     environment:
       STORAGE_MODE: local
       DATABASE_URL: postgresql+asyncpg://petstore:${POSTGRES_PASSWORD:-localpassword}@postgres:5432/petstore
-      API_KEY: ${API_KEY:-dev-api-key}
+      API_KEY: ${API_KEY:-test-api-key}
       APP_ENV: dev
       LOG_LEVEL: INFO
     security_opt:
