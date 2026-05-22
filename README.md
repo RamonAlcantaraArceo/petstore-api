@@ -64,6 +64,9 @@ uv run <command>  # e.g., uv run pytest, uv run ruff check .
 ```bash
 # Run test suites
 uv run pytest tests/unit/ tests/integration/ tests/system/ --cov=app
+
+# Reproduce CI merge cleanup locally (lint + type-check + tests + reports)
+make merge-cleanup
 ```
 
 ## Building and Deploying
