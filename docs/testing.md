@@ -35,3 +35,9 @@ pytest tests/unit/ tests/integration/ tests/system/ \
   --cov=app --cov-report=html
 open htmlcov/index.html
 ```
+
+## E2E Docker Coverage
+
+For the fixture-scoped Docker E2E stack and merged service coverage workflow, see:
+
+- [E2E Docker Coverage Guide](e2e-docker-coverage.md)
