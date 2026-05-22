@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+- Added `make merge-cleanup` to run linting, type checks, tests, and report
+  generation in one local command.
+
 ### Changed
 - E2E tests now spawn the API as a host-side `uvicorn` subprocess instrumented
   with `coverage run --parallel-mode` instead of booting a Docker Compose stack.
@@ -14,6 +18,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   `PermissionError` in CI. The subprocess approach removes the Docker
   dependency from E2E execution and ensures coverage files are owned by the
   same user that runs the merge step.
+- CI now always uploads test/coverage artifacts even when test execution fails,
+  then explicitly fails the workflow after upload when tests fail.
+- Coverage enforcement now runs after combining API and E2E coverage data, so
+  the final merged report is the value checked against the 80% threshold.
 
 ### Removed
 - `tests/e2e/docker-compose.e2e.yml` and the `pytest-docker` dev dependency are
