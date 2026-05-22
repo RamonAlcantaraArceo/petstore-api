@@ -155,7 +155,6 @@ async def test_apply_dataset_creates_orders_with_resolved_pet_ids() -> None:
             OrderFixture(pet_index=0, quantity=2, status=OrderStatus.delivered),
         ],
     )
-    assigned_pet = _make_pet(42, "Goldie")
     assigned_pet = Pet(id=42, name="Goldie", photoUrls=[], status=PetStatus.sold)
     pet_service, order_service, user_service = _make_services(
         pet_side_effects=[assigned_pet],
