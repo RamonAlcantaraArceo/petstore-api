@@ -97,19 +97,20 @@ async def test_delete_pet(app_client: AsyncClient, api_key_header: dict[str, str
 
 
 @pytest.mark.asyncio
-async def test_find_by_status(app_client: AsyncClient, api_key_header: dict[str, str]) -> None:
+@pytest.mark.parametrize("status", ["available", "pending", "sold"])
+async def test_find_by_status(app_client: AsyncClient, api_key_header: dict[str, str], status: str) -> None:
     """GET /api/v1/pet/findByStatus returns matching pets."""
     await app_client.post(
         "/api/v1/pet",
-        json={"name": "Available Pet", "photoUrls": [], "status": "available"},
+        json={"name": f"{status.capitalize()} Pet", "photoUrls": [], "status": status},
         headers=api_key_header,
     )
     response = await app_client.get(
-        "/api/v1/pet/findByStatus?status=available", headers=api_key_header
+        f"/api/v1/pet/findByStatus?status={status}", headers=api_key_header
     )
     assert response.status_code == 200
     pets = response.json()
-    assert all(p["status"] == "available" for p in pets)
+    assert all(p["status"] == status for p in pets)
 
 
 @pytest.mark.asyncio
