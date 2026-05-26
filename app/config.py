@@ -41,6 +41,7 @@ class Settings(BaseSettings):
     db_max_overflow: int = 10
     db_pool_timeout: int = 30
     seed_dataset: str = ""
+    e2e_base_url: str = ""
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

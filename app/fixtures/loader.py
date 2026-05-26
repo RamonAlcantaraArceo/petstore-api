@@ -58,7 +58,7 @@ async def apply_dataset(
         )
         pet_id = pet.id or 0
         created_pet_ids.append(pet_id)
-        log.info("seeded pet", pet_id=pet_id, name=pet.name, status=pet.status)
+        log.debug("seeded pet", pet_id=pet_id, name=pet.name, status=pet.status)
 
     for order_fixture in dataset.orders:
         if order_fixture.pet_index >= len(created_pet_ids):
@@ -76,7 +76,7 @@ async def apply_dataset(
                 complete=order_fixture.complete,
             )
         )
-        log.info(
+        log.debug(
             "seeded order",
             order_id=order.id,
             pet_id=pet_id,
@@ -95,7 +95,7 @@ async def apply_dataset(
                 password=user_fixture.password,
             )
         )
-        log.info("seeded user", user_id=user.id, username=user.username)
+        log.debug("seeded user", user_id=user.id, username=user.username)
 
 
 async def seed_from_settings(settings: object) -> None:
