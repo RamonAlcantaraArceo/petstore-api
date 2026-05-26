@@ -22,14 +22,14 @@ services:
       target: runtime
       args:
         BUILD_DATE: ${BUILD_DATE:-2026-04-09T00:00:00Z}
-        VERSION: ${VERSION:-0.1.0}
-        GIT_SHA: ${GIT_SHA:-dev}
+        VERSION: ${VERSION:-docker-compose-local}
+        GIT_SHA: ${GIT_SHA:-docker-compose-local}
     ports:
       - "8000:8000"
     environment:
       STORAGE_MODE: local
       DATABASE_URL: postgresql+asyncpg://petstore:${POSTGRES_PASSWORD:-localpassword}@postgres:5432/petstore
-      API_KEY: ${API_KEY:-dev-api-key}
+      API_KEY: ${API_KEY:-test-api-key}
       APP_ENV: dev
       LOG_LEVEL: INFO
     security_opt:

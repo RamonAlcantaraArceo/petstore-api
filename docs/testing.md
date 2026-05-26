@@ -35,3 +35,10 @@ pytest tests/unit/ tests/integration/ tests/system/ \
   --cov=app --cov-report=html
 open htmlcov/index.html
 ```
+
+## E2E Coverage
+
+For how E2E tests spawn a local service under coverage instrumentation and
+how the resulting data is merged into the combined report, see:
+
+- [E2E Coverage Guide](e2e-coverage.md)

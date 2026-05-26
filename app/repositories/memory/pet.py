@@ -30,16 +30,30 @@ class MemoryPetRepository:
         """
         return self._store.get(pet_id)
 
-    async def list_by_status(self, status: str) -> list[Pet]:
-        """List pets filtered by status.
+    async def list_by_status(
+        self,
+        status: str | None,
+        skip: int = 0,
+        limit: int | None = None,
+    ) -> list[Pet]:
+        """List pets filtered by status with optional pagination.
 
         Args:
-            status: Availability status to filter by.
+            status: Availability status to filter by. When ``None``, all pets
+                are returned regardless of status.
+            skip: Number of records to skip (offset). Defaults to 0.
+            limit: Maximum number of records to return. When ``None``, all
+                matching records are returned.
 
         Returns:
             List of matching pets.
         """
-        return [p for p in self._store.values() if p.status and p.status.value == status]
+        if status is None:
+            pets = list(self._store.values())
+        else:
+            pets = [p for p in self._store.values() if p.status and p.status.value == status]
+        paginated = pets[skip:] if limit is None else pets[skip : skip + limit]
+        return paginated
 
     async def list_by_tags(self, tags: list[str]) -> list[Pet]:
         """List pets filtered by tag names.

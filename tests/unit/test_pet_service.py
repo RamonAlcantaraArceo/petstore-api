@@ -140,8 +140,37 @@ async def test_find_by_status_delegates_to_repo() -> None:
     service = make_service(repo)
     result = await service.find_by_status("available")
 
-    repo.list_by_status.assert_called_once_with("available")
+    repo.list_by_status.assert_called_once_with("available", skip=0, limit=None)
     assert len(result) == 1
+
+
+@pytest.mark.asyncio
+async def test_find_by_status_none_returns_all() -> None:
+    """find_by_status with None status delegates to repo with None status."""
+    repo = AsyncMock()
+    pets = [
+        Pet(id=1, name="Fido", photoUrls=[], status=PetStatus.available),
+        Pet(id=2, name="Rex", photoUrls=[], status=PetStatus.sold),
+    ]
+    repo.list_by_status.return_value = pets
+
+    service = make_service(repo)
+    result = await service.find_by_status(None)
+
+    repo.list_by_status.assert_called_once_with(None, skip=0, limit=None)
+    assert len(result) == 2
+
+
+@pytest.mark.asyncio
+async def test_find_by_status_with_pagination() -> None:
+    """find_by_status passes skip and limit to the repository."""
+    repo = AsyncMock()
+    repo.list_by_status.return_value = []
+
+    service = make_service(repo)
+    await service.find_by_status("available", skip=5, limit=10)
+
+    repo.list_by_status.assert_called_once_with("available", skip=5, limit=10)
 
 
 @pytest.mark.asyncio
