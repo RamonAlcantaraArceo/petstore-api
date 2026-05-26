@@ -10,13 +10,9 @@
       
       
       
-        <link rel="canonical" href="https://ramonalcantaraarceo.github.io/petstore-api/testing/">
+        <link rel="canonical" href="https://ramonalcantaraarceo.github.io/petstore-api/e2e-coverage/">
       
       
-        <link rel="prev" href="../configuration/">
-      
-      
-        <link rel="next" href="../deployment/">
       
       
         
@@ -27,7 +23,7 @@
     
     
       
-        <title>Testing Guide - Petstore API</title>
+        <title>E2E Coverage Guide - Petstore API</title>
       
     
     
@@ -80,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#testing-guide" class="md-skip">
+        <a href="#e2e-coverage-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Testing Guide
+              E2E Coverage Guide
             
           </span>
         </div>
@@ -396,37 +392,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Testing Guide
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
         
   
   
@@ -442,70 +411,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#test-layers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Layers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Running Tests
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#coverage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Coverage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#e2e-coverage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        E2E Coverage
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -706,10 +611,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#test-layers" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Test Layers
+        How It Works
       
     </span>
   </a>
@@ -717,10 +622,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
+  <a href="#why-not-docker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Running Tests
+        Why Not Docker?
       
     </span>
   </a>
@@ -728,21 +633,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#coverage" class="md-nav__link">
+  <a href="#local-execution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Coverage
+        Local Execution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Local Execution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-e2e-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. E2E only
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#e2e-coverage" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#2-full-suite-with-merged-coverage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        E2E Coverage
+        2. Full suite with merged coverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-running-e2e-against-a-remote-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Running E2E against a remote environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -769,68 +713,107 @@
   
 
 
-<h1 id="testing-guide">Testing Guide<a class="headerlink" href="#testing-guide" title="Permanent link">&para;</a></h1>
-<h2 id="test-layers">Test Layers<a class="headerlink" href="#test-layers" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Directory</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Unit</td>
-<td><code>tests/unit/</code></td>
-<td>Service layer, mocked repositories</td>
-</tr>
-<tr>
-<td>Integration</td>
-<td><code>tests/integration/</code></td>
-<td>HTTP-level, in-memory or testcontainers</td>
-</tr>
-<tr>
-<td>System</td>
-<td><code>tests/system/</code></td>
-<td>Multi-step workflow tests</td>
-</tr>
-<tr>
-<td>E2E</td>
-<td><code>tests/e2e/</code></td>
-<td>Live service smoke tests</td>
-</tr>
-<tr>
-<td>Performance</td>
-<td><code>performance/</code></td>
-<td>pytest-benchmark (manual only)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Unit tests only</span>
-pytest<span class="w"> </span>tests/unit/
-
-<span class="c1"># Integration tests</span>
-pytest<span class="w"> </span>tests/integration/
-
-<span class="c1"># All CI tests with coverage</span>
-pytest<span class="w"> </span>tests/unit/<span class="w"> </span>tests/integration/<span class="w"> </span>tests/system/<span class="w"> </span>--cov<span class="o">=</span>app
-
-<span class="c1"># E2E against staging (requires E2E_BASE_URL)</span>
-<span class="nv">E2E_BASE_URL</span><span class="o">=</span>https://staging.example.com<span class="w"> </span>pytest<span class="w"> </span>tests/e2e/
-</code></pre></div>
-<h2 id="coverage">Coverage<a class="headerlink" href="#coverage" title="Permanent link">&para;</a></h2>
-<p>Minimum 80% coverage is enforced in CI. Generate a report:</p>
-<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests/unit/<span class="w"> </span>tests/integration/<span class="w"> </span>tests/system/<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--cov<span class="o">=</span>app<span class="w"> </span>--cov-report<span class="o">=</span>html
-open<span class="w"> </span>htmlcov/index.html
-</code></pre></div>
-<h2 id="e2e-coverage">E2E Coverage<a class="headerlink" href="#e2e-coverage" title="Permanent link">&para;</a></h2>
-<p>For how E2E tests spawn a local service under coverage instrumentation and
-how the resulting data is merged into the combined report, see:</p>
+<h1 id="e2e-coverage-guide">E2E Coverage Guide<a class="headerlink" href="#e2e-coverage-guide" title="Permanent link">&para;</a></h1>
+<p>This guide explains how E2E tests run a real service in a separate process and
+how their coverage data is merged with the in-process pytest coverage.</p>
+<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<p>E2E tests need a live service to hit over HTTP. To still contribute to overall
+coverage, the service is launched under <code>coverage run --parallel-mode</code> so that
+each instrumented process writes its own <code>.coverage.*</code> file. After pytest
+finishes, those files are merged into the combined coverage database.</p>
+<p>Implementation:</p>
 <ul>
-<li><a href="../e2e-coverage/">E2E Coverage Guide</a></li>
+<li><code>tests/e2e/conftest.py</code></li>
+<li>Picks a free localhost port and exports <code>E2E_BASE_URL=http://127.0.0.1:&lt;port&gt;</code>
+    and <code>API_KEY=test-api-key</code> at module import time so <code>tests/conftest.py</code>
+    does not skip <code>remote_only</code> tests during collection.</li>
+<li>Spawns a subprocess equivalent to:
+    <div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>coverage<span class="w"> </span>run<span class="w"> </span>--parallel-mode<span class="w"> </span>--save-signal<span class="o">=</span>USR1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--rcfile<span class="w"> </span>pyproject.toml<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-m<span class="w"> </span>uvicorn<span class="w"> </span>app.main:app<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span>&lt;port&gt;
+</code></pre></div>
+    with <code>COVERAGE_FILE=.e2e-coverage/.coverage.service</code> so each forked
+    worker writes uniquely-named files under <code>.e2e-coverage/</code>.</li>
+<li>When Docker is available a <code>testcontainers</code> Postgres instance is started
+    and the service runs with <code>STORAGE_MODE=local</code> against it (so the
+    postgres repositories contribute to coverage). When Docker is not
+    available the fixture falls back to <code>STORAGE_MODE=memory</code> so developers
+    without Docker can still run E2E tests locally.</li>
+<li>To force memory mode explicitly: <code>E2E_STORAGE_MODE=memory pytest tests/e2e</code>.</li>
+<li>Waits for <code>/health</code> to return <code>status=ok</code> before yielding.</li>
+<li>On teardown, sends <code>SIGUSR1</code> (the coverage <code>--save-signal</code>) so the
+    instrumented process writes <code>.coverage.service.*</code> files, then sends
+    <code>SIGTERM</code> for a clean uvicorn shutdown. (<code>atexit</code> handlers do not run
+    when uvicorn's signal handler exits the process, so an explicit save
+    signal is required.)</li>
+<li>
+<p>If <code>TEST_BASE_URL</code> or <code>E2E_BASE_URL</code> is already set by the caller, the
+    fixture does <strong>not</strong> spawn anything and tests run against that target.</p>
+</li>
+<li>
+<p><code>pyproject.toml</code></p>
+</li>
+<li>
+<p><code>[tool.coverage.paths]</code> maps in-process and subprocess paths to the same
+    canonical source tree so <code>coverage combine</code> reconciles them.</p>
+</li>
+<li>
+<p><code>.github/workflows/ci.yml</code></p>
+</li>
+<li>Runs the full suite (including <code>tests/e2e/</code>) with the local subprocess
+    fixture, then appends the service coverage files and rebuilds <code>coverage.xml</code>.</li>
+</ul>
+<h2 id="why-not-docker">Why Not Docker?<a class="headerlink" href="#why-not-docker" title="Permanent link">&para;</a></h2>
+<p>The previous design used <code>docker compose</code> to run the API container with a
+bind-mounted <code>.e2e-coverage/</code> volume. In CI the container ran as root and
+produced root-owned coverage files; <code>coverage combine</code> (running as the
+unprivileged GitHub Actions <code>runner</code> user) then failed with <code>PermissionError</code>
+when trying to delete the merged source files. Running the service as a
+host-side subprocess of the test runner sidesteps the entire UID-mapping
+problem and removes the Docker dependency from CI.</p>
+<h2 id="local-execution">Local Execution<a class="headerlink" href="#local-execution" title="Permanent link">&para;</a></h2>
+<h3 id="1-e2e-only">1. E2E only<a class="headerlink" href="#1-e2e-only" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>pytest<span class="w"> </span>tests/e2e<span class="w"> </span>-q
+</code></pre></div>
+<p>Expected:</p>
+<ul>
+<li>A local <code>uvicorn</code> subprocess is started under <code>coverage</code> and torn down by the
+  fixture.</li>
+<li>All E2E tests pass.</li>
+<li><code>.e2e-coverage/.coverage.service.*</code> files are produced.</li>
+</ul>
+<h3 id="2-full-suite-with-merged-coverage">2. Full suite with merged coverage<a class="headerlink" href="#2-full-suite-with-merged-coverage" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-rf<span class="w"> </span>.e2e-coverage<span class="w"> </span>.coverage<span class="w"> </span>coverage.xml
+
+uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>pytest<span class="w"> </span>tests<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cov<span class="o">=</span>app<span class="w"> </span>--cov-fail-under<span class="o">=</span><span class="m">0</span><span class="w"> </span>--cov-report<span class="o">=</span>xml<span class="w"> </span>-q
+
+uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>coverage<span class="w"> </span>combine<span class="w"> </span>--append<span class="w"> </span>.e2e-coverage/.coverage.service*
+uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>coverage<span class="w"> </span>xml<span class="w"> </span>-o<span class="w"> </span>coverage.xml
+uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>coverage<span class="w"> </span>html<span class="w"> </span>-d<span class="w"> </span>htmlcov-combined
+uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>coverage<span class="w"> </span>report<span class="w"> </span>--fail-under<span class="o">=</span><span class="m">80</span>
+</code></pre></div>
+<p>Expected:</p>
+<ul>
+<li>All tests pass.</li>
+<li>Coverage is merged from in-process pytest runs <strong>and</strong> the E2E subprocess.</li>
+<li>Final combined coverage passes the threshold.</li>
+</ul>
+<h3 id="3-running-e2e-against-a-remote-environment">3. Running E2E against a remote environment<a class="headerlink" href="#3-running-e2e-against-a-remote-environment" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nv">TEST_BASE_URL</span><span class="o">=</span>https://staging.example.com<span class="w"> </span><span class="nv">API_KEY</span><span class="o">=</span>...<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>pytest<span class="w"> </span>tests/e2e<span class="w"> </span>-q
+</code></pre></div>
+<p>The fixture detects the external URL and does not spawn a local service.</p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>401 in E2E tests:</strong> Ensure <code>API_KEY=test-api-key</code> matches the value used by
+  the spawned service (default in fixture).</li>
+<li><strong>Coverage stays around 75%:</strong> Verify the post-pytest merge step ran:
+  <code>coverage combine --append .e2e-coverage/.coverage.service*</code>.</li>
+<li><strong>Port conflict:</strong> The fixture picks an ephemeral port automatically; ensure
+  no firewall blocks <code>127.0.0.1</code> traffic.</li>
+<li><strong>Service never becomes healthy:</strong> Inspect stdout/stderr from the subprocess
+  (rerun with <code>LOG_LEVEL=INFO</code> and remove <code>--log-level warning</code> locally).</li>
 </ul>
 
 
