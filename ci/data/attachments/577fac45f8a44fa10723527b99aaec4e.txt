@@ -1,0 +1,2 @@
+{"dataset": "test", "pet_id": 42, "name": "Goldie", "status": "sold", "event": "seeded pet", "correlation_id": "", "app_env": "dev", "level": "info", "timestamp": "2026-05-26T17:37:11.590463Z", "module": "loader", "func_name": "apply_dataset"}
+{"dataset": "test", "order_id": 1, "pet_id": 42, "status": "placed", "event": "seeded order", "correlation_id": "", "app_env": "dev", "level": "info", "timestamp": "2026-05-26T17:37:11.590582Z", "module": "loader", "func_name": "apply_dataset"}

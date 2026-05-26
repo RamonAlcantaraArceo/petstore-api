@@ -1,1 +1,1 @@
-{"id":"1f15bd2a046130bb15a7a1c503638a98","fullName":"tests.integration.test_pet_api#test_correlation_id_in_response","name":"test_correlation_id_in_response","status":"passed","testResultsByEnv":{"default":"c4a479cc812a329cfee34d110fa14605"}}
+{"id":"1f15bd2a046130bb15a7a1c503638a98","fullName":"tests.integration.test_pet_api#test_correlation_id_in_response","name":"test_correlation_id_in_response","status":"passed","testResultsByEnv":{"default":"1c8c952e2c329e87ce75608631814595"}}
