@@ -6,7 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.1.1-rc4] - 2026-05-26
+
 ### Added
+- `GET /api/v1/pet/findByStatus`: `status` query parameter is now optional;
+  omitting it returns all pets regardless of status. Pagination via `skip`
+  (offset, default 0) and `limit` (max 100, default unlimited) query
+  parameters is now supported.
 - Added `make merge-cleanup` to run linting, type checks, tests, and report
   generation in one local command.
 
@@ -26,14 +32,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Removed
 - `tests/e2e/docker-compose.e2e.yml` and the `pytest-docker` dev dependency are
   no longer needed and have been removed.
-
-## [0.1.1-rc4] - 2026-05-22
-
-### Added
-- `GET /api/v1/pet/findByStatus`: `status` query parameter is now optional;
-  omitting it returns all pets regardless of status. Pagination via `skip`
-  (offset, default 0) and `limit` (max 100, default unlimited) query
-  parameters is now supported.
 
 ## [0.1.1-rc2 and 0.1.1-rc3]
 ### Added
