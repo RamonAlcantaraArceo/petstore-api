@@ -16,12 +16,12 @@ from __future__ import annotations
 import structlog
 
 from app.fixtures.datasets import FixtureDataset, get_dataset
-from app.schemas.order import OrderCreate
-from app.schemas.pet import PetCreate
-from app.schemas.user import UserCreate
-from app.services.order import OrderService
-from app.services.pet import PetService
-from app.services.user import UserService
+from petstore_core.schemas.order import OrderCreate
+from petstore_core.schemas.pet import PetCreate
+from petstore_core.schemas.user import UserCreate
+from petstore_core.services.order import OrderService
+from petstore_core.services.pet import PetService
+from petstore_core.services.user import UserService
 
 logger = structlog.get_logger(__name__)
 
@@ -111,7 +111,7 @@ async def seed_from_settings(settings: object) -> None:
     Raises:
         ValueError: When the dataset name is not recognised.
     """
-    from app.config import Settings
+    from petstore_core.config import Settings
 
     assert isinstance(settings, Settings)
 
@@ -160,10 +160,10 @@ async def _seed_postgres(dataset: FixtureDataset) -> None:
     Args:
         dataset: Dataset to apply.
     """
-    from app.db.session import get_session_factory
-    from app.repositories.postgres.order import PostgresOrderRepository
-    from app.repositories.postgres.pet import PostgresPetRepository
-    from app.repositories.postgres.user import PostgresUserRepository
+    from petstore_core.db.session import get_session_factory
+    from petstore_core.repositories.postgres.order import PostgresOrderRepository
+    from petstore_core.repositories.postgres.pet import PostgresPetRepository
+    from petstore_core.repositories.postgres.user import PostgresUserRepository
 
     session_factory = get_session_factory()
     async with session_factory() as session:

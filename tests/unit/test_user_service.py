@@ -5,10 +5,10 @@ from __future__ import annotations
 from unittest.mock import AsyncMock
 
 import pytest
-from fastapi import HTTPException
 
 from app.schemas.user import User, UserCreate, UserUpdate
 from app.services.user import UserService
+from petstore_core.errors import NotFoundError, ValidationError
 from tests.factories.user import UserCreateFactory
 
 
@@ -43,11 +43,11 @@ async def test_create_user_delegates_to_repo() -> None:
 
 @pytest.mark.asyncio
 async def test_create_user_raises_value_error_for_empty_username() -> None:
-    """create_user raises ValueError when username is empty."""
+    """create_user raises ValidationError when username is empty."""
     repo = AsyncMock()
     service = make_service(repo)
 
-    with pytest.raises(ValueError, match="Username cannot be empty"):
+    with pytest.raises(ValidationError, match="Username cannot be empty"):
         await service.create_user(UserCreate(username=""))
 
 
@@ -66,17 +66,14 @@ async def test_get_user_returns_user() -> None:
 
 @pytest.mark.asyncio
 async def test_get_user_raises_404_when_not_found() -> None:
-    """get_user raises HTTPException 404 when user is not found."""
-    from fastapi import HTTPException
+    """get_user raises NotFoundError when user is not found."""
 
     repo = AsyncMock()
     repo.get_by_username.return_value = None
 
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(NotFoundError, match="User not found"):
         await service.get_user("nobody")
-
-    assert exc_info.value.status_code == 404
 
 
 @pytest.mark.asyncio
@@ -96,17 +93,14 @@ async def test_update_user_delegates_to_repo() -> None:
 
 @pytest.mark.asyncio
 async def test_update_user_raises_404_when_not_found() -> None:
-    """update_user raises HTTPException 404 when user does not exist."""
-    from fastapi import HTTPException
+    """update_user raises NotFoundError when user does not exist."""
 
     repo = AsyncMock()
     repo.update.side_effect = KeyError("User not found")
 
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(NotFoundError, match="User not found"):
         await service.update_user("nobody", UserUpdate(first_name="Jane"))
-
-    assert exc_info.value.status_code == 404
 
 
 @pytest.mark.asyncio
@@ -123,17 +117,14 @@ async def test_delete_user_calls_repo() -> None:
 
 @pytest.mark.asyncio
 async def test_delete_user_raises_404_when_not_found() -> None:
-    """delete_user raises HTTPException 404 when user not found."""
-    from fastapi import HTTPException
+    """delete_user raises NotFoundError when user not found."""
 
     repo = AsyncMock()
     repo.delete.side_effect = KeyError("User not found")
 
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(NotFoundError, match="User not found"):
         await service.delete_user("nobody")
-
-    assert exc_info.value.status_code == 404
 
 
 @pytest.mark.asyncio
@@ -151,17 +142,14 @@ async def test_login_returns_token() -> None:
 
 @pytest.mark.asyncio
 async def test_login_raises_400_for_invalid_user() -> None:
-    """login raises HTTPException 400 for non-existent user."""
-    from fastapi import HTTPException
+    """login raises ValidationError for non-existent user."""
 
     repo = AsyncMock()
     repo.get_by_username.return_value = None
 
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(ValidationError, match="Invalid username or password"):
         await service.login("nobody", "password")
-
-    assert exc_info.value.status_code == 400
 
 
 @pytest.mark.asyncio
@@ -269,9 +257,8 @@ async def test_delete_user_raises_404_on_keyerror():
     repo = AsyncMock()
     repo.delete.side_effect = KeyError("not found")
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(NotFoundError, match="User not found"):
         await service.delete_user("nobody")
-    assert exc_info.value.status_code == 404
 
 
 @pytest.mark.asyncio
@@ -281,7 +268,7 @@ async def test_delete_user_calls_rollback_on_keyerror():
     commit = AsyncMock()
     rollback = AsyncMock()
     service = make_service(repo, commit=commit, rollback=rollback)
-    with pytest.raises(HTTPException):
+    with pytest.raises(NotFoundError):
         await service.delete_user("nobody")
     rollback.assert_awaited_once()
     commit.assert_not_called()

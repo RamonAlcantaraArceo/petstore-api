@@ -6,9 +6,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
 
+from app.api.v1.error_mapping import map_domain_errors
 from app.dependencies import get_user_service
-from app.schemas.user import User, UserCreate, UserUpdate
-from app.services.user import UserService
+from petstore_core.schemas.user import User, UserCreate, UserUpdate
+from petstore_core.services.user import UserService
 
 router = APIRouter(prefix="/user", tags=["user"])
 
@@ -27,7 +28,7 @@ async def create_user(
     Returns:
         The created user.
     """
-    return await service.create_user(user)
+    return await map_domain_errors(service.create_user(user))
 
 
 @router.post(
@@ -49,7 +50,7 @@ async def create_users_with_list(
     Returns:
         List of created users.
     """
-    return await service.create_users_with_list(users)
+    return await map_domain_errors(service.create_users_with_list(users))
 
 
 @router.get("/login", operation_id="login_user")
@@ -68,7 +69,7 @@ async def login_user(
     Returns:
         Dict containing the session token.
     """
-    token = await service.login(username, password)
+    token = await map_domain_errors(service.login(username, password))
     return {"token": token}
 
 
@@ -84,7 +85,7 @@ async def logout_user(
     Returns:
         Confirmation message.
     """
-    await service.logout()
+    await map_domain_errors(service.logout())
     return {"message": "User logged out"}
 
 
@@ -102,7 +103,7 @@ async def get_user_by_name(
     Returns:
         The user with the given username.
     """
-    return await service.get_user(username)
+    return await map_domain_errors(service.get_user(username))
 
 
 @router.put("/{username}", response_model=User, operation_id="update_user")
@@ -121,7 +122,7 @@ async def update_user(
     Returns:
         The updated user.
     """
-    return await service.update_user(username, user)
+    return await map_domain_errors(service.update_user(username, user))
 
 
 @router.delete("/{username}", status_code=200, operation_id="delete_user")
@@ -138,5 +139,5 @@ async def delete_user(
     Returns:
         Confirmation message.
     """
-    await service.delete_user(username)
+    await map_domain_errors(service.delete_user(username))
     return {"message": "User deleted"}

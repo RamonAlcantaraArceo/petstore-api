@@ -19,8 +19,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 
-from app.schemas.order import OrderStatus
-from app.schemas.pet import Category, PetStatus, Tag
+from petstore_core.schemas.order import OrderStatus
+from petstore_core.schemas.pet import Category, PetStatus, Tag
 
 
 @dataclass
