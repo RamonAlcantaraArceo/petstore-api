@@ -92,7 +92,9 @@ omit = [
   "app/db/migrations/*",
   "app/db/session.py",
   "app/models/*",
-  "**/__init__.py",
+  "petstore_core/models/*",
+  "petstore_core/db/session.py",
+  "**/__pycache__/*",
 ]
 
 [tool.coverage.paths]
