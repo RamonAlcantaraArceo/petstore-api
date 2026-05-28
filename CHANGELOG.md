@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-28
+
+### Added
+- New `petstore_core` package to consolidate domain models, services, repositories,
+  and schemas. This provides a stable, reusable core for the API and future clients.
+- `error_mapping.py` module in `app/api/v1/` to standardize error responses across all endpoints.
+
+### Changed
+- Refactored app architecture: moved core models, services, repositories, and schemas
+  into the standalone `petstore_core` package while keeping API-specific code in `app/`.
+- All API routes (`pets`, `store`, `users`, `health`) now use error mapping for consistent
+  error handling across adapter layers.
+- Updated imports throughout the codebase to reference the new `petstore_core` package structure.
+
 ## [0.1.1-rc4] - 2026-05-26
 
 ### Added
