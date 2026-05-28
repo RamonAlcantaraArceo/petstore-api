@@ -6,9 +6,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, Query, UploadFile
 
+from app.api.v1.error_mapping import map_domain_errors
 from app.dependencies import get_pet_service
-from app.schemas.pet import Pet, PetCreate, PetStatus, PetUpdate
-from app.services.pet import PetService
+from petstore_core.schemas.pet import Pet, PetCreate, PetStatus, PetUpdate
+from petstore_core.services.pet import PetService
 
 router = APIRouter(prefix="/pet", tags=["pet"])
 
@@ -27,7 +28,7 @@ async def add_pet(
     Returns:
         The created pet.
     """
-    return await service.add_pet(pet)
+    return await map_domain_errors(service.add_pet(pet))
 
 
 @router.put("", response_model=Pet, status_code=200, operation_id="update_pet")
@@ -44,7 +45,7 @@ async def update_pet(
     Returns:
         The updated pet.
     """
-    return await service.update_pet(pet)
+    return await map_domain_errors(service.update_pet(pet))
 
 
 @router.get("/findByStatus", response_model=list[Pet], operation_id="find_pets_by_status")
@@ -73,7 +74,7 @@ async def find_pets_by_status(
         List of pets matching the given status (or all pets when status is
         not provided).
     """
-    return await service.find_by_status(status, skip=skip, limit=limit)
+    return await map_domain_errors(service.find_by_status(status, skip=skip, limit=limit))
 
 
 @router.get("/findByTags", response_model=list[Pet], operation_id="find_pets_by_tags")
@@ -90,7 +91,7 @@ async def find_pets_by_tags(
     Returns:
         List of pets matching any of the given tags.
     """
-    return await service.find_by_tags(tags)
+    return await map_domain_errors(service.find_by_tags(tags))
 
 
 @router.get("/{pet_id}", response_model=Pet, operation_id="get_pet_by_id")
@@ -107,7 +108,7 @@ async def get_pet_by_id(
     Returns:
         The pet with the given ID.
     """
-    return await service.get_pet(pet_id)
+    return await map_domain_errors(service.get_pet(pet_id))
 
 
 @router.post("/{pet_id}", response_model=Pet, operation_id="update_pet_with_form")
@@ -128,7 +129,7 @@ async def update_pet_with_form(
     Returns:
         The updated pet.
     """
-    return await service.update_pet_with_form(pet_id, name=name, status=status)
+    return await map_domain_errors(service.update_pet_with_form(pet_id, name=name, status=status))
 
 
 @router.delete("/{pet_id}", status_code=200, operation_id="delete_pet")
@@ -145,7 +146,7 @@ async def delete_pet(
     Returns:
         Confirmation message.
     """
-    await service.delete_pet(pet_id)
+    await map_domain_errors(service.delete_pet(pet_id))
     return {"message": "Pet deleted"}
 
 
@@ -168,6 +169,6 @@ async def upload_file(
         Confirmation message with file info.
     """
     # Verify pet exists
-    await service.get_pet(pet_id)
+    await map_domain_errors(service.get_pet(pet_id))
     filename = file.filename if file else "none"
     return {"message": f"File uploaded: {filename}"}

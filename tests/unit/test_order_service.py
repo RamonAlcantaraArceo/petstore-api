@@ -8,6 +8,7 @@ import pytest
 
 from app.schemas.order import Order, OrderStatus
 from app.services.order import OrderService
+from petstore_core.errors import NotFoundError, ValidationError
 from tests.factories.order import OrderCreateFactory
 
 
@@ -47,42 +48,35 @@ async def test_get_order_returns_order() -> None:
 
 @pytest.mark.asyncio
 async def test_get_order_raises_404_when_not_found() -> None:
-    """get_order raises HTTPException 404 when order is not found."""
-    from fastapi import HTTPException
+    """get_order raises NotFoundError when order is not found."""
 
     repo = AsyncMock()
     repo.get.return_value = None
 
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(NotFoundError, match="Order not found"):
         await service.get_order(5)
-
-    assert exc_info.value.status_code == 404
 
 
 @pytest.mark.asyncio
 async def test_get_order_raises_400_for_id_less_than_1() -> None:
-    """get_order raises HTTPException 400 when order_id < 1."""
-    from fastapi import HTTPException
+    """get_order raises ValidationError when order_id < 1."""
 
     repo = AsyncMock()
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(ValidationError, match="Invalid order ID"):
         await service.get_order(0)
-    assert exc_info.value.status_code == 400
 
 
 @pytest.mark.asyncio
 async def test_get_order_raises_404_for_id_greater_than_10() -> None:
-    """get_order raises HTTPException 404 when order_id > 10."""
-    from fastapi import HTTPException
+    """get_order raises NotFoundError when order_id > 10 and no record exists."""
 
     repo = AsyncMock()
     repo.get.return_value = None
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(NotFoundError, match="Order not found"):
         await service.get_order(11)
-    assert exc_info.value.status_code == 404
 
 
 @pytest.mark.asyncio
@@ -99,31 +93,25 @@ async def test_delete_order_calls_repo() -> None:
 
 @pytest.mark.asyncio
 async def test_delete_order_raises_400_for_invalid_id() -> None:
-    """delete_order raises HTTPException 400 for id < 1."""
-    from fastapi import HTTPException
+    """delete_order raises ValidationError for id < 1."""
 
     repo = AsyncMock()
     service = make_service(repo)
 
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(ValidationError, match="Invalid order ID"):
         await service.delete_order(0)
-
-    assert exc_info.value.status_code == 400
 
 
 @pytest.mark.asyncio
 async def test_delete_order_raises_404_when_not_found() -> None:
-    """delete_order raises HTTPException 404 when order not found."""
-    from fastapi import HTTPException
+    """delete_order raises NotFoundError when order not found."""
 
     repo = AsyncMock()
     repo.delete.side_effect = KeyError("Order not found")
 
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(NotFoundError, match="Order not found"):
         await service.delete_order(1)
-
-    assert exc_info.value.status_code == 404
 
 
 @pytest.mark.asyncio

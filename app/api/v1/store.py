@@ -6,9 +6,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
+from app.api.v1.error_mapping import map_domain_errors
 from app.dependencies import get_order_service
-from app.schemas.order import Order, OrderCreate
-from app.services.order import OrderService
+from petstore_core.schemas.order import Order, OrderCreate
+from petstore_core.services.order import OrderService
 
 router = APIRouter(prefix="/store", tags=["store"])
 
@@ -25,7 +26,7 @@ async def get_inventory(
     Returns:
         List of all orders.
     """
-    return await service.get_inventory()
+    return await map_domain_errors(service.get_inventory())
 
 
 @router.post("/order", response_model=Order, status_code=200, operation_id="place_order")
@@ -42,7 +43,7 @@ async def place_order(
     Returns:
         The placed order.
     """
-    return await service.place_order(order)
+    return await map_domain_errors(service.place_order(order))
 
 
 @router.get("/order/{order_id}", response_model=Order, operation_id="get_order_by_id")
@@ -59,7 +60,7 @@ async def get_order_by_id(
     Returns:
         The order with the given ID.
     """
-    return await service.get_order(order_id)
+    return await map_domain_errors(service.get_order(order_id))
 
 
 @router.delete("/order/{order_id}", status_code=200, operation_id="delete_order")
@@ -76,5 +77,5 @@ async def delete_order(
     Returns:
         Confirmation message.
     """
-    await service.delete_order(order_id)
+    await map_domain_errors(service.delete_order(order_id))
     return {"message": "Order deleted"}

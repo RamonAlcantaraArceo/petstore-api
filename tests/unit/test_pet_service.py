@@ -8,6 +8,7 @@ import pytest
 
 from app.schemas.pet import Pet, PetCreate, PetStatus, PetUpdate
 from app.services.pet import PetService
+from petstore_core.errors import NotFoundError, ValidationError
 from tests.factories.pet import PetCreateFactory
 
 
@@ -33,17 +34,14 @@ async def test_get_pet_returns_pet() -> None:
 
 @pytest.mark.asyncio
 async def test_get_pet_raises_404_when_not_found() -> None:
-    """get_pet raises HTTPException 404 when pet is not found."""
-    from fastapi import HTTPException
+    """get_pet raises NotFoundError when pet is not found."""
 
     repo = AsyncMock()
     repo.get.return_value = None
 
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(NotFoundError, match="Pet not found"):
         await service.get_pet(99)
-
-    assert exc_info.value.status_code == 404
 
 
 @pytest.mark.asyncio
@@ -90,17 +88,14 @@ async def test_update_pet_delegates_to_repo() -> None:
 
 @pytest.mark.asyncio
 async def test_update_pet_raises_404_when_not_found() -> None:
-    """update_pet raises HTTPException 404 when the pet does not exist."""
-    from fastapi import HTTPException
+    """update_pet raises NotFoundError when the pet does not exist."""
 
     repo = AsyncMock()
     repo.update.side_effect = KeyError("Pet 1 not found")
 
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(NotFoundError, match="Pet not found"):
         await service.update_pet(PetUpdate(id=1, name="Rex", photoUrls=[]))
-
-    assert exc_info.value.status_code == 404
 
 
 @pytest.mark.asyncio
@@ -117,17 +112,14 @@ async def test_delete_pet_calls_repo() -> None:
 
 @pytest.mark.asyncio
 async def test_delete_pet_raises_404_when_not_found() -> None:
-    """delete_pet raises HTTPException 404 when not found."""
-    from fastapi import HTTPException
+    """delete_pet raises NotFoundError when not found."""
 
     repo = AsyncMock()
     repo.delete.side_effect = KeyError("Pet 1 not found")
 
     service = make_service(repo)
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(NotFoundError, match="Pet not found"):
         await service.delete_pet(1)
-
-    assert exc_info.value.status_code == 404
 
 
 @pytest.mark.asyncio
@@ -269,7 +261,7 @@ async def test_add_pet_successful_creation():
 async def test_add_pet_raises_value_error_for_whitespace_name():
     repo = AsyncMock()
     service = PetService(repo)
-    with pytest.raises(ValueError, match="Pet name cannot be empty"):
+    with pytest.raises(ValidationError, match="Pet name cannot be empty"):
         await service.add_pet(PetCreate(name="   ", photoUrls=[]))
 
 

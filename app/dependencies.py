@@ -8,13 +8,13 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from app.config import Settings, get_settings
-from app.repositories.memory.order import MemoryOrderRepository
-from app.repositories.memory.pet import MemoryPetRepository
-from app.repositories.memory.user import MemoryUserRepository
-from app.services.order import OrderService
-from app.services.pet import PetService
-from app.services.user import UserService
+from petstore_core.config import Settings, get_settings
+from petstore_core.repositories.memory.order import MemoryOrderRepository
+from petstore_core.repositories.memory.pet import MemoryPetRepository
+from petstore_core.repositories.memory.user import MemoryUserRepository
+from petstore_core.services.order import OrderService
+from petstore_core.services.pet import PetService
+from petstore_core.services.user import UserService
 
 # Singletons for in-memory mode
 _memory_pet_repo: MemoryPetRepository | None = None
@@ -94,8 +94,8 @@ async def get_pet_service(
     if settings.storage_mode == "memory":
         yield PetService(get_memory_pet_repo())
         return
-    from app.db.session import get_session_factory
-    from app.repositories.postgres.pet import PostgresPetRepository
+    from petstore_core.db.session import get_session_factory
+    from petstore_core.repositories.postgres.pet import PostgresPetRepository
 
     session_factory = get_session_factory()
     async with session_factory() as session:
@@ -120,8 +120,8 @@ async def get_order_service(
     if settings.storage_mode == "memory":
         yield OrderService(get_memory_order_repo())
         return
-    from app.db.session import get_session_factory
-    from app.repositories.postgres.order import PostgresOrderRepository
+    from petstore_core.db.session import get_session_factory
+    from petstore_core.repositories.postgres.order import PostgresOrderRepository
 
     session_factory = get_session_factory()
     async with session_factory() as session:
@@ -146,8 +146,8 @@ async def get_user_service(
     if settings.storage_mode == "memory":
         yield UserService(get_memory_user_repo())
         return
-    from app.db.session import get_session_factory
-    from app.repositories.postgres.user import PostgresUserRepository
+    from petstore_core.db.session import get_session_factory
+    from petstore_core.repositories.postgres.user import PostgresUserRepository
 
     session_factory = get_session_factory()
     async with session_factory() as session:

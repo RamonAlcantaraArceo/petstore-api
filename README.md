@@ -6,6 +6,11 @@
 
 A **production-ready Python backend API** implementing the [Petstore OpenAPI 3.0 spec](https://petstore3.swagger.io/api/v3/openapi.json), built with FastAPI.
 
+## Package split
+
+Core domain and persistence code now lives in `petstore_core/` (framework-agnostic), while
+`app/` contains HTTP adapter concerns (routes, middleware, and FastAPI wiring).
+
 ## Quick Start
 
 
@@ -63,7 +68,7 @@ uv run <command>  # e.g., uv run pytest, uv run ruff check .
 
 ```bash
 # Run test suites
-uv run pytest tests/unit/ tests/integration/ tests/system/ --cov=app
+uv run pytest tests/unit/ tests/integration/ tests/system/ --cov=app --cov=petstore_core
 
 # Reproduce CI merge cleanup locally (lint + type-check + tests + reports)
 make merge-cleanup

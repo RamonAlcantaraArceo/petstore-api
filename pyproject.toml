@@ -61,7 +61,7 @@ tag-pattern = "v(?P<version>.*)"
 version_scheme = "no-guess-dev"
 
 [tool.hatch.build.targets.wheel]
-packages = ["app"]
+packages = ["app", "petstore_core"]
 
 [tool.ruff]
 line-length = 100
@@ -87,19 +87,26 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["app"]
+source = ["app", "petstore_core"]
 omit = [
   "app/db/migrations/*",
   "app/db/session.py",
   "app/models/*",
-  "**/__init__.py",
+  "petstore_core/models/*",
+  "petstore_core/db/session.py",
+  "app/repositories/postgres/*",
+  "petstore_core/repositories/postgres/*",
+  "**/__pycache__/*",
 ]
 
 [tool.coverage.paths]
 source = [
   "app",
+  "petstore_core",
   "/workspace/app",
+  "/workspace/petstore_core",
   "/petstore/app",
+  "/petstore/petstore_core",
 ]
 
 [tool.coverage.report]
@@ -108,4 +115,3 @@ fail_under = 80
 [tool.black]
 line-length = 100
 target-version = ["py314"]
-
