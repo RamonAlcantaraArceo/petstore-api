@@ -25,6 +25,7 @@ env/
 
 # Coverage
 .coverage
+coverage.json
 coverage.xml
 htmlcov/
 .e2e-coverage/

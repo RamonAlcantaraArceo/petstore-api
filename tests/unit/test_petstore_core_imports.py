@@ -7,8 +7,6 @@ wrapper modules.
 
 from __future__ import annotations
 
-import pytest
-
 from petstore_core.config import get_settings
 from petstore_core.errors import NotFoundError, ValidationError
 from petstore_core.repositories.base import (
