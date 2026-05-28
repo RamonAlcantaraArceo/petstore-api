@@ -94,6 +94,8 @@ omit = [
   "app/models/*",
   "petstore_core/models/*",
   "petstore_core/db/session.py",
+  "app/repositories/postgres/*",
+  "petstore_core/repositories/postgres/*",
   "**/__pycache__/*",
 ]
 
