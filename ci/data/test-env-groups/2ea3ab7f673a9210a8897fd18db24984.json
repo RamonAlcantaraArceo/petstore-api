@@ -1,1 +1,1 @@
-{"id":"2ea3ab7f673a9210a8897fd18db24984","fullName":"tests.integration.test_user_api#test_get_user_not_found","name":"test_get_user_not_found","status":"passed","testResultsByEnv":{"default":"b89445be518b76d7e67517c498a401b2"}}
+{"id":"2ea3ab7f673a9210a8897fd18db24984","fullName":"tests.integration.test_user_api#test_get_user_not_found","name":"test_get_user_not_found","status":"passed","testResultsByEnv":{"default":"5254b1500f740a0f3677cf4a15bd98f6"}}
