@@ -21,7 +21,6 @@ from petstore_core.services.pet import PetService
 from petstore_core.services.user import UserService
 
 
-@pytest.mark.unit
 def test_petstore_core_config_import() -> None:
     """Verify petstore_core.config is importable and get_settings works."""
     settings = get_settings()
@@ -29,14 +28,12 @@ def test_petstore_core_config_import() -> None:
     assert hasattr(settings, "api_key")
 
 
-@pytest.mark.unit
 def test_petstore_core_errors_import() -> None:
     """Verify petstore_core errors are importable."""
     assert NotFoundError is not None
     assert ValidationError is not None
 
 
-@pytest.mark.unit
 def test_petstore_core_base_repositories_import() -> None:
     """Verify petstore_core base repositories are importable."""
     assert OrderRepository is not None
@@ -44,7 +41,6 @@ def test_petstore_core_base_repositories_import() -> None:
     assert UserRepository is not None
 
 
-@pytest.mark.unit
 def test_petstore_core_services_import() -> None:
     """Verify petstore_core services are importable."""
     assert OrderService is not None
