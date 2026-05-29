@@ -18,6 +18,7 @@ from app.api.v1.health import router as health_router
 from app.api.v1.router import router as v1_router
 from app.middleware.auth import ApiKeyMiddleware
 from app.middleware.correlation_id import CorrelationIdMiddleware
+from app.middleware.rate_limit import RateLimitMiddleware
 from petstore_core.config import get_settings
 
 warnings.filterwarnings("error", message="Duplicate Operation ID")
@@ -107,7 +108,19 @@ def create_app() -> FastAPI:
 
     app = FastAPI(
         title="Petstore API",
-        description="A production-ready Petstore API built with FastAPI.",
+        description=(
+            "A production-ready Petstore API built with FastAPI.\n\n"
+            "## Rate Limiting\n\n"
+            "All endpoints (except `/health` and `/openapi.json`) are subject to a "
+            "**fixed-window rate limit** of `RATE_LIMIT_REQUESTS` requests per "
+            "`RATE_LIMIT_WINDOW_SECONDS` seconds (default: **40 req / 60 s**) "
+            "per API key or client IP.\n\n"
+            "When the limit is exceeded the API returns `429 Too Many Requests` with a "
+            "`Retry-After` header indicating how many seconds to wait.\n\n"
+            "### Bypass\n\n"
+            "Include the `X-Bypass-Key` header with the value configured via the "
+            "`RATE_LIMIT_BYPASS_KEY` environment variable to skip rate limiting entirely."
+        ),
         version=settings.api_version,
         docs_url=None,
         redoc_url=None,
@@ -145,6 +158,12 @@ def create_app() -> FastAPI:
     # Middleware (outermost first)
     app.add_middleware(ApiKeyMiddleware, api_key=settings.api_key)
     app.add_middleware(CorrelationIdMiddleware)
+    app.add_middleware(
+        RateLimitMiddleware,
+        max_requests=settings.rate_limit_requests,
+        window_seconds=settings.rate_limit_window_seconds,
+        bypass_key=settings.rate_limit_bypass_key,
+    )
 
     # Routes
     app.include_router(health_router)
