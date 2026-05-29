@@ -73,7 +73,7 @@ async def rate_limited_client() -> AsyncIterator[AsyncClient]:
 async def test_rate_limit_triggers_after_threshold(
     rate_limited_client: AsyncClient,
 ) -> None:
-    """GET /health succeeds up to the threshold; the next request returns 429."""
+    """Non-exempt endpoint succeeds up to the threshold; the next request returns 429."""
     headers = {"X-API-Key": _API_KEY}
 
     # Requests 1 … _LOW_LIMIT should all succeed (health is exempt, use a real endpoint)

@@ -70,7 +70,7 @@ async def _ok_response(_request: Request) -> Response:
 @allure.story("Client Key Resolution")
 @allure.severity(allure.severity_level.MINOR)
 def test_get_client_key_uses_api_key() -> None:
-    """_get_client_key returns an api:-prefixed key when X-API-Key is present."""
+    """_get_client_key returns an API-prefixed key when X-API-Key is present."""
     request = _make_request(api_key="my-key", client_ip="10.0.0.1")
     assert _get_client_key(request) == "api:my-key"
 
@@ -78,7 +78,7 @@ def test_get_client_key_uses_api_key() -> None:
 @allure.story("Client Key Resolution")
 @allure.severity(allure.severity_level.MINOR)
 def test_get_client_key_falls_back_to_ip() -> None:
-    """_get_client_key returns an ip:-prefixed key when X-API-Key is absent."""
+    """_get_client_key returns an IP-prefixed key when X-API-Key is absent."""
     request = _make_request(api_key="", client_ip="10.0.0.2")
     assert _get_client_key(request) == "ip:10.0.0.2"
 

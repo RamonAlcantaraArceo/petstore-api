@@ -11,7 +11,7 @@ from starlette.responses import JSONResponse, Response
 from starlette.types import ASGIApp
 
 #: Paths that are exempt from rate limiting (mirrors the auth exemptions).
-EXEMPT_PATHS = {"/health", "/api/v1/health", "/docs", "/redoc", "/openapi.json"}
+EXEMPT_PATHS = {"/health", "/api/v1/health", "/redoc", "/openapi.json"}
 
 #: Header name used to bypass rate limiting.
 BYPASS_HEADER = "X-Bypass-Key"
@@ -46,7 +46,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
     """Fixed-window in-memory rate limiter for all non-exempt routes.
 
     Each unique client key (API key or IP address) is allowed up to
-    ``max_requests`` requests within a rolling ``window_seconds`` window.
+    ``max_requests`` requests within a fixed ``window_seconds`` window.
     Once the counter exceeds the limit a ``429 Too Many Requests`` response
     is returned with a ``Retry-After`` header.
 
