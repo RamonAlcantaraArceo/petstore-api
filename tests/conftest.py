@@ -116,9 +116,14 @@ def api_key_header(auth_header: dict[str, str]) -> dict[str, str]:
     return auth_header
 
 
-@pytest.fixture
-def remote_api_key_header() -> dict[str, str]:
-    """Return headers containing the API key for remote/live tests."""
+@pytest_asyncio.fixture
+async def remote_api_key_header(remote_client: AsyncClient) -> dict[str, str]:
+    """Return auth headers for remote/live tests."""
+    login_response = await remote_client.post("/auth/dev/login", json={"username": "devuser"})
+    if login_response.status_code == 200:
+        token = login_response.json()["access_token"]
+        return {"Authorization": "Bearer " + token}
+
     return {"X-API-Key": _remote_api_key()}
 
 

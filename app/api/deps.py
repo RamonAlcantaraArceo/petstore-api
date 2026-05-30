@@ -131,7 +131,7 @@ def maybe_get_current_user(
 
     try:
         user = resolve_current_user_from_token(token, settings or _cached_settings())
-    except (DevJWTError, SupabaseJWTError, HTTPException):
+    except DevJWTError, SupabaseJWTError, HTTPException:
         return None
 
     request.state.current_user = user
