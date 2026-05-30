@@ -1,0 +1,1 @@
+{"id":"b4ecffd1a048a085cd408fd6d38f2799","fullName":"tests.auth.test_dev_auth#test_protected_route_accepts_valid_bearer_token","name":"test_protected_route_accepts_valid_bearer_token","status":"passed","testResultsByEnv":{"default":"cf172646a4683bef880b9d41752548e6"}}

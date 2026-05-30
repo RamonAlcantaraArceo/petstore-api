@@ -1,1 +1,1 @@
-{"id":"e4f10f7c2d1c104c99700e84f5ff529d","fullName":"tests.e2e.test_petstore_e2e#test_e2e_pet_crud","name":"test_e2e_pet_crud","status":"passed","testResultsByEnv":{"default":"909d8ef2baa9b891339e1fd00d8b3d6d"}}
+{"id":"e4f10f7c2d1c104c99700e84f5ff529d","fullName":"tests.e2e.test_petstore_e2e#test_e2e_pet_crud","name":"test_e2e_pet_crud","status":"failed","testResultsByEnv":{"default":"c212da06744db612af1e472ac838db08"}}
