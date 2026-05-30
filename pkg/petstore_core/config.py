@@ -40,7 +40,10 @@ class Settings(BaseSettings):
     database_url: str = ""
     database_pooler_url: str = ""
     api_key: str = "dev-api-key"
-    app_env: str = Field(default="dev", validation_alias=AliasChoices("APP_ENV", "ENV"))
+    app_env: str = Field(
+        default="dev",
+        validation_alias=AliasChoices("app_env", "APP_ENV", "ENV"),
+    )
     dev_jwt_secret: str = "dev-jwt-secret"
     dev_jwt_expiration_seconds: int = 3600
     debug: bool = False

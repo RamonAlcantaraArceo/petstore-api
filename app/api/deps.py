@@ -19,12 +19,7 @@ from app.dependencies import _cached_settings
 from app.models.user import UserModel
 from petstore_core.config import Settings
 
-_EXAMPLE_JWT = (
-    "Bearer "
-    "******"
-    "eyJzdWIiOiIxIiwiZW1haWwiOiJkZXZAZXhhbXBsZS5jb20iLCJyb2xlIjoiYXV0aGVudGljYXRlZCJ9."
-    "dev-signature"
-)
+_EXAMPLE_JWT = "******"
 
 bearer_scheme = HTTPBearer(
     auto_error=False,

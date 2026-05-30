@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock
 
 import allure
@@ -12,6 +13,7 @@ from starlette.types import ASGIApp
 
 from app.auth.dev_jwt import issue_dev_jwt
 from app.auth.dev_store import get_dev_user_by_username
+from app.config import Settings
 from app.middleware.rate_limit import (
     BYPASS_HEADER,
     RATE_LIMIT_LIMIT_HEADER,
@@ -47,6 +49,11 @@ def _make_request(
             *([(BYPASS_HEADER.lower().encode(), bypass_key.encode())] if bypass_key else []),
         ],
         "client": (client_ip, 12345),
+        "app": SimpleNamespace(
+            state=SimpleNamespace(
+                settings=Settings(app_env="dev", dev_jwt_secret="dev-jwt-secret")
+            )
+        ),
     }
     return Request(scope)  # type: ignore[arg-type]
 

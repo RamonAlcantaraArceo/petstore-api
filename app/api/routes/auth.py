@@ -33,8 +33,8 @@ class DevLoginResponse(BaseModel):
         "json_schema_extra": {
             "example": {
                 "access_token": (
-                    "******"
-                    "eyJzdWIiOiIxIiwiZW1haWwiOiJkZXZAZXhhbXBsZS5jb20iLCJyb2xlIjoiYXV0aGVudGljYXRlZCJ9."
+                    "dev-header."
+                    "dev-payload."
                     "dev-signature"
                 ),
                 "token_type": "bearer",

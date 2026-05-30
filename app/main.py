@@ -18,7 +18,6 @@ from petstore_core.config import get_settings
 from app.api.routes.auth import router as auth_router
 from app.api.v1.health import router as health_router
 from app.api.v1.router import router as v1_router
-from app.middleware.rate_limit import BYPASS_HEADER
 from app.middleware.correlation_id import CorrelationIdMiddleware
 from app.middleware.rate_limit import RateLimitMiddleware
 

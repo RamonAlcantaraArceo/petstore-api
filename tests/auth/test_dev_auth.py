@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-from fastapi import HTTPException
 from httpx import AsyncClient
 
 from app.api.deps import resolve_current_user_from_token

@@ -7,7 +7,7 @@ import hashlib
 import hmac
 import json
 import time
-from typing import Any
+from typing import Any, cast
 
 from app.models.user import UserModel
 
@@ -99,7 +99,7 @@ def decode_dev_jwt(token: str, secret: str, *, now: int | None = None) -> dict[s
 
     try:
         header = json.loads(_b64url_decode(encoded_header))
-        claims = json.loads(_b64url_decode(encoded_claims))
+        claims = cast(dict[str, Any], json.loads(_b64url_decode(encoded_claims)))
     except json.JSONDecodeError as exc:
         raise DevJWTError("JWT payload is not valid JSON.") from exc
 
