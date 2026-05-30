@@ -6,6 +6,8 @@ import math
 import time
 from collections.abc import Awaitable, Callable
 
+from app.api.deps import maybe_get_current_user
+from petstore_core.config import Settings, get_settings
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
@@ -25,19 +27,23 @@ RATE_LIMIT_RESET_HEADER = "X-RateLimit-Reset"
 def _get_client_key(request: Request) -> str:
     """Return a stable key that identifies the calling client.
 
-    Prefers the ``X-API-Key`` header when present; falls back to the
-    client IP address extracted from ``X-Forwarded-For`` or the direct
-    connection address.
+    Prefers the authenticated user identifier when available; otherwise falls
+    back to the client IP address extracted from ``X-Forwarded-For`` or the
+    direct connection address.
 
     Args:
         request: The incoming HTTP request.
 
     Returns:
-        A string key in the form ``"api:<value>"`` or ``"ip:<address>"``.
+        A string key in the form ``"user:<value>"`` or ``"ip:<address>"``.
     """
-    api_key = request.headers.get("X-API-Key", "").strip()
-    if api_key:
-        return f"api:{api_key}"
+    app = request.scope.get("app")
+    state = getattr(app, "state", None)
+    settings = getattr(state, "settings", None)
+    auth_settings = settings if isinstance(settings, Settings) else get_settings()
+    user = maybe_get_current_user(request, settings=auth_settings)
+    if user is not None and user.id is not None:
+        return f"user:{user.id}"
 
     forwarded_for = request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
     if forwarded_for:
@@ -56,7 +62,7 @@ def _seconds_until_reset(window_start: float, window_seconds: int, now: float) -
 class RateLimitMiddleware(BaseHTTPMiddleware):
     """Fixed-window in-memory rate limiter for all non-exempt routes.
 
-    Each unique client key (API key or IP address) is allowed up to
+    Each unique client key (authenticated user ID or IP address) is allowed up to
     ``max_requests`` requests within a fixed ``window_seconds`` window.
     Once the counter exceeds the limit a ``429 Too Many Requests`` response
     is returned with a ``Retry-After`` header.

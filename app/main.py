@@ -15,9 +15,10 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 from petstore_core.config import get_settings
 
+from app.api.routes.auth import router as auth_router
 from app.api.v1.health import router as health_router
 from app.api.v1.router import router as v1_router
-from app.middleware.auth import ApiKeyMiddleware
+from app.middleware.rate_limit import BYPASS_HEADER
 from app.middleware.correlation_id import CorrelationIdMiddleware
 from app.middleware.rate_limit import RateLimitMiddleware
 
@@ -110,11 +111,15 @@ def create_app() -> FastAPI:
         title="Petstore API",
         description=(
             "A production-ready Petstore API built with FastAPI.\n\n"
+            "## Authentication\n\n"
+            "Protected `/api/v1/*` endpoints use `BearerAuth` JWTs. In development, "
+            "use `POST /auth/dev/login` with a seeded username to obtain a "
+            "Supabase-shaped token.\n\n"
             "## Rate Limiting\n\n"
             "All endpoints (except `/health` and `/openapi.json`) are subject to a "
             "**fixed-window rate limit** of `RATE_LIMIT_REQUESTS` requests per "
             "`RATE_LIMIT_WINDOW_SECONDS` seconds (default: **40 req / 60 s**) "
-            "per API key or client IP.\n\n"
+            "per authenticated user ID or client IP.\n\n"
             "Accepted responses include `X-RateLimit-Limit`, "
             "`X-RateLimit-Remaining`, and `X-RateLimit-Reset` headers.\n\n"
             "When the limit is exceeded the API returns `429 Too Many Requests` with a "
@@ -130,6 +135,7 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
         contact={"name": "Ramon Alcantara Arceo", "email": "ramalc.ms@outlook.com"},
     )
+    app.state.settings = settings
 
     @app.get("/openapi.json", include_in_schema=False)
     async def openapi_json(request: Request) -> JSONResponse:
@@ -142,6 +148,34 @@ def create_app() -> FastAPI:
             contact=app.contact,
         )
         schema = deepcopy(schema)
+        components = schema.setdefault("components", {})
+        parameters = components.setdefault("parameters", {})
+        parameters["BypassKeyHeader"] = {
+            "name": BYPASS_HEADER,
+            "in": "header",
+            "required": False,
+            "schema": {"type": "string"},
+            "description": (
+                "Optional header that bypasses rate limiting when it matches "
+                "`RATE_LIMIT_BYPASS_KEY`."
+            ),
+        }
+        for path, path_item in schema.get("paths", {}).items():
+            if path in {"/health", "/api/v1/health", "/openapi.json"} or path.startswith("/docs"):
+                continue
+            for operation in path_item.values():
+                if not isinstance(operation, dict):
+                    continue
+                parameters_list = operation.setdefault("parameters", [])
+                if not any(
+                    isinstance(parameter, dict)
+                    and (
+                        parameter.get("$ref") == "#/components/parameters/BypassKeyHeader"
+                        or parameter.get("name") == BYPASS_HEADER
+                    )
+                    for parameter in parameters_list
+                ):
+                    parameters_list.append({"$ref": "#/components/parameters/BypassKeyHeader"})
         forwarded_proto = _first_forwarded_value(request.headers.get("x-forwarded-proto"))
         forwarded_host = _first_forwarded_value(request.headers.get("x-forwarded-host"))
         scheme = forwarded_proto or request.url.scheme
@@ -166,7 +200,6 @@ def create_app() -> FastAPI:
         )
 
     # Middleware (outermost first)
-    app.add_middleware(ApiKeyMiddleware, api_key=settings.api_key)
     app.add_middleware(CorrelationIdMiddleware)
     app.add_middleware(
         RateLimitMiddleware,
@@ -177,6 +210,7 @@ def create_app() -> FastAPI:
 
     # Routes
     app.include_router(health_router)
+    app.include_router(auth_router)
     app.include_router(v1_router)
 
     return app

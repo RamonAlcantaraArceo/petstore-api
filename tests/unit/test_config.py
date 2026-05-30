@@ -195,3 +195,15 @@ def test_get_settings_reads_environment_values(monkeypatch: pytest.MonkeyPatch) 
     assert settings.storage_mode == "cloud"
     assert settings.api_key == "env-api-key"
     assert settings.app_env == "staging"
+
+
+@allure.story("Settings Initialization")
+@allure.severity(allure.severity_level.NORMAL)
+def test_get_settings_supports_env_alias(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Build Settings from the ENV alias used by the auth requirements."""
+    monkeypatch.delenv("APP_ENV", raising=False)
+    monkeypatch.setenv("ENV", "prod")
+
+    settings = get_settings()
+
+    assert settings.app_env == "prod"

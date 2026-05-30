@@ -10,6 +10,8 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.types import ASGIApp
 
+from app.auth.dev_jwt import issue_dev_jwt
+from app.auth.dev_store import get_dev_user_by_username
 from app.middleware.rate_limit import (
     BYPASS_HEADER,
     RATE_LIMIT_LIMIT_HEADER,
@@ -29,7 +31,7 @@ pytestmark = [allure.epic("Middleware"), allure.feature("Rate Limiting")]
 def _make_request(
     *,
     path: str = "/api/v1/pet",
-    api_key: str = "test-key",
+    authorization: str = "",
     bypass_key: str = "",
     client_ip: str = "127.0.0.1",
 ) -> Request:
@@ -41,7 +43,7 @@ def _make_request(
         "query_string": b"",
         "headers": [
             (b"host", b"testserver"),
-            *([(b"x-api-key", api_key.encode())] if api_key else []),
+            *([(b"authorization", authorization.encode())] if authorization else []),
             *([(BYPASS_HEADER.lower().encode(), bypass_key.encode())] if bypass_key else []),
         ],
         "client": (client_ip, 12345),
@@ -69,6 +71,13 @@ async def _ok_response(_request: Request) -> Response:
     return Response(content="ok", status_code=200)
 
 
+def _authorization_for(username: str) -> str:
+    user = get_dev_user_by_username(username)
+    assert user is not None
+    token = issue_dev_jwt(user, "dev-jwt-secret")
+    return "Bearer " + token
+
+
 # ---------------------------------------------------------------------------
 # _get_client_key
 # ---------------------------------------------------------------------------
@@ -76,17 +85,20 @@ async def _ok_response(_request: Request) -> Response:
 
 @allure.story("Client Key Resolution")
 @allure.severity(allure.severity_level.MINOR)
-def test_get_client_key_uses_api_key() -> None:
-    """_get_client_key returns an API-prefixed key when X-API-Key is present."""
-    request = _make_request(api_key="my-key", client_ip="10.0.0.1")
-    assert _get_client_key(request) == "api:my-key"
+def test_get_client_key_uses_authenticated_user_id() -> None:
+    """_get_client_key returns a user-prefixed key when a valid bearer token is present."""
+    request = _make_request(
+        authorization=_authorization_for("devuser"),
+        client_ip="10.0.0.1",
+    )
+    assert _get_client_key(request) == "user:1"
 
 
 @allure.story("Client Key Resolution")
 @allure.severity(allure.severity_level.MINOR)
 def test_get_client_key_falls_back_to_ip() -> None:
-    """_get_client_key returns an IP-prefixed key when X-API-Key is absent."""
-    request = _make_request(api_key="", client_ip="10.0.0.2")
+    """_get_client_key returns an IP-prefixed key when auth is absent."""
+    request = _make_request(authorization="", client_ip="10.0.0.2")
     assert _get_client_key(request) == "ip:10.0.0.2"
 
 
@@ -107,6 +119,14 @@ def test_get_client_key_uses_forwarded_for() -> None:
     }
     request = Request(scope)  # type: ignore[arg-type]
     assert _get_client_key(request) == "ip:1.2.3.4"
+
+
+@allure.story("Client Key Resolution")
+@allure.severity(allure.severity_level.MINOR)
+def test_get_client_key_falls_back_to_ip_for_invalid_token() -> None:
+    """_get_client_key falls back to IP when the bearer token is invalid."""
+    request = _make_request(authorization="******", client_ip="10.0.0.3")
+    assert _get_client_key(request) == "ip:10.0.0.3"
 
 
 # ---------------------------------------------------------------------------
@@ -266,17 +286,23 @@ async def test_non_throttled_response_has_rate_limit_headers() -> None:
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.asyncio
 async def test_different_clients_have_separate_counters() -> None:
-    """Each API key maintains its own request counter."""
+    """Each authenticated user maintains an independent request counter."""
     middleware = _make_middleware(max_requests=1, bypass_key="")
     call_next = AsyncMock(return_value=Response(content="ok", status_code=200))
 
     # First client exhausts its quota
-    await middleware.dispatch(_make_request(api_key="key-A"), call_next)
-    resp_a = await middleware.dispatch(_make_request(api_key="key-A"), call_next)
+    await middleware.dispatch(_make_request(authorization=_authorization_for("devuser")), call_next)
+    resp_a = await middleware.dispatch(
+        _make_request(authorization=_authorization_for("devuser")),
+        call_next,
+    )
     assert resp_a.status_code == 429
 
     # Second client still has its own fresh quota
-    resp_b = await middleware.dispatch(_make_request(api_key="key-B"), call_next)
+    resp_b = await middleware.dispatch(
+        _make_request(authorization=_authorization_for("devadmin")),
+        call_next,
+    )
     assert resp_b.status_code == 200
 
 

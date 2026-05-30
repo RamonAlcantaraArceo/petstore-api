@@ -9,6 +9,8 @@ import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 
+from app.auth.dev_jwt import issue_dev_jwt
+from app.auth.dev_store import get_dev_user_by_username, reset_dev_users
 from app.dependencies import reset_memory_repos
 from app.main import create_app
 
@@ -53,6 +55,7 @@ def reset_repos(request: pytest.FixtureRequest) -> None:
     if "remote_only" in request.node.keywords:
         return
     reset_memory_repos()
+    reset_dev_users()
 
 
 @pytest_asyncio.fixture
@@ -64,6 +67,8 @@ async def memory_client() -> AsyncIterator[AsyncClient]:
     """
     os.environ.setdefault("STORAGE_MODE", "memory")
     os.environ.setdefault("API_KEY", "test-api-key")
+    os.environ.setdefault("APP_ENV", "dev")
+    os.environ.setdefault("DEV_JWT_SECRET", "test-dev-jwt-secret")
 
     from app.dependencies import _cached_settings  # noqa: PLC2701
 
@@ -91,13 +96,24 @@ async def app_client(memory_client: AsyncClient) -> AsyncClient:
 
 
 @pytest.fixture
-def api_key_header() -> dict[str, str]:
-    """Return headers containing the test API key.
+def auth_header() -> dict[str, str]:
+    """Return headers containing a valid development bearer token.
 
     Returns:
-        Dict with X-API-Key header.
+        Dict with Authorization header.
     """
-    return {"X-API-Key": "test-api-key"}
+    os.environ.setdefault("APP_ENV", "dev")
+    os.environ.setdefault("DEV_JWT_SECRET", "test-dev-jwt-secret")
+    user = get_dev_user_by_username("devuser")
+    assert user is not None
+    token = issue_dev_jwt(user, os.environ["DEV_JWT_SECRET"])
+    return {"Authorization": "Bearer " + token}
+
+
+@pytest.fixture
+def api_key_header(auth_header: dict[str, str]) -> dict[str, str]:
+    """Backward-compatible alias for tests that still request api_key_header."""
+    return auth_header
 
 
 @pytest.fixture
