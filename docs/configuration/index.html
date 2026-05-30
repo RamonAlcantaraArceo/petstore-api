@@ -16,7 +16,7 @@
         <link rel="prev" href="../architecture/">
       
       
-        <link rel="next" href="../testing/">
+        <link rel="next" href="../rate-limiting/">
       
       
         
@@ -468,6 +468,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../rate-limiting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rate Limiting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../testing/" class="md-nav__link">
         
   
@@ -562,10 +589,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
         
           
-          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
             
   
   
@@ -583,8 +610,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_9">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -781,6 +808,21 @@
 <td><code>DB_POOL_TIMEOUT</code></td>
 <td><code>30</code></td>
 <td>SQLAlchemy pool timeout (seconds)</td>
+</tr>
+<tr>
+<td><code>RATE_LIMIT_REQUESTS</code></td>
+<td><code>40</code></td>
+<td>Max requests per window per API key / client IP</td>
+</tr>
+<tr>
+<td><code>RATE_LIMIT_WINDOW_SECONDS</code></td>
+<td><code>60</code></td>
+<td>Rate-limit window duration (seconds)</td>
+</tr>
+<tr>
+<td><code>RATE_LIMIT_BYPASS_KEY</code></td>
+<td><em>(empty)</em></td>
+<td>Secret <code>X-Bypass-Key</code> header value that skips rate limiting</td>
 </tr>
 </tbody>
 </table>

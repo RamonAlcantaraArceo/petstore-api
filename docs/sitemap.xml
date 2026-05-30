@@ -2,46 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/</loc>
-         <lastmod>2026-05-26</lastmod>
+         <lastmod>2026-05-30</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/allure-history-design/</loc>
-         <lastmod>2026-05-26</lastmod>
+         <lastmod>2026-05-30</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/allure-quick-reference/</loc>
-         <lastmod>2026-05-26</lastmod>
+         <lastmod>2026-05-30</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/architecture/</loc>
-         <lastmod>2026-05-26</lastmod>
+         <lastmod>2026-05-30</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/badges/</loc>
-         <lastmod>2026-05-26</lastmod>
+         <lastmod>2026-05-30</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/changelog/</loc>
-         <lastmod>2026-05-26</lastmod>
+         <lastmod>2026-05-30</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/configuration/</loc>
-         <lastmod>2026-05-26</lastmod>
+         <lastmod>2026-05-30</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/deployment/</loc>
-         <lastmod>2026-05-26</lastmod>
+         <lastmod>2026-05-30</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/e2e-coverage/</loc>
-         <lastmod>2026-05-26</lastmod>
+         <lastmod>2026-05-30</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/getting-started/</loc>
-         <lastmod>2026-05-26</lastmod>
+         <lastmod>2026-05-30</lastmod>
+    </url>
+    <url>
+         <loc>https://ramonalcantaraarceo.github.io/petstore-api/rate-limiting/</loc>
+         <lastmod>2026-05-30</lastmod>
     </url>
     <url>
          <loc>https://ramonalcantaraarceo.github.io/petstore-api/testing/</loc>
-         <lastmod>2026-05-26</lastmod>
+         <lastmod>2026-05-30</lastmod>
     </url>
 </urlset>

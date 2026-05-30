@@ -10,29 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://ramonalcantaraarceo.github.io/petstore-api/">
+        <link rel="canonical" href="https://ramonalcantaraarceo.github.io/petstore-api/rate-limiting/">
       
       
+        <link rel="prev" href="../configuration/">
       
-        <link rel="next" href="badges/">
+      
+        <link rel="next" href="../testing/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Petstore API</title>
+        <title>Rate Limiting - Petstore API</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#petstore-api" class="md-skip">
+        <a href="#rate-limiting" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +96,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="Petstore API" class="md-header__button md-logo" aria-label="Petstore API" data-md-component="logo">
+    <a href=".." title="Petstore API" class="md-header__button md-logo" aria-label="Petstore API" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Rate Limiting
             
           </span>
         </div>
@@ -232,7 +234,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Petstore API" class="md-nav__button md-logo" aria-label="Petstore API" data-md-component="logo">
+    <a href=".." title="Petstore API" class="md-nav__button md-logo" aria-label="Petstore API" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -259,37 +261,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -305,48 +280,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Start
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Features
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -358,7 +291,7 @@
   
   
     <li class="md-nav__item">
-      <a href="badges/" class="md-nav__link">
+      <a href="../badges/" class="md-nav__link">
         
   
   
@@ -385,7 +318,7 @@
   
   
     <li class="md-nav__item">
-      <a href="getting-started/" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
@@ -412,7 +345,7 @@
   
   
     <li class="md-nav__item">
-      <a href="architecture/" class="md-nav__link">
+      <a href="../architecture/" class="md-nav__link">
         
   
   
@@ -439,7 +372,7 @@
   
   
     <li class="md-nav__item">
-      <a href="configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   
@@ -463,10 +396,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="rate-limiting/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rate Limiting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -482,6 +442,148 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How It Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exempt-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exempt Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#normal-usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normal Usage Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bypass-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bypass Mechanism
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bypass Mechanism">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openapi-429-error-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAPI / 429 Error Response
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -493,7 +595,7 @@
   
   
     <li class="md-nav__item">
-      <a href="testing/" class="md-nav__link">
+      <a href="../testing/" class="md-nav__link">
         
   
   
@@ -520,7 +622,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deployment/" class="md-nav__link">
+      <a href="../deployment/" class="md-nav__link">
         
   
   
@@ -547,7 +649,7 @@
   
   
     <li class="md-nav__item">
-      <a href="changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         
   
   
@@ -626,7 +728,7 @@
   
   
     <li class="md-nav__item">
-      <a href="allure-history-design/" class="md-nav__link">
+      <a href="../allure-history-design/" class="md-nav__link">
         
   
   
@@ -654,7 +756,7 @@
   
   
     <li class="md-nav__item">
-      <a href="allure-quick-reference/" class="md-nav__link">
+      <a href="../allure-quick-reference/" class="md-nav__link">
         
   
   
@@ -709,10 +811,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        How It Works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How It Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exempt-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exempt Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
       
     </span>
   </a>
@@ -720,10 +850,82 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+  <a href="#response-format" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Features
+        Response Format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#normal-usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normal Usage Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bypass-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bypass Mechanism
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bypass Mechanism">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openapi-429-error-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAPI / 429 Error Response
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Notes
       
     </span>
   </a>
@@ -750,22 +952,132 @@
   
 
 
-<h1 id="petstore-api">Petstore API<a class="headerlink" href="#petstore-api" title="Permanent link">&para;</a></h1>
-<p>A <strong>production-ready Python backend API</strong> implementing the <a href="https://petstore3.swagger.io/api/v3/openapi.json">Petstore OpenAPI 3.0 spec</a>, built with FastAPI and deployable to the cloud.</p>
-<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<p>Start the API in in-memory mode (no external dependencies):</p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up
+<h1 id="rate-limiting">Rate Limiting<a class="headerlink" href="#rate-limiting" title="Permanent link">&para;</a></h1>
+<p>Petstore API enforces a <strong>fixed-window rate limit</strong> on all non-exempt endpoints to protect the service from abuse and ensure fair usage.</p>
+<hr />
+<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<p>Requests are tracked per <strong>API key</strong> (from the <code>X-API-Key</code> header) or, when no key is supplied, per <strong>client IP address</strong>.<br />
+A fixed-window counter is incremented with each request.<br />
+Once the counter exceeds the configured threshold within the current window, the API returns <code>429 Too Many Requests</code> until the window resets.</p>
+<h3 id="exempt-endpoints">Exempt Endpoints<a class="headerlink" href="#exempt-endpoints" title="Permanent link">&para;</a></h3>
+<p>The following paths are <strong>never</strong> rate-limited:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/health</code></td>
+<td>Health probe</td>
+</tr>
+<tr>
+<td><code>/api/v1/health</code></td>
+<td>Versioned health probe</td>
+</tr>
+<tr>
+<td><code>/openapi.json</code></td>
+<td>OpenAPI schema</td>
+</tr>
+<tr>
+<td><code>/docs</code></td>
+<td>Swagger UI</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Environment Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RATE_LIMIT_REQUESTS</code></td>
+<td><code>40</code></td>
+<td>Max requests allowed per window per client key</td>
+</tr>
+<tr>
+<td><code>RATE_LIMIT_WINDOW_SECONDS</code></td>
+<td><code>60</code></td>
+<td>Window duration in seconds</td>
+</tr>
+<tr>
+<td><code>RATE_LIMIT_BYPASS_KEY</code></td>
+<td><em>(empty)</em></td>
+<td>Secret value for the bypass header (see below)</td>
+</tr>
+</tbody>
+</table>
+<p>Set these in your <code>.env</code> file (copy from <code>.env.example</code>):</p>
+<div class="highlight"><pre><span></span><code>RATE_LIMIT_REQUESTS=40
+RATE_LIMIT_WINDOW_SECONDS=60
+RATE_LIMIT_BYPASS_KEY=your-secret-bypass-key-here
 </code></pre></div>
-<p>Then test the health endpoint:</p>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8000/health
+<hr />
+<h2 id="response-format">Response Format<a class="headerlink" href="#response-format" title="Permanent link">&para;</a></h2>
+<p>When a request is accepted, the response includes rate-limit metadata headers:</p>
+<div class="highlight"><pre><span></span><code>X-RateLimit-Limit: 40
+X-RateLimit-Remaining: 39
+X-RateLimit-Reset: 60
 </code></pre></div>
-<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<p>When the rate limit is exceeded the API returns:</p>
+<p><strong>HTTP <code>429 Too Many Requests</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Rate limit exceeded. Please retry after the window resets.&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The throttled response includes a <code>Retry-After</code> header indicating the number of seconds to wait before the next request will succeed:</p>
+<div class="highlight"><pre><span></span><code>HTTP/1.1 429 Too Many Requests
+Retry-After: 42
+Content-Type: application/json
+</code></pre></div>
+<hr />
+<h2 id="normal-usage-example">Normal Usage Example<a class="headerlink" href="#normal-usage-example" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># First 40 requests succeed (HTTP 200 / 404 / etc.)</span>
+curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-API-Key: my-api-key&quot;</span><span class="w"> </span>https://api.example.com/api/v1/pet/1
+
+<span class="c1"># Request 41+ within the same 60-second window returns 429</span>
+<span class="c1"># HTTP/1.1 429 Too Many Requests</span>
+<span class="c1"># Retry-After: 23</span>
+<span class="c1"># {&quot;detail&quot;: &quot;Rate limit exceeded. Please retry after the window resets.&quot;}</span>
+</code></pre></div>
+<hr />
+<h2 id="bypass-mechanism">Bypass Mechanism<a class="headerlink" href="#bypass-mechanism" title="Permanent link">&para;</a></h2>
+<p>Certain privileged clients (for example, internal automation or admin tooling) can skip rate limiting entirely by including the <code>X-Bypass-Key</code> header with the configured secret value.</p>
+<h3 id="configuration_1">Configuration<a class="headerlink" href="#configuration_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>RATE_LIMIT_BYPASS_KEY=super-secret-value
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Keep the bypass key secret</p>
+<p>The bypass key grants unlimited request throughput.<br />
+Treat it like a high-privilege credential — store it in a secret manager and never commit it to source control.</p>
+</div>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># No rate limit applied when the correct bypass key is present</span>
+curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-API-Key: my-api-key&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-H<span class="w"> </span><span class="s2">&quot;X-Bypass-Key: super-secret-value&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>https://api.example.com/api/v1/pet/1
+</code></pre></div>
+<p>If <code>RATE_LIMIT_BYPASS_KEY</code> is left empty (the default) the bypass mechanism is <strong>disabled</strong>; the <code>X-Bypass-Key</code> header has no effect.</p>
+<hr />
+<h2 id="openapi-429-error-response">OpenAPI / 429 Error Response<a class="headerlink" href="#openapi-429-error-response" title="Permanent link">&para;</a></h2>
+<p>The <code>429 Too Many Requests</code> response is emitted by the rate-limiting middleware <strong>before</strong> route handlers are invoked.<br />
+The global API description in the interactive docs (<code>/docs</code>) documents this behaviour, accepted responses include <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code>, and <code>X-RateLimit-Reset</code>, and <code>Retry-After</code> is always present on 429 responses.</p>
+<hr />
+<h2 id="design-notes">Design Notes<a class="headerlink" href="#design-notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Full Petstore API (pets, store, users)</li>
-<li>Three runtime modes: in-memory, local PostgreSQL, AWS RDS</li>
-<li>Structured JSON logging with correlation IDs</li>
-<li>API key authentication with JWT-ready interface</li>
-<li>Deployable via Docker locally and Helm to AWS EKS</li>
+<li><strong>In-memory, per-process store</strong> — no external dependency (Redis, etc.) is required.<br />
+  Each application process maintains its own counters; in a multi-replica deployment consider replacing the store with a shared Redis instance using the same <code>RateLimitMiddleware</code> interface.</li>
+<li><strong>Fixed-window algorithm</strong> — simple and predictable.<br />
+  Each window starts the first time a key is seen and resets after <code>RATE_LIMIT_WINDOW_SECONDS</code> seconds.</li>
+<li><strong>Middleware placement</strong> — <code>RateLimitMiddleware</code> is registered as a Starlette <code>BaseHTTPMiddleware</code> <em>inside</em> the auth middleware stack so rate limiting occurs for every request reaching the application, authenticated or not.</li>
 </ul>
 
 
@@ -822,10 +1134,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.top", "search.highlight", "content.code.copy", "search.suggest"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "search.highlight", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
