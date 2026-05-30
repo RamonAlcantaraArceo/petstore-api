@@ -50,9 +50,7 @@ def _make_request(
         ],
         "client": (client_ip, 12345),
         "app": SimpleNamespace(
-            state=SimpleNamespace(
-                settings=Settings(app_env="dev", dev_jwt_secret="dev-jwt-secret")
-            )
+            state=SimpleNamespace(settings=Settings(app_env="dev", dev_jwt_secret="dev-jwt-secret"))
         ),
     }
     return Request(scope)  # type: ignore[arg-type]

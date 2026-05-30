@@ -21,6 +21,4 @@ def validate_supabase_jwt(token: str, *, settings: Settings) -> dict[str, Any]:
     This is a stub for future JWKS-backed validation in staging and production.
     """
     del token, settings
-    raise SupabaseJWTNotConfiguredError(
-        "Supabase JWT validation is not configured yet."
-    )
+    raise SupabaseJWTNotConfiguredError("Supabase JWT validation is not configured yet.")

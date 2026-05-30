@@ -32,11 +32,7 @@ class DevLoginResponse(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "access_token": (
-                    "dev-header."
-                    "dev-payload."
-                    "dev-signature"
-                ),
+                "access_token": ("dev-header." "dev-payload." "dev-signature"),
                 "token_type": "bearer",
                 "user": {
                     "id": 1,
@@ -57,10 +53,7 @@ class DevLoginResponse(BaseModel):
     response_model=DevLoginResponse,
     operation_id="dev_login",
     summary="DEV ONLY login",
-    description=(
-        "DEV ONLY. Exchange a seeded in-memory username for a Supabase-shaped "
-        "development JWT."
-    ),
+    description="DEV ONLY. Exchange a seeded in-memory username for a Supabase-shaped development JWT.",
     responses={
         401: {"description": "Unknown development username."},
         403: {"description": "Development login is disabled outside dev."},

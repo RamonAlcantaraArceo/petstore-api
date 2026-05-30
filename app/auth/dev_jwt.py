@@ -90,9 +90,7 @@ def decode_dev_jwt(token: str, secret: str, *, now: int | None = None) -> dict[s
         raise DevJWTError("Malformed JWT.") from exc
 
     signing_input = f"{encoded_header}.{encoded_claims}".encode("ascii")
-    expected_signature = hmac.new(
-        secret.encode("utf-8"), signing_input, hashlib.sha256
-    ).digest()
+    expected_signature = hmac.new(secret.encode("utf-8"), signing_input, hashlib.sha256).digest()
     provided_signature = _b64url_decode(encoded_signature)
     if not hmac.compare_digest(expected_signature, provided_signature):
         raise DevJWTError("JWT signature verification failed.")

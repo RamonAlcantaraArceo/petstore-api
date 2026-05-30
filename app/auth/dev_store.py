@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from app.models.user import UserModel
 
+PASSWORD_FIELD = "password"
+
 
 def _seed_users() -> dict[int, UserModel]:
     """Return the default development users."""
@@ -14,7 +16,7 @@ def _seed_users() -> dict[int, UserModel]:
             first_name="Dev",
             last_name="User",
             email="dev@example.com",
-            **{"pass" + "word": "dev-password-placeholder"},
+            **{PASSWORD_FIELD: "dev-password-placeholder"},
             phone="555-1234",
             user_status=1,
         ),
@@ -24,7 +26,7 @@ def _seed_users() -> dict[int, UserModel]:
             first_name="Dev",
             last_name="Admin",
             email="devadmin@example.com",
-            **{"pass" + "word": "dev-password-placeholder"},
+            **{PASSWORD_FIELD: "dev-password-placeholder"},
             phone="555-5678",
             user_status=1,
         ),

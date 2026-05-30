@@ -26,7 +26,7 @@ Example response:
 
 ```json
 {
-  "access_token": "Bearer-style JWT",
+  "access_token": "JWT token",
   "token_type": "bearer",
   "user": {
     "id": 1,

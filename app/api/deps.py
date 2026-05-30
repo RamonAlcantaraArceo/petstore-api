@@ -20,6 +20,7 @@ from app.models.user import UserModel
 from petstore_core.config import Settings
 
 _EXAMPLE_JWT = "******"
+PASSWORD_FIELD = "password"
 
 bearer_scheme = HTTPBearer(
     auto_error=False,
@@ -80,7 +81,7 @@ def _map_claims_to_user_model(claims: Mapping[str, Any]) -> UserModel:
         first_name=_string_or_none(metadata.get("first_name")),
         last_name=_string_or_none(metadata.get("last_name")),
         email=_string_or_none(claims.get("email") or metadata.get("email")),
-        **{"pass" + "word": None},
+        **{PASSWORD_FIELD: None},
         phone=_string_or_none(metadata.get("phone")),
         user_status=_coerce_int(metadata.get("user_status")),
     )
