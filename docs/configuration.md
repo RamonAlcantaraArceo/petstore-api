@@ -15,6 +15,9 @@ All settings are loaded from environment variables. Copy `.env.example` to `.env
 | `DB_POOL_SIZE` | `5` | SQLAlchemy connection pool size |
 | `DB_MAX_OVERFLOW` | `10` | SQLAlchemy max overflow connections |
 | `DB_POOL_TIMEOUT` | `30` | SQLAlchemy pool timeout (seconds) |
+| `RATE_LIMIT_REQUESTS` | `40` | Max requests per window per API key / client IP |
+| `RATE_LIMIT_WINDOW_SECONDS` | `60` | Rate-limit window duration (seconds) |
+| `RATE_LIMIT_BYPASS_KEY` | _(empty)_ | Secret `X-Bypass-Key` header value that skips rate limiting |
 
 ## Storage Modes
 

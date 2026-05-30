@@ -23,6 +23,10 @@ class Settings(BaseSettings):
         db_pool_timeout: SQLAlchemy pool timeout in seconds.
         seed_dataset: Optional fixture dataset name to load at startup
             (e.g. "basic", "mixed_v1", "mixed_v2"). Empty string disables seeding.
+        rate_limit_requests: Maximum number of requests allowed per window per client key.
+        rate_limit_window_seconds: Duration of the rate-limit window in seconds.
+        rate_limit_bypass_key: Secret value for the ``X-Bypass-Key`` header that skips
+            rate limiting. Empty string disables the bypass mechanism.
 
     Example:
         >>> settings = Settings(api_key="test-key")
@@ -42,6 +46,9 @@ class Settings(BaseSettings):
     db_pool_timeout: int = 30
     seed_dataset: str = ""
     e2e_base_url: str = ""
+    rate_limit_requests: int = 40
+    rate_limit_window_seconds: int = 60
+    rate_limit_bypass_key: str = ""
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

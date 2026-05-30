@@ -42,6 +42,7 @@ nav:
   - Getting Started: getting-started.md
   - Architecture: architecture.md
   - Configuration: configuration.md
+  - Rate Limiting: rate-limiting.md
   - Testing Guide: testing.md
   - Deployment: deployment.md
   - Changelog: changelog.md
