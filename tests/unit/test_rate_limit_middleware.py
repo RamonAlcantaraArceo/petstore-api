@@ -10,7 +10,14 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.types import ASGIApp
 
-from app.middleware.rate_limit import BYPASS_HEADER, RateLimitMiddleware, _get_client_key
+from app.middleware.rate_limit import (
+    BYPASS_HEADER,
+    RATE_LIMIT_LIMIT_HEADER,
+    RATE_LIMIT_REMAINING_HEADER,
+    RATE_LIMIT_RESET_HEADER,
+    RateLimitMiddleware,
+    _get_client_key,
+)
 
 pytestmark = [allure.epic("Middleware"), allure.feature("Rate Limiting")]
 
@@ -237,6 +244,22 @@ async def test_429_response_has_retry_after_header() -> None:
 
     assert response.status_code == 429
     assert "retry-after" in response.headers
+
+
+@allure.story("Rate Limit Enforcement")
+@allure.severity(allure.severity_level.NORMAL)
+@pytest.mark.asyncio
+async def test_non_throttled_response_has_rate_limit_headers() -> None:
+    """Non-throttled responses include rate-limit metadata headers."""
+    middleware = _make_middleware(max_requests=3, window_seconds=60, bypass_key="")
+    call_next = AsyncMock(return_value=Response(content="ok", status_code=200))
+
+    response = await middleware.dispatch(_make_request(), call_next)
+
+    assert response.status_code == 200
+    assert response.headers[RATE_LIMIT_LIMIT_HEADER] == "3"
+    assert response.headers[RATE_LIMIT_REMAINING_HEADER] == "2"
+    assert response.headers[RATE_LIMIT_RESET_HEADER] == "60"
 
 
 @allure.story("Rate Limit Enforcement")

@@ -97,10 +97,15 @@ async def test_rate_limit_triggers_after_threshold(
 async def test_rate_limit_response_body_and_headers(
     rate_limited_client: AsyncClient,
 ) -> None:
-    """429 response contains expected body and Retry-After header."""
+    """Responses expose rate-limit metadata until throttling occurs."""
     headers = {"X-API-Key": _API_KEY}
 
-    for _ in range(_LOW_LIMIT):
+    first_response = await rate_limited_client.get("/api/v1/pet/1", headers=headers)
+    assert first_response.headers["x-ratelimit-limit"] == str(_LOW_LIMIT)
+    assert first_response.headers["x-ratelimit-remaining"] == str(_LOW_LIMIT - 1)
+    assert int(first_response.headers["x-ratelimit-reset"]) > 0
+
+    for _ in range(_LOW_LIMIT - 1):
         await rate_limited_client.get("/api/v1/pet/1", headers=headers)
 
     response = await rate_limited_client.get("/api/v1/pet/1", headers=headers)

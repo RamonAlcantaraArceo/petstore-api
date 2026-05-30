@@ -115,6 +115,8 @@ def create_app() -> FastAPI:
             "**fixed-window rate limit** of `RATE_LIMIT_REQUESTS` requests per "
             "`RATE_LIMIT_WINDOW_SECONDS` seconds (default: **40 req / 60 s**) "
             "per API key or client IP.\n\n"
+            "Accepted responses include `X-RateLimit-Limit`, "
+            "`X-RateLimit-Remaining`, and `X-RateLimit-Reset` headers.\n\n"
             "When the limit is exceeded the API returns `429 Too Many Requests` with a "
             "`Retry-After` header indicating how many seconds to wait.\n\n"
             "### Bypass\n\n"

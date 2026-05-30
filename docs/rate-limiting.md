@@ -43,6 +43,14 @@ RATE_LIMIT_BYPASS_KEY=your-secret-bypass-key-here
 
 ## Response Format
 
+When a request is accepted, the response includes rate-limit metadata headers:
+
+```
+X-RateLimit-Limit: 40
+X-RateLimit-Remaining: 39
+X-RateLimit-Reset: 60
+```
+
 When the rate limit is exceeded the API returns:
 
 **HTTP `429 Too Many Requests`**
@@ -53,7 +61,7 @@ When the rate limit is exceeded the API returns:
 }
 ```
 
-The response also includes a `Retry-After` header indicating the number of seconds to wait before the next request will succeed:
+The throttled response includes a `Retry-After` header indicating the number of seconds to wait before the next request will succeed:
 
 ```
 HTTP/1.1 429 Too Many Requests
@@ -107,7 +115,7 @@ If `RATE_LIMIT_BYPASS_KEY` is left empty (the default) the bypass mechanism is *
 ## OpenAPI / 429 Error Response
 
 The `429 Too Many Requests` response is emitted by the rate-limiting middleware **before** route handlers are invoked.  
-The global API description in the interactive docs (`/docs`) documents this behaviour, and the `Retry-After` header is always present on 429 responses.
+The global API description in the interactive docs (`/docs`) documents this behaviour, accepted responses include `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-RateLimit-Reset`, and `Retry-After` is always present on 429 responses.
 
 ---
 

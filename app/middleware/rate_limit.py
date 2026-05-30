@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import time
 from collections.abc import Awaitable, Callable
 
@@ -15,6 +16,10 @@ EXEMPT_PATHS = {"/health", "/api/v1/health", "/redoc", "/openapi.json"}
 
 #: Header name used to bypass rate limiting.
 BYPASS_HEADER = "X-Bypass-Key"
+
+RATE_LIMIT_LIMIT_HEADER = "X-RateLimit-Limit"
+RATE_LIMIT_REMAINING_HEADER = "X-RateLimit-Remaining"
+RATE_LIMIT_RESET_HEADER = "X-RateLimit-Reset"
 
 
 def _get_client_key(request: Request) -> str:
@@ -40,6 +45,12 @@ def _get_client_key(request: Request) -> str:
 
     host = request.client.host if request.client else "unknown"
     return f"ip:{host}"
+
+
+def _seconds_until_reset(window_start: float, window_seconds: int, now: float) -> int:
+    """Return the number of whole seconds until the current window resets."""
+    remaining = window_seconds - (now - window_start)
+    return max(0, math.ceil(remaining))
 
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
@@ -119,12 +130,18 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
         self._counters[client_key] = (count, window_start)
 
+        reset_seconds = _seconds_until_reset(window_start, self._window_seconds, now)
+
         if count > self._max_requests:
-            retry_after = max(1, int(self._window_seconds - (now - window_start)) + 1)
+            retry_after = max(1, reset_seconds)
             return JSONResponse(
                 status_code=429,
                 content={"detail": "Rate limit exceeded. Please retry after the window resets."},
                 headers={"Retry-After": str(retry_after)},
             )
 
-        return await call_next(request)
+        response = await call_next(request)
+        response.headers[RATE_LIMIT_LIMIT_HEADER] = str(self._max_requests)
+        response.headers[RATE_LIMIT_REMAINING_HEADER] = str(max(0, self._max_requests - count))
+        response.headers[RATE_LIMIT_RESET_HEADER] = str(reset_seconds)
+        return response
