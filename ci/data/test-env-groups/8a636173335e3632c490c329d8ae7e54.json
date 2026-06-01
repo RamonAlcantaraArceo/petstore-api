@@ -1,1 +1,1 @@
-{"id":"8a636173335e3632c490c329d8ae7e54","fullName":"tests.unit.test_order_service#test_get_inventory_delegates_to_repo","name":"test_get_inventory_delegates_to_repo","status":"passed","testResultsByEnv":{"default":"ec51f3e59a957ab08e453ad61995810c"}}
+{"id":"8a636173335e3632c490c329d8ae7e54","fullName":"tests.unit.test_order_service#test_get_inventory_delegates_to_repo","name":"test_get_inventory_delegates_to_repo","status":"passed","testResultsByEnv":{"default":"8f5270aad381b7719d218a9410be1aa6"}}
