@@ -5,11 +5,11 @@ from __future__ import annotations
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
+from petstore_core.schemas.user import User, UserCreate, UserUpdate
+from petstore_core.services.user import UserService
 
 from app.api.v1.error_mapping import map_domain_errors
 from app.dependencies import get_user_service
-from petstore_core.schemas.user import User, UserCreate, UserUpdate
-from petstore_core.services.user import UserService
 
 router = APIRouter(prefix="/user", tags=["user"])
 

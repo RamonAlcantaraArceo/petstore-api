@@ -5,11 +5,11 @@ from __future__ import annotations
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, Query, UploadFile
+from petstore_core.schemas.pet import Pet, PetCreate, PetStatus, PetUpdate
+from petstore_core.services.pet import PetService
 
 from app.api.v1.error_mapping import map_domain_errors
 from app.dependencies import get_pet_service
-from petstore_core.schemas.pet import Pet, PetCreate, PetStatus, PetUpdate
-from petstore_core.services.pet import PetService
 
 router = APIRouter(prefix="/pet", tags=["pet"])
 

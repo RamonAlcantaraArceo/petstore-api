@@ -5,7 +5,6 @@ from __future__ import annotations
 from collections.abc import Awaitable
 
 from fastapi import HTTPException, status
-
 from petstore_core.errors import DomainError, NotFoundError, ValidationError
 
 

@@ -14,14 +14,14 @@ See ``scripts/load_fixtures.py`` for a CLI wrapper around this module.
 from __future__ import annotations
 
 import structlog
-
-from app.fixtures.datasets import FixtureDataset, get_dataset
 from petstore_core.schemas.order import OrderCreate
 from petstore_core.schemas.pet import PetCreate
 from petstore_core.schemas.user import UserCreate
 from petstore_core.services.order import OrderService
 from petstore_core.services.pet import PetService
 from petstore_core.services.user import UserService
+
+from app.fixtures.datasets import FixtureDataset, get_dataset
 
 logger = structlog.get_logger(__name__)
 

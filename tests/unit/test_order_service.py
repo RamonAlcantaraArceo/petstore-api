@@ -5,10 +5,10 @@ from __future__ import annotations
 from unittest.mock import AsyncMock
 
 import pytest
+from petstore_core.errors import NotFoundError, ValidationError
 
 from app.schemas.order import Order, OrderStatus
 from app.services.order import OrderService
-from petstore_core.errors import NotFoundError, ValidationError
 from tests.factories.order import OrderCreateFactory
 
 
