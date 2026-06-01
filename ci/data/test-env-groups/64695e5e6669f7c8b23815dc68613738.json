@@ -1,1 +1,1 @@
-{"id":"64695e5e6669f7c8b23815dc68613738","fullName":"tests.integration.test_rate_limiting#test_health_endpoint_is_exempt_from_rate_limiting","name":"test_health_endpoint_is_exempt_from_rate_limiting","status":"passed","testResultsByEnv":{"default":"a5beb71d123c051964a6d310c7534a33"}}
+{"id":"64695e5e6669f7c8b23815dc68613738","fullName":"tests.integration.test_rate_limiting#test_health_endpoint_is_exempt_from_rate_limiting","name":"test_health_endpoint_is_exempt_from_rate_limiting","status":"passed","testResultsByEnv":{"default":"55c48e7541fe3fb2fc3a0135eb269959"}}

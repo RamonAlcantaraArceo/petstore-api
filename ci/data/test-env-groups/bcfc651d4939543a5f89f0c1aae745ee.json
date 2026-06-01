@@ -1,1 +1,1 @@
-{"id":"bcfc651d4939543a5f89f0c1aae745ee","fullName":"tests.unit.test_user_service#test_login_returns_token","name":"test_login_returns_token","status":"passed","testResultsByEnv":{"default":"66f2b7e02c9c0a492e5fc7674abdadc5"}}
+{"id":"bcfc651d4939543a5f89f0c1aae745ee","fullName":"tests.unit.test_user_service#test_login_returns_token","name":"test_login_returns_token","status":"passed","testResultsByEnv":{"default":"b5c706a71653b3d74dabfe553550b5c7"}}
