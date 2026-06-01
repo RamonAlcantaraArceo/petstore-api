@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-06-01
+
+### Fixed
+
+- Resolved issue with packaging of petstore_core after incomplete work during refactor.
+- Fixed /redoc endpoint to be exposed again
+
 ## [0.2.0] - 2026-05-28
 
 ### Added
