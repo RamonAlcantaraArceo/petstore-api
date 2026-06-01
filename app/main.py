@@ -10,7 +10,7 @@ from copy import deepcopy
 
 import structlog
 from fastapi import FastAPI, Request
-from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
@@ -155,6 +155,14 @@ def create_app() -> FastAPI:
         return get_swagger_ui_html(
             openapi_url="/openapi.json",
             title=f"{app.title} - Swagger UI",
+        )
+
+    @app.get("/redoc", include_in_schema=False)
+    async def redoc_html() -> object:
+        """Serve ReDoc pointing to the custom OpenAPI endpoint."""
+        return get_redoc_html(
+            openapi_url="/openapi.json",
+            title=f"{app.title} - ReDoc",
         )
 
     # Middleware (outermost first)
