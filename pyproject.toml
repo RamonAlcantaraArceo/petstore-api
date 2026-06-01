@@ -13,6 +13,7 @@ dependencies = [
   "httpx>=0.27.0",
   "python-multipart>=0.0.29",
   "dotenv>=0.9.9",
+  "petstore-core",
 ]
 
 [project.optional-dependencies]
@@ -61,7 +62,10 @@ tag-pattern = "v(?P<version>.*)"
 version_scheme = "no-guess-dev"
 
 [tool.hatch.build.targets.wheel]
-packages = ["app", "petstore_core"]
+packages = ["app"]
+
+[tool.uv.sources]
+petstore-core = { path = "pkg" }
 
 [tool.ruff]
 line-length = 100
@@ -87,26 +91,22 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["app", "petstore_core"]
+source = ["app"]
 omit = [
   "app/db/migrations/*",
   "app/db/session.py",
   "app/models/*",
-  "petstore_core/models/*",
-  "petstore_core/db/session.py",
   "app/repositories/postgres/*",
-  "petstore_core/repositories/postgres/*",
   "**/__pycache__/*",
+  "pkg/*",
+  ".venv/*",
 ]
 
 [tool.coverage.paths]
 source = [
   "app",
-  "petstore_core",
   "/workspace/app",
-  "/workspace/petstore_core",
   "/petstore/app",
-  "/petstore/petstore_core",
 ]
 
 [tool.coverage.report]

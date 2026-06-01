@@ -5,11 +5,11 @@ from __future__ import annotations
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
+from petstore_core.schemas.order import Order, OrderCreate
+from petstore_core.services.order import OrderService
 
 from app.api.v1.error_mapping import map_domain_errors
 from app.dependencies import get_order_service
-from petstore_core.schemas.order import Order, OrderCreate
-from petstore_core.services.order import OrderService
 
 router = APIRouter(prefix="/store", tags=["store"])
 

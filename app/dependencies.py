@@ -7,7 +7,6 @@ from functools import lru_cache
 from typing import Annotated
 
 from fastapi import Depends
-
 from petstore_core.config import Settings, get_settings
 from petstore_core.repositories.memory.order import MemoryOrderRepository
 from petstore_core.repositories.memory.pet import MemoryPetRepository

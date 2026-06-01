@@ -7,13 +7,13 @@ from logging.config import fileConfig
 from typing import Any
 
 from alembic import context
-from sqlalchemy.ext.asyncio import create_async_engine
 
 # Load app config
 from petstore_core.config import get_settings
 from petstore_core.models.order import Base as OrderBase
 from petstore_core.models.pet import Base as PetBase
 from petstore_core.models.user import Base as UserBase
+from sqlalchemy.ext.asyncio import create_async_engine
 
 # Alembic Config object
 config = context.config
