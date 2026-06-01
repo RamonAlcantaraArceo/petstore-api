@@ -63,3 +63,5 @@ prompts/
 .allure/
 allure-results/
 allure-report/
+
+.DS_Store

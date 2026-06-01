@@ -836,7 +836,7 @@ requires-dist = [
     { name = "mkdocs-material", marker = "extra == 'docs'" },
     { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.10.0" },
-    { name = "petstore-core", directory = "petstore_core" },
+    { name = "petstore-core", directory = "pkg" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.7.0" },
     { name = "pydantic-settings", specifier = ">=2.14.1" },
     { name = "pymdown-extensions", marker = "extra == 'docs'" },
@@ -858,7 +858,7 @@ provides-extras = ["cli", "dev", "docs", "perf"]
 [[package]]
 name = "petstore-core"
 version = "0.1.0"
-source = { directory = "petstore_core" }
+source = { directory = "pkg" }
 dependencies = [
     { name = "asyncpg" },
     { name = "pydantic" },

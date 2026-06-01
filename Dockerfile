@@ -45,7 +45,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # Copy only dependency files for layer caching
 COPY pyproject.toml ./
 COPY requirements-runtime.txt ./
-COPY petstore_core/ ./petstore_core/
+COPY pkg/ ./pkg/
 RUN touch README.md
 
 # Install production dependencies (no dev extras) with cache mount

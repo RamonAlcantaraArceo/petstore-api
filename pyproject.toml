@@ -65,7 +65,7 @@ version_scheme = "no-guess-dev"
 packages = ["app"]
 
 [tool.uv.sources]
-petstore-core = { path = "petstore_core" }
+petstore-core = { path = "pkg" }
 
 [tool.ruff]
 line-length = 100
