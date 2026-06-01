@@ -1,0 +1,2 @@
+WARNING  fastapi:models.py:38 email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
