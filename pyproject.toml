@@ -13,6 +13,7 @@ dependencies = [
   "httpx>=0.27.0",
   "python-multipart>=0.0.29",
   "dotenv>=0.9.9",
+  "petstore-core",
 ]
 
 [project.optional-dependencies]
@@ -61,7 +62,10 @@ tag-pattern = "v(?P<version>.*)"
 version_scheme = "no-guess-dev"
 
 [tool.hatch.build.targets.wheel]
-packages = ["app", "petstore_core"]
+packages = ["app"]
+
+[tool.uv.sources]
+petstore-core = { path = "petstore_core" }
 
 [tool.ruff]
 line-length = 100
