@@ -91,26 +91,26 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["app", "petstore_core"]
+source = ["app", "pkg"]
 omit = [
   "app/db/migrations/*",
   "app/db/session.py",
   "app/models/*",
-  "petstore_core/models/*",
-  "petstore_core/db/session.py",
+  "pkg/petstore_core/models/*",
+  "pkg/petstore_core/db/session.py",
   "app/repositories/postgres/*",
-  "petstore_core/repositories/postgres/*",
+  "pkg/petstore_core/repositories/postgres/*",
   "**/__pycache__/*",
 ]
 
 [tool.coverage.paths]
 source = [
   "app",
-  "petstore_core",
+  "pkg",
   "/workspace/app",
-  "/workspace/petstore_core",
+  "/workspace/pkg",
   "/petstore/app",
-  "/petstore/petstore_core",
+  "/petstore/pkg",
 ]
 
 [tool.coverage.report]
