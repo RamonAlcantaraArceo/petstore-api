@@ -1,1 +1,1 @@
-{"id":"93bc9dd492da63304949e002427e30c9","fullName":"tests.unit.test_user_service#test_logout_does_not_call_commit_or_rollback","name":"test_logout_does_not_call_commit_or_rollback","status":"passed","testResultsByEnv":{"default":"11aac52ff545dcff31c919c930967808"}}
+{"id":"93bc9dd492da63304949e002427e30c9","fullName":"tests.unit.test_user_service#test_logout_does_not_call_commit_or_rollback","name":"test_logout_does_not_call_commit_or_rollback","status":"passed","testResultsByEnv":{"default":"3a6bbf05565c3bd754131b81331dfdf3"}}
