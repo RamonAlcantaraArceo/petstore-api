@@ -4,14 +4,14 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query, Response
+from fastapi import APIRouter, Body, Depends, Query, Response
 from petstore_core.config import Settings
-from petstore_core.models.user import UserModel
 from petstore_core.schemas.user import User, UserCreate, UserLogin, UserUpdate
 from petstore_core.services.user import UserService
 
 from app.api.v1.error_mapping import map_domain_errors
 from app.auth.dev_jwt import issue_dev_jwt
+from app.models.user import UserModel
 from app.dependencies import _cached_settings, _cached_settings, get_user_service
 
 protected_router = APIRouter(prefix="/user", tags=["user"])
@@ -20,10 +20,46 @@ unprotected_router = APIRouter(prefix="/user", tags=["user"])
 
 @unprotected_router.post("", response_model=User, status_code=200, operation_id="create_user")
 async def create_user(
-    user: UserCreate,
+    user: Annotated[
+        UserCreate,
+        Body(
+            description="User data for the new user to be created",
+            openapi_examples={
+                "example1": {
+                    "summary": "Create user example",
+                    "value": {
+                        "username": "johndoe",
+                        "first_name": "John",
+                        "last_name": "Doe",
+                        "email": "johndoe@example.com",
+                        "phone": "555-1234",
+                        "password": "securepassword",
+                        "user_status": 1,
+                    },
+                },
+                "example2": {
+                    "summary": "Minimal data example",
+                    "value": {"username": "janedoe", "password": "securepassword"},
+                },
+                "example3": {
+                    "summary": "Invalid user example",
+                    "value": {
+                        "username": "johndoe",
+                        "first_name": "John",
+                        "last_name": "Doe",
+                        "email": "johndoe@example.com",
+                        "phone": "555-1234",
+                        "user_status": 1,
+                    },
+                },
+            },
+        ),
+    ],
     service: Annotated[UserService, Depends(get_user_service)],
 ) -> User:
     """Create a new user.
+
+    \f
 
     Args:
         user: User data from request body.
@@ -46,7 +82,7 @@ async def create_users_with_list(
     service: Annotated[UserService, Depends(get_user_service)],
 ) -> list[User]:
     """Create users from a list.
-
+    \f
     Args:
         users: List of user data from request body.
         service: Injected UserService.
@@ -75,17 +111,9 @@ async def login_user(
     Returns:
         UserLogin containing the session token and user information.
     """
-    token = await map_domain_errors(service.login(username, password))
+    await map_domain_errors(service.login(username, password))
     user = await map_domain_errors(service.get_user(username))
-    user_model = UserModel(
-        id=user.id,
-        username=user.username,
-        first_name=user.first_name,
-        last_name=user.last_name,
-        email=user.email,
-        phone=user.phone,
-        user_status=user.user_status,
-    )
+    user_model = UserModel(**user.model_dump())
 
     access_token = issue_dev_jwt(
         user=user_model,

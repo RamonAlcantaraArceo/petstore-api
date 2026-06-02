@@ -12,44 +12,13 @@ from app.auth.dev_store import get_dev_user_by_username
 from app.dependencies import _cached_settings
 from petstore_core.config import Settings
 from petstore_core.schemas.user import User
+from petstore_core.schemas.auth import DevLoginRequest, DevLoginResponse
 
-router = APIRouter(prefix="/auth", tags=["auth"])
-
-
-class DevLoginRequest(BaseModel):
-    """Request payload for development login."""
-
-    username: str = Field(description="Seeded development username.", examples=["devuser"])
-
-
-class DevLoginResponse(BaseModel):
-    """Response payload for development login."""
-
-    access_token: str
-    token_type: str = "bearer"
-    user: User
-
-    model_config = {
-        "json_schema_extra": {
-            "example": {
-                "access_token": ("dev-header.dev-payload.dev-signature"),
-                "token_type": "bearer",
-                "user": {
-                    "id": 1,
-                    "username": "devuser",
-                    "first_name": "Dev",
-                    "last_name": "User",
-                    "email": "dev@example.com",
-                    "phone": "555-1234",
-                    "user_status": 1,
-                },
-            }
-        }
-    }
+router = APIRouter(prefix="/user", tags=["user"])
 
 
 @router.post(
-    "/dev/login",
+    "/auth",
     response_model=DevLoginResponse,
     operation_id="dev_login",
     summary="DEV ONLY login",

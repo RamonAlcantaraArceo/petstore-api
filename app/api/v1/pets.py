@@ -49,7 +49,9 @@ async def update_pet(
     return await map_domain_errors(service.update_pet(pet))
 
 
-@unprotected_router.get("/findByStatus", response_model=list[Pet], operation_id="find_pets_by_status")
+@unprotected_router.get(
+    "/findByStatus", response_model=list[Pet], operation_id="find_pets_by_status"
+)
 async def find_pets_by_status(
     status: Annotated[
         PetStatus | None,

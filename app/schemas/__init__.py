@@ -1,9 +1,10 @@
 """Schemas package."""
 
 from app.schemas.health import HealthDetails, HealthResponse
+from app.schemas.auth import DevLoginRequest, DevLoginResponse
 from app.schemas.order import Order, OrderCreate, OrderStatus
 from app.schemas.pet import Category, Pet, PetCreate, PetStatus, PetUpdate, Tag
-from app.schemas.user import User, UserCreate, UserUpdate
+from app.schemas.user import User, UserCreate, UserUpdate, UserLogin
 
 __all__ = [
     "HealthDetails",
@@ -20,4 +21,7 @@ __all__ = [
     "User",
     "UserCreate",
     "UserUpdate",
+    "UserLogin",
+    "DevLoginRequest",
+    "DevLoginResponse",
 ]

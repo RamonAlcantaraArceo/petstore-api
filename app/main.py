@@ -15,7 +15,6 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 from petstore_core.config import get_settings
 
-from app.api.routes.auth import router as auth_router
 from app.api.v1.health import router as health_router
 from app.api.v1.router import router as v1_router
 from app.middleware.correlation_id import CorrelationIdMiddleware
@@ -209,7 +208,6 @@ def create_app() -> FastAPI:
 
     # Routes
     app.include_router(health_router)
-    app.include_router(auth_router)
     app.include_router(v1_router)
 
     return app
