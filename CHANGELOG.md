@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- Migrated all SQLAlchemy ORM model columns from legacy `Column[T]` annotations to the
+  SQLAlchemy 2.x `Mapped[T]` + `mapped_column()` pattern, resolving mypy errors of the
+  form "Invalid conditional operand of type ColumnElement[bool]".
+- Removed now-unnecessary `# type: ignore[assignment]` suppression comments from
+  repository files that were previously required to work around the unannotated columns.
+
 ## [0.2.1] - 2026-06-01
 
 ### Fixed
