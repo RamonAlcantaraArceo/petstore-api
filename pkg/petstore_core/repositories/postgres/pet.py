@@ -152,7 +152,7 @@ class PostgresPetRepository:
         if not model:
             raise KeyError(f"Pet {pet.id} not found")
         model.name = pet.name  # type: ignore[assignment]
-        model.status = (pet.status or PetStatus.available).value  # type: ignore[assignment]
+        model.status = (pet.status or PetStatus.available).value
         model.photo_urls = pet.photo_urls  # type: ignore[assignment]
         model.category = pet.category.model_dump() if pet.category else None  # type: ignore[assignment]
         model.tags = [t.model_dump() for t in pet.tags] if pet.tags is not None else None  # type: ignore[assignment]

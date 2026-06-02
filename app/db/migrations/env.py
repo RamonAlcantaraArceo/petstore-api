@@ -56,7 +56,7 @@ def do_run_migrations(connection: object) -> None:
         connection: The active database connection.
     """
     context.configure(
-        connection=connection,  # type: ignore[arg-type]
+        connection=connection,
         target_metadata=target_metadata,
     )
     with context.begin_transaction():

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from sqlalchemy import Boolean, Column, DateTime, Enum, Integer
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
@@ -30,7 +30,7 @@ class OrderModel(Base):
     pet_id = Column(Integer, nullable=True)
     quantity = Column(Integer, nullable=True)
     ship_date = Column(DateTime(timezone=True), nullable=True)
-    status: Column[str] = Column(
+    status: Mapped[str | None] = mapped_column(
         Enum("placed", "approved", "delivered", name="order_status"),
         default="placed",
         nullable=True,

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from sqlalchemy import JSON, Column, Enum, Integer, String
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
@@ -28,7 +28,7 @@ class PetModel(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
-    status: Column[str] = Column(
+    status: Mapped[str] = mapped_column(
         Enum("available", "pending", "sold", name="pet_status"),
         default="available",
         nullable=False,
