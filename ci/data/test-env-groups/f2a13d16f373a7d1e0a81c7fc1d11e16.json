@@ -1,1 +1,1 @@
-{"id":"f2a13d16f373a7d1e0a81c7fc1d11e16","fullName":"tests.system.test_full_flows#test_full_pet_lifecycle","name":"test_full_pet_lifecycle","status":"passed","testResultsByEnv":{"default":"8ffc981a424b2afa6511a1038c2287db"}}
+{"id":"f2a13d16f373a7d1e0a81c7fc1d11e16","fullName":"tests.system.test_full_flows#test_full_pet_lifecycle","name":"test_full_pet_lifecycle","status":"failed","testResultsByEnv":{"default":"8c6f7f58c00e99c6b74cc278ab4d6440"}}

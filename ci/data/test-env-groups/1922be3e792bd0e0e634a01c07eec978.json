@@ -1,1 +1,1 @@
-{"id":"1922be3e792bd0e0e634a01c07eec978","fullName":"tests.integration.test_user_api#test_update_user","name":"test_update_user","status":"passed","testResultsByEnv":{"default":"2cfcb5bd1a60c54579003f63235d6646"}}
+{"id":"1922be3e792bd0e0e634a01c07eec978","fullName":"tests.integration.test_user_api#test_update_user","name":"test_update_user","status":"failed","testResultsByEnv":{"default":"51a8ea97c5745978a42fb60958180ad6"}}

@@ -1,1 +1,1 @@
-{"id":"d519debcccc8276eeec788ced310e7a7","fullName":"tests.integration.test_dev_auth_api#test_dev_login_route_rejects_unknown_user","name":"test_dev_login_route_rejects_unknown_user","status":"passed","testResultsByEnv":{"default":"05a5ad9a20254746c092078f53114351"}}
+{"id":"d519debcccc8276eeec788ced310e7a7","fullName":"tests.integration.test_dev_auth_api#test_dev_login_route_rejects_unknown_user","name":"test_dev_login_route_rejects_unknown_user","status":"failed","testResultsByEnv":{"default":"d038db922b1e071282bbd92314b51c67"}}

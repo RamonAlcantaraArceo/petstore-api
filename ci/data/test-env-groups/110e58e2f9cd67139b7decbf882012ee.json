@@ -1,1 +1,1 @@
-{"id":"110e58e2f9cd67139b7decbf882012ee","fullName":"tests.integration.test_user_api#test_create_users_with_list","name":"test_create_users_with_list","status":"passed","testResultsByEnv":{"default":"10271a910a939486f6dbd51d66131c06"}}
+{"id":"110e58e2f9cd67139b7decbf882012ee","fullName":"tests.integration.test_user_api#test_create_users_with_list","name":"test_create_users_with_list","status":"failed","testResultsByEnv":{"default":"43bcc9d33de16587347f7f0171f5cd5a"}}
