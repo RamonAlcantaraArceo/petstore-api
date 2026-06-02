@@ -5,14 +5,13 @@ from __future__ import annotations
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, Field
+from petstore_core.config import Settings
+from petstore_core.schemas.auth import DevLoginRequest, DevLoginResponse
+from petstore_core.schemas.user import User
 
 from app.auth.dev_jwt import issue_dev_jwt
 from app.auth.dev_store import get_dev_user_by_username
 from app.dependencies import _cached_settings
-from petstore_core.config import Settings
-from petstore_core.schemas.user import User
-from petstore_core.schemas.auth import DevLoginRequest, DevLoginResponse
 
 router = APIRouter(prefix="/user", tags=["user"])
 

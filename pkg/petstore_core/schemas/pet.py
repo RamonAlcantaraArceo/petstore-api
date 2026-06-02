@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import Annotated
 
 from pydantic import BaseModel, Field
 
@@ -17,26 +18,26 @@ class PetStatus(StrEnum):
 
 class Category(BaseModel):
     """Pet category.
-
+    \f
     Attributes:
         id: Category identifier.
         name: Category name.
     """
 
-    id: int | None = None
-    name: str | None = None
+    id: Annotated[int | None, Field(gt=0, description="Category identifier")] = None
+    name: Annotated[str | None, Field(description="Category name")] = None
 
 
 class Tag(BaseModel):
     """Pet tag.
-
+    \f
     Attributes:
         id: Tag identifier.
         name: Tag name.
     """
 
-    id: int | None = None
-    name: str | None = None
+    id: Annotated[int | None, Field(gt=0, description="Tag identifier")] = None
+    name: Annotated[str | None, Field(description="Tag name")] = None
 
 
 class PetBase(BaseModel):
@@ -50,11 +51,15 @@ class PetBase(BaseModel):
         status: Pet availability status.
     """
 
-    name: str = Field(..., min_length=1)
-    photo_urls: list[str] = Field(default_factory=list, alias="photoUrls")
-    category: Category | None = None
-    tags: list[Tag] | None = None
-    status: PetStatus | None = PetStatus.available
+    name: Annotated[str, Field(..., min_length=1, description="Pet name (required)")]
+    photo_urls: Annotated[
+        list[str], Field(default_factory=list, alias="photoUrls", description="List of photo URLs")
+    ]
+    category: Annotated[Category | None, Field(description="Pet category")] = None
+    tags: Annotated[list[Tag] | None, Field(description="List of tags")] = None
+    status: Annotated[PetStatus | None, Field(description="Pet availability status")] = (
+        PetStatus.available
+    )
 
     model_config = {"populate_by_name": True, "extra": "forbid"}
 
@@ -67,21 +72,21 @@ class PetCreate(PetBase):
 
 class PetUpdate(PetBase):
     """Schema for updating an existing pet.
-
+    \f
     Attributes:
         id: Pet identifier (required for updates).
     """
 
-    id: int
+    id: Annotated[int, Field(gt=0, description="Pet identifier (required for updates)")]
 
 
 class Pet(PetBase):
     """Full pet schema including server-assigned fields.
-
+    \f
     Attributes:
         id: Pet identifier.
     """
 
-    id: int | None = None
+    id: Annotated[int | None, Field(gt=0, description="Pet identifier")] = None
 
     model_config = {"from_attributes": True, "populate_by_name": True}

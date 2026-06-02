@@ -6,13 +6,13 @@ import math
 import time
 from collections.abc import Awaitable, Callable
 
+from petstore_core.config import Settings, get_settings
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.types import ASGIApp
 
 from app.api.deps import maybe_get_current_user
-from petstore_core.config import Settings, get_settings
 
 #: Paths that are exempt from rate limiting (mirrors the auth exemptions).
 EXEMPT_PATHS = {"/health", "/api/v1/health", "/redoc", "/openapi.json"}

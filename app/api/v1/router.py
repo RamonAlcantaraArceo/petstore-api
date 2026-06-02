@@ -9,11 +9,15 @@ from app.api.v1.auth import router as auth_router
 from app.api.v1.health import router as health_router
 from app.api.v1.pets import (
     protected_router as protected_pets_router,
+)
+from app.api.v1.pets import (
     unprotected_router as unprotected_pets_router,
 )
 from app.api.v1.store import router as store_router
 from app.api.v1.users import (
     protected_router as protected_users_router,
+)
+from app.api.v1.users import (
     unprotected_router as unprotected_users_router,
 )
 

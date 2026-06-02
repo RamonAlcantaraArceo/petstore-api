@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 
 class UserLogin(BaseModel):
     """Schema for user login response.
-
+    \f
     Attributes:
         access_token: JWT token issued upon successful login.
         token_type: Type of the issued token (e.g., "bearer").
@@ -19,7 +19,7 @@ class UserLogin(BaseModel):
 
 class UserBase(BaseModel):
     """Base user schema with shared fields.
-
+    \f
     Attributes:
         username: Unique username.
         first_name: User's first name.
@@ -65,7 +65,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     """Schema for creating a new user.
-
+    \f
     Attributes:
         password: User's plain-text password (hashed before storage).
     """
@@ -75,7 +75,7 @@ class UserCreate(UserBase):
 
 class UserUpdate(UserBase):
     """Schema for updating an existing user.
-
+    \f
     Attributes:
         password: New password (optional).
     """
@@ -85,7 +85,7 @@ class UserUpdate(UserBase):
 
 class User(UserBase):
     """Full user schema including server-assigned fields.
-
+    \f
     Attributes:
         id: User identifier.
     """

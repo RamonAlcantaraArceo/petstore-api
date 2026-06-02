@@ -12,7 +12,7 @@ import structlog
 from fastapi import FastAPI, Request
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 from petstore_core.config import get_settings
 
 from app.api.v1.health import router as health_router
@@ -134,6 +134,15 @@ def create_app() -> FastAPI:
         contact={"name": "Ramon Alcantara Arceo", "email": "ramalc.ms@outlook.com"},
     )
     app.state.settings = settings
+
+    @app.get("/", include_in_schema=False)
+    async def root() -> RedirectResponse:
+        """Root endpoint redirecting to API docs."""
+        return RedirectResponse(url="/docs", status_code=308)
+
+    @app.exception_handler(404)
+    async def not_found_handler(request: Request, exc):
+        return PlainTextResponse("😢 404 Not Found", status_code=404)
 
     @app.get("/openapi.json", include_in_schema=False)
     async def openapi_json(request: Request) -> JSONResponse:

@@ -7,6 +7,7 @@ from typing import Annotated, Any
 
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from petstore_core.config import Settings
 
 from app.auth.dev_jwt import DevJWTError, DevJWTExpiredError, decode_dev_jwt
 from app.auth.dev_store import get_dev_user
@@ -17,7 +18,6 @@ from app.auth.supabase_jwt import (
 )
 from app.dependencies import _cached_settings
 from app.models.user import UserModel
-from petstore_core.config import Settings
 
 _EXAMPLE_JWT = "******"
 PASSWORD_FIELD = "password"

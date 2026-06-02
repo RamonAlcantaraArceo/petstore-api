@@ -11,8 +11,8 @@ from petstore_core.services.user import UserService
 
 from app.api.v1.error_mapping import map_domain_errors
 from app.auth.dev_jwt import issue_dev_jwt
+from app.dependencies import _cached_settings, get_user_service
 from app.models.user import UserModel
-from app.dependencies import _cached_settings, _cached_settings, get_user_service
 
 protected_router = APIRouter(prefix="/user", tags=["user"])
 unprotected_router = APIRouter(prefix="/user", tags=["user"])
@@ -58,9 +58,7 @@ async def create_user(
     service: Annotated[UserService, Depends(get_user_service)],
 ) -> User:
     """Create a new user.
-
     \f
-
     Args:
         user: User data from request body.
         service: Injected UserService.
@@ -102,7 +100,7 @@ async def login_user(
     settings: Annotated[Settings, Depends(_cached_settings)],
 ) -> UserLogin:
     """Log user into the system.
-
+    \f
     Args:
         username: The username to log in with.
         password: The password to log in with.
@@ -131,7 +129,7 @@ async def logout_user(
     service: Annotated[UserService, Depends(get_user_service)],
 ) -> dict[str, str]:
     """Log out current logged-in user session.
-
+    \f
     Args:
         service: Injected UserService.
 
@@ -148,7 +146,7 @@ async def get_user_by_name(
     service: Annotated[UserService, Depends(get_user_service)],
 ) -> User:
     """Get user by username.
-
+    \f
     Args:
         username: The user's username.
         service: Injected UserService.
@@ -166,7 +164,7 @@ async def update_user(
     service: Annotated[UserService, Depends(get_user_service)],
 ) -> User:
     """Update user by username.
-
+    \f
     Args:
         username: The user's current username.
         user: Updated user data.
@@ -184,7 +182,7 @@ async def delete_user(
     service: Annotated[UserService, Depends(get_user_service)],
 ) -> dict[str, str]:
     """Delete user by username.
-
+    \f
     Args:
         username: The user's unique username.
         service: Injected UserService.
