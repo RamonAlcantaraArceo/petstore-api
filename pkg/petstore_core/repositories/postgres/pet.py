@@ -151,11 +151,11 @@ class PostgresPetRepository:
         model = result.scalar_one_or_none()
         if not model:
             raise KeyError(f"Pet {pet.id} not found")
-        model.name = pet.name  # type: ignore[assignment]
+        model.name = pet.name
         model.status = (pet.status or PetStatus.available).value
-        model.photo_urls = pet.photo_urls  # type: ignore[assignment]
-        model.category = pet.category.model_dump() if pet.category else None  # type: ignore[assignment]
-        model.tags = [t.model_dump() for t in pet.tags] if pet.tags is not None else None  # type: ignore[assignment]
+        model.photo_urls = pet.photo_urls
+        model.category = pet.category.model_dump() if pet.category else None
+        model.tags = [t.model_dump() for t in pet.tags] if pet.tags is not None else None
         await self._session.flush()
         await self._session.refresh(model)
         return _model_to_schema(model)

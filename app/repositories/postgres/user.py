@@ -125,17 +125,17 @@ class PostgresUserRepository:
         if not model:
             raise KeyError(f"User '{username}' not found")
         if user.username is not None:
-            model.username = user.username  # type: ignore[assignment]
+            model.username = user.username
         if user.first_name is not None:
-            model.first_name = user.first_name  # type: ignore[assignment]
+            model.first_name = user.first_name
         if user.last_name is not None:
-            model.last_name = user.last_name  # type: ignore[assignment]
+            model.last_name = user.last_name
         if user.email is not None:
-            model.email = user.email  # type: ignore[assignment]
+            model.email = user.email
         if user.phone is not None:
-            model.phone = user.phone  # type: ignore[assignment]
+            model.phone = user.phone
         if user.user_status is not None:
-            model.user_status = user.user_status  # type: ignore[assignment]
+            model.user_status = user.user_status
         await self._session.flush()
         await self._session.refresh(model)
         return _model_to_schema(model)
