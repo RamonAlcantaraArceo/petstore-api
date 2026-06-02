@@ -32,7 +32,7 @@ class DevLoginResponse(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "access_token": ("dev-header." "dev-payload." "dev-signature"),
+                "access_token": ("dev-header.dev-payload.dev-signature"),
                 "token_type": "bearer",
                 "user": {
                     "id": 1,

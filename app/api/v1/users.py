@@ -4,17 +4,21 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
-from petstore_core.schemas.user import User, UserCreate, UserUpdate
+from fastapi import APIRouter, Depends, Query, Response
+from petstore_core.config import Settings
+from petstore_core.models.user import UserModel
+from petstore_core.schemas.user import User, UserCreate, UserLogin, UserUpdate
 from petstore_core.services.user import UserService
 
 from app.api.v1.error_mapping import map_domain_errors
-from app.dependencies import get_user_service
+from app.auth.dev_jwt import issue_dev_jwt
+from app.dependencies import _cached_settings, _cached_settings, get_user_service
 
-router = APIRouter(prefix="/user", tags=["user"])
+protected_router = APIRouter(prefix="/user", tags=["user"])
+unprotected_router = APIRouter(prefix="/user", tags=["user"])
 
 
-@router.post("", response_model=User, status_code=200, operation_id="create_user")
+@unprotected_router.post("", response_model=User, status_code=200, operation_id="create_user")
 async def create_user(
     user: UserCreate,
     service: Annotated[UserService, Depends(get_user_service)],
@@ -31,7 +35,7 @@ async def create_user(
     return await map_domain_errors(service.create_user(user))
 
 
-@router.post(
+@unprotected_router.post(
     "/createWithList",
     response_model=list[User],
     status_code=200,
@@ -53,12 +57,14 @@ async def create_users_with_list(
     return await map_domain_errors(service.create_users_with_list(users))
 
 
-@router.get("/login", operation_id="login_user")
+@unprotected_router.get("/login", operation_id="login_user", response_model=UserLogin)
 async def login_user(
     username: Annotated[str, Query(description="The username for login")],
     password: Annotated[str, Query(description="The password for login")],
+    response: Response,
     service: Annotated[UserService, Depends(get_user_service)],
-) -> dict[str, str]:
+    settings: Annotated[Settings, Depends(_cached_settings)],
+) -> UserLogin:
     """Log user into the system.
 
     Args:
@@ -67,13 +73,32 @@ async def login_user(
         service: Injected UserService.
 
     Returns:
-        Dict containing the session token.
+        UserLogin containing the session token and user information.
     """
     token = await map_domain_errors(service.login(username, password))
-    return {"token": token}
+    user = await map_domain_errors(service.get_user(username))
+    user_model = UserModel(
+        id=user.id,
+        username=user.username,
+        first_name=user.first_name,
+        last_name=user.last_name,
+        email=user.email,
+        phone=user.phone,
+        user_status=user.user_status,
+    )
+
+    access_token = issue_dev_jwt(
+        user=user_model,
+        secret=settings.dev_jwt_secret,
+        lifetime_seconds=settings.dev_jwt_expiration_seconds,
+    )
+
+    response.headers["Authorization"] = f"Bearer {access_token}"
+
+    return UserLogin(access_token=access_token, token_type="bearer")
 
 
-@router.get("/logout", status_code=200, operation_id="logout_user")
+@protected_router.get("/logout", status_code=200, operation_id="logout_user")
 async def logout_user(
     service: Annotated[UserService, Depends(get_user_service)],
 ) -> dict[str, str]:
@@ -89,7 +114,7 @@ async def logout_user(
     return {"message": "User logged out"}
 
 
-@router.get("/{username}", response_model=User, operation_id="get_user_by_name")
+@protected_router.get("/{username}", response_model=User, operation_id="get_user_by_name")
 async def get_user_by_name(
     username: str,
     service: Annotated[UserService, Depends(get_user_service)],
@@ -106,7 +131,7 @@ async def get_user_by_name(
     return await map_domain_errors(service.get_user(username))
 
 
-@router.put("/{username}", response_model=User, operation_id="update_user")
+@protected_router.put("/{username}", response_model=User, operation_id="update_user")
 async def update_user(
     username: str,
     user: UserUpdate,
@@ -125,7 +150,7 @@ async def update_user(
     return await map_domain_errors(service.update_user(username, user))
 
 
-@router.delete("/{username}", status_code=200, operation_id="delete_user")
+@protected_router.delete("/{username}", status_code=200, operation_id="delete_user")
 async def delete_user(
     username: str,
     service: Annotated[UserService, Depends(get_user_service)],
