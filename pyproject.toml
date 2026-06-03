@@ -35,7 +35,7 @@ dev = [
   "anyio>=4.4.0",
 ]
 perf = [
-  "pytest-benchmark>=4.0.0",
+  "pytest-benchmark>=5.2.3",
 ]
 docs = [
   "mkdocs",
