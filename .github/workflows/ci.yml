@@ -42,7 +42,7 @@ jobs:
           python-version: "3.14"
 
       - name: mypy
-        run: uv run mypy app/
+        run: uv run mypy app/ pkg/
 
   test:
     name: Test
