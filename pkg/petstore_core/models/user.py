@@ -36,4 +36,3 @@ class UserModel(Base):
     password: Mapped[str | None] = mapped_column(String(255), nullable=True)
     phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
     user_status: Mapped[int | None] = mapped_column(Integer, default=0, nullable=True)
-

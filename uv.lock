@@ -881,7 +881,7 @@ provides-extras = ["cli", "dev", "docs", "perf"]
 
 [[package]]
 name = "petstore-core"
-version = "0.1.0"
+version = "0.0.0"
 source = { editable = "pkg" }
 dependencies = [
     { name = "asyncpg" },

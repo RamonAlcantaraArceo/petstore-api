@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from sqlalchemy import Boolean, Enum, Integer, DateTime
+from sqlalchemy import Boolean, DateTime, Enum, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 

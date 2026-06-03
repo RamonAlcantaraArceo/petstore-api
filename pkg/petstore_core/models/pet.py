@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from sqlalchemy import Enum, Integer, JSON, String
+from sqlalchemy import JSON, Enum, Integer, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -38,4 +38,3 @@ class PetModel(Base):
     photo_urls: Mapped[list[Any]] = mapped_column(JSON, default=list)
     category: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
     tags: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
-
