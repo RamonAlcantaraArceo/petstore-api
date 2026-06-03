@@ -90,7 +90,7 @@ async def test_delete_pet(app_client: AsyncClient, api_key_header: dict[str, str
     pet_id = create_resp.json()["id"]
 
     delete_resp = await app_client.delete(f"/api/v1/pet/{pet_id}", headers=api_key_header)
-    assert delete_resp.status_code == 200
+    assert delete_resp.status_code == 204
 
     get_resp = await app_client.get(f"/api/v1/pet/{pet_id}", headers=api_key_header)
     assert get_resp.status_code == 404
@@ -174,5 +174,5 @@ async def test_correlation_id_in_response(
 @pytest.mark.asyncio
 async def test_missing_api_key_returns_401(app_client: AsyncClient) -> None:
     """Request without X-API-Key returns 401."""
-    response = await app_client.get("/api/v1/pet/1")
+    response = await app_client.delete("/api/v1/pet/1")
     assert response.status_code == 401

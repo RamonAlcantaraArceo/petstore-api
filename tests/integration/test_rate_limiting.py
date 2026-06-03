@@ -36,6 +36,8 @@ async def rate_limited_client() -> AsyncIterator[AsyncClient]:
         "RATE_LIMIT_REQUESTS": os.environ.get("RATE_LIMIT_REQUESTS"),
         "RATE_LIMIT_WINDOW_SECONDS": os.environ.get("RATE_LIMIT_WINDOW_SECONDS"),
         "RATE_LIMIT_BYPASS_KEY": os.environ.get("RATE_LIMIT_BYPASS_KEY"),
+        # #SEED_DATASET=mixed_v2
+        # "SEED_DATASET": os.environ.get("SEED_DATASET"),
     }
 
     os.environ["STORAGE_MODE"] = "memory"
@@ -45,6 +47,7 @@ async def rate_limited_client() -> AsyncIterator[AsyncClient]:
     os.environ["RATE_LIMIT_REQUESTS"] = str(_LOW_LIMIT)
     os.environ["RATE_LIMIT_WINDOW_SECONDS"] = "60"
     os.environ["RATE_LIMIT_BYPASS_KEY"] = _BYPASS_KEY
+    # os.environ["SEED_DATASET"] = "mixed_v2"
 
     from app.dependencies import _cached_settings  # noqa: PLC2701
 
@@ -190,8 +193,8 @@ async def test_unauthenticated_requests_are_also_rate_limited(
     """Rate limiting applies to unauthenticated requests (keyed by IP)."""
     # No token — auth fails, but rate limiting still counts by client IP.
     for _ in range(_LOW_LIMIT):
-        response = await rate_limited_client.get("/api/v1/pet/1")
-        assert response.status_code == 401  # auth fails, but not rate-limited
+        response = await rate_limited_client.delete("/api/v1/pet/1")
+        assert response.status_code == 401  # not found, but not rate-limited
 
     # The (N+1)-th request from the same IP should be rate-limited before auth.
     response = await rate_limited_client.get("/api/v1/pet/1")

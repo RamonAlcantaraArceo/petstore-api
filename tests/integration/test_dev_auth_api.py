@@ -17,8 +17,8 @@ def _dev_token(*, lifetime_seconds: int = 3600) -> str:
 
 @pytest.mark.asyncio
 async def test_dev_login_route_returns_seeded_user(app_client: AsyncClient) -> None:
-    """POST /auth/dev/login returns a bearer token for a seeded user."""
-    response = await app_client.post("/auth/dev/login", json={"username": "devuser"})
+    """POST /api/v1/user/auth returns a bearer token for a seeded user."""
+    response = await app_client.post("/api/v1/user/auth", json={"username": "devuser"})
 
     assert response.status_code == 200
     assert response.json()["user"]["username"] == "devuser"
@@ -26,8 +26,8 @@ async def test_dev_login_route_returns_seeded_user(app_client: AsyncClient) -> N
 
 @pytest.mark.asyncio
 async def test_dev_login_route_rejects_unknown_user(app_client: AsyncClient) -> None:
-    """POST /auth/dev/login returns 401 for unknown development users."""
-    response = await app_client.post("/auth/dev/login", json={"username": "unknown"})
+    """POST /api/v1/user/auth returns 401 for unknown development users."""
+    response = await app_client.post("/api/v1/user/auth", json={"username": "unknown"})
 
     assert response.status_code == 401
 

@@ -29,7 +29,7 @@ class UserBase(BaseModel):
         user_status: User status code.
     """
 
-    username: str = Field(description="Unique username.")
+    username: str | None = Field(description="Unique username.", default=None)
     first_name: str | None = Field(
         default=None, description="User's first name.", examples=["Patricia", "John"]
     )
@@ -70,6 +70,7 @@ class UserCreate(UserBase):
         password: User's plain-text password (hashed before storage).
     """
 
+    # username: str | None = Field(description="Unique username.", default=...)
     password: str = Field(description="User's plain-text password (hashed before storage).")
 
 

@@ -176,11 +176,11 @@ async def update_user(
     return await map_domain_errors(service.update_user(username, user))
 
 
-@protected_router.delete("/{username}", status_code=200, operation_id="delete_user")
+@protected_router.delete("/{username}", status_code=204, operation_id="delete_user")
 async def delete_user(
     username: str,
     service: Annotated[UserService, Depends(get_user_service)],
-) -> dict[str, str]:
+) -> None:
     """Delete user by username.
     \f
     Args:
@@ -191,4 +191,4 @@ async def delete_user(
         Confirmation message.
     """
     await map_domain_errors(service.delete_user(username))
-    return {"message": "User deleted"}
+    return

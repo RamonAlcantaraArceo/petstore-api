@@ -92,22 +92,25 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["app"]
+source = ["app", "pkg"]
+branch=true
 omit = [
   "app/db/migrations/*",
   "app/db/session.py",
   "app/models/*",
   "app/repositories/postgres/*",
   "**/__pycache__/*",
-  "pkg/*",
   ".venv/*",
 ]
 
 [tool.coverage.paths]
 source = [
   "app",
+  "pkg",
   "/workspace/app",
   "/petstore/app",
+  "/workspace/pkg",
+  "/petstore/pkg",
 ]
 
 [tool.coverage.report]

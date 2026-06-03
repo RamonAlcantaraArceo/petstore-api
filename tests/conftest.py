@@ -119,7 +119,7 @@ def api_key_header(auth_header: dict[str, str]) -> dict[str, str]:
 @pytest_asyncio.fixture
 async def remote_api_key_header(remote_client: AsyncClient) -> dict[str, str]:
     """Return auth headers for remote/live tests."""
-    login_response = await remote_client.post("/auth/dev/login", json={"username": "devuser"})
+    login_response = await remote_client.post("/api/v1/user/auth", json={"username": "devuser"})
     if login_response.status_code == 200:
         token = login_response.json()["access_token"]
         return {"Authorization": "Bearer " + token}

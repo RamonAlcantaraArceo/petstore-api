@@ -63,11 +63,11 @@ async def get_order_by_id(
     return await map_domain_errors(service.get_order(order_id))
 
 
-@router.delete("/order/{order_id}", status_code=200, operation_id="delete_order")
+@router.delete("/order/{order_id}", status_code=204, operation_id="delete_order")
 async def delete_order(
     order_id: int,
     service: Annotated[OrderService, Depends(get_order_service)],
-) -> dict[str, str]:
+) -> None:
     """Delete purchase order by ID.
 
     Args:
@@ -78,4 +78,4 @@ async def delete_order(
         Confirmation message.
     """
     await map_domain_errors(service.delete_order(order_id))
-    return {"message": "Order deleted"}
+    return

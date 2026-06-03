@@ -9,9 +9,10 @@ from app.api.deps import resolve_current_user_from_token
 from app.auth.dev_jwt import issue_dev_jwt
 from app.auth.dev_store import get_dev_user_by_username
 from app.config import Settings
+from app.models.user import UserModel
 
 
-def _dev_user() -> object:
+def _dev_user() -> UserModel:
     user = get_dev_user_by_username("devuser")
     assert user is not None
     return user
@@ -21,8 +22,8 @@ def _dev_user() -> object:
 async def test_dev_login_returns_token(
     app_client: AsyncClient,
 ) -> None:
-    """POST /auth/dev/login returns a bearer token for a seeded user."""
-    response = await app_client.post("/auth/dev/login", json={"username": "devuser"})
+    """POST /api/v1/user/auth returns a bearer token for a seeded user."""
+    response = await app_client.post("/api/v1/user/auth", json={"username": "devuser"})
 
     assert response.status_code == 200
     data = response.json()
@@ -35,10 +36,11 @@ async def test_dev_login_returns_token(
 async def test_dev_login_rejects_unknown_username(
     app_client: AsyncClient,
 ) -> None:
-    """POST /auth/dev/login returns 401 for an unknown seeded user."""
-    response = await app_client.post("/auth/dev/login", json={"username": "missing"})
+    """POST /api/v1/user/auth returns 401 for an unknown seeded user."""
+    response = await app_client.post("/api/v1/user/auth", json={"username": "missing"})
 
     assert response.status_code == 401
+    assert response.json()["detail"] == "Unknown development username."
 
 
 def test_resolve_current_user_from_valid_dev_token() -> None:

@@ -51,5 +51,6 @@ async def dev_login(
             settings.dev_jwt_secret,
             lifetime_seconds=settings.dev_jwt_expiration_seconds,
         ),
+        token_type="bearer",
         user=User.model_validate(user),
     )

@@ -5,7 +5,7 @@ The development environment includes an in-memory authentication layer that uses
 ## How it works
 
 - Seeded users live in memory only
-- `POST /auth/dev/login` exchanges a seeded username for a bearer token
+- `POST /api/v1/user/auth` exchanges a seeded username for a bearer token
 - Protected `/api/v1/*` routes use the shared `get_current_user` dependency
 - In `staging` and `prod`, the same dependency is ready to delegate to Supabase JWT validation
 
@@ -17,7 +17,7 @@ The development environment includes an in-memory authentication layer that uses
 ## Login
 
 ```bash
-curl -X POST http://localhost:8000/auth/dev/login \
+curl -X POST http://localhost:8000/api/v1/user/auth \
   -H 'Content-Type: application/json' \
   -d '{"username":"devuser"}'
 ```

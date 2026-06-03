@@ -111,7 +111,7 @@ def create_app() -> FastAPI:
             "A production-ready Petstore API built with FastAPI.\n\n"
             "## Authentication\n\n"
             "Protected `/api/v1/*` endpoints use `BearerAuth` JWTs. In development, "
-            "use `POST /auth/dev/login` with a seeded username to obtain a "
+            "use `POST /api/v1/user/auth` with a seeded username to obtain a "
             "Supabase-shaped token.\n\n"
             "## Rate Limiting\n\n"
             "All endpoints (except `/health` and `/openapi.json`) are subject to a "

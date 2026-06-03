@@ -27,7 +27,7 @@ bearer_scheme = HTTPBearer(
     scheme_name="BearerAuth",
     description=(
         "JWT bearer authentication. In development, obtain a token from "
-        "`POST /auth/dev/login`.\n\nExample:\n\n"
+        "`POST /api/v1/user/auth`.\n\nExample:\n\n"
         f"`{_EXAMPLE_JWT}`"
     ),
 )

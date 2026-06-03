@@ -48,7 +48,7 @@ async def test_create_user_raises_value_error_for_empty_username() -> None:
     service = make_service(repo)
 
     with pytest.raises(ValidationError, match="Username cannot be empty"):
-        await service.create_user(UserCreate(username=""))
+        await service.create_user(UserCreate(username="", password="password"))
 
 
 @pytest.mark.asyncio
@@ -367,7 +367,7 @@ async def test_create_users_with_list_does_not_call_rollback_on_success():
 @pytest.mark.asyncio
 async def test_create_user_calls_commit_on_success():
     repo = AsyncMock()
-    user_data = UserCreate(username="johndoe")
+    user_data = UserCreate(username="johndoe", password="password")
     expected = User(id=1, username="johndoe")
     repo.create.return_value = expected
     commit = AsyncMock()
@@ -381,7 +381,7 @@ async def test_create_user_calls_commit_on_success():
 @pytest.mark.asyncio
 async def test_create_user_calls_rollback_and_reraises_on_exception():
     repo = AsyncMock()
-    user_data = UserCreate(username="johndoe")
+    user_data = UserCreate(username="johndoe", password="password")
     repo.create.side_effect = RuntimeError("db error")
     commit = AsyncMock()
     rollback = AsyncMock()
@@ -395,7 +395,7 @@ async def test_create_user_calls_rollback_and_reraises_on_exception():
 @pytest.mark.asyncio
 async def test_create_user_does_not_call_rollback_on_success():
     repo = AsyncMock()
-    user_data = UserCreate(username="johndoe")
+    user_data = UserCreate(username="johndoe", password="password")
     expected = User(id=1, username="johndoe")
     repo.create.return_value = expected
     commit = AsyncMock()
