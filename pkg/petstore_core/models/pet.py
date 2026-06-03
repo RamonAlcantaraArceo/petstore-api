@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from sqlalchemy import JSON, Column, Enum, Integer, String
-from sqlalchemy.orm import DeclarativeBase
+from typing import Any
+
+from sqlalchemy import Enum, Integer, JSON, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
@@ -26,13 +28,14 @@ class PetModel(Base):
 
     __tablename__ = "pets"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(255), nullable=False)
-    status: Column[str] = Column(
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    status: Mapped[str] = mapped_column(
         Enum("available", "pending", "sold", name="pet_status"),
         default="available",
         nullable=False,
     )
-    photo_urls = Column(JSON, default=list)
-    category = Column(JSON, nullable=True)
-    tags = Column(JSON, nullable=True)
+    photo_urls: Mapped[list[Any]] = mapped_column(JSON, default=list)
+    category: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+    tags: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
+

@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from sqlalchemy import Boolean, Column, DateTime, Enum, Integer
-from sqlalchemy.orm import DeclarativeBase
+from datetime import datetime
+
+from sqlalchemy import Boolean, Enum, Integer, DateTime
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
@@ -26,13 +28,13 @@ class OrderModel(Base):
 
     __tablename__ = "orders"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    pet_id = Column(Integer, nullable=True)
-    quantity = Column(Integer, nullable=True)
-    ship_date = Column(DateTime(timezone=True), nullable=True)
-    status: Column[str] = Column(
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    pet_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    quantity: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    ship_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    status: Mapped[str | None] = mapped_column(
         Enum("placed", "approved", "delivered", name="order_status"),
         default="placed",
         nullable=True,
     )
-    complete = Column(Boolean, default=False, nullable=True)
+    complete: Mapped[bool | None] = mapped_column(Boolean, default=False, nullable=True)
