@@ -1,1 +1,1 @@
-{"id":"81be8f139d62b645e3a7afba6c290686","fullName":"tests.integration.test_rate_limiting#test_rate_limit_triggers_after_threshold","name":"test_rate_limit_triggers_after_threshold","status":"passed","testResultsByEnv":{"default":"90352da7c152d60632695cb3f345276b"}}
+{"id":"81be8f139d62b645e3a7afba6c290686","fullName":"tests.integration.test_rate_limiting#test_rate_limit_triggers_after_threshold","name":"test_rate_limit_triggers_after_threshold","status":"passed","testResultsByEnv":{"default":"9fb859bfad9acbcc7d10124c9ed92595"}}
