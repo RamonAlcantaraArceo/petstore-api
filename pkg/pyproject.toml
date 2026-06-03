@@ -1,6 +1,6 @@
 [project]
 name = "petstore-core"
-version = "0.1.0"
+version = "0.0.0"
 requires-python = ">=3.14"
 dependencies = [
   "pydantic>=2.11.0",
