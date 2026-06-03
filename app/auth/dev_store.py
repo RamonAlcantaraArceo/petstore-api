@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from app.models.user import UserModel
+from petstore_core.models.user import UserModel
 
 PASSWORD_FIELD = "password"
 

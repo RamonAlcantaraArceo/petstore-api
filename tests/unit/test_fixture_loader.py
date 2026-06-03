@@ -6,12 +6,12 @@ from unittest.mock import AsyncMock
 
 import allure
 import pytest
+from petstore_core.schemas.order import Order, OrderStatus
+from petstore_core.schemas.pet import Pet, PetStatus
+from petstore_core.schemas.user import User
 
 from app.fixtures.datasets import FixtureDataset, OrderFixture, PetFixture, UserFixture, get_dataset
 from app.fixtures.loader import apply_dataset
-from app.schemas.order import Order, OrderStatus
-from app.schemas.pet import Pet, PetStatus
-from app.schemas.user import User
 
 pytestmark = [allure.epic("Fixtures"), allure.feature("Loader")]
 
@@ -104,7 +104,7 @@ async def test_apply_dataset_creates_all_pets() -> None:
 @pytest.mark.asyncio
 async def test_apply_dataset_pet_create_uses_correct_fields() -> None:
     """PetCreate passed to the service matches the PetFixture fields."""
-    from app.schemas.pet import Category, Tag
+    from petstore_core.schemas.pet import Category, Tag
 
     category = Category(id=1, name="Dogs")
     tags = [Tag(id=1, name="friendly")]
@@ -342,9 +342,10 @@ async def test_seed_memory_populates_repos_with_basic_dataset() -> None:
     dataset = get_dataset("basic")
     await _seed_memory(dataset)
 
+    from petstore_core.services.pet import PetService
+    from petstore_core.services.user import UserService
+
     from app.dependencies import get_memory_pet_repo, get_memory_user_repo
-    from app.services.pet import PetService
-    from app.services.user import UserService
 
     pet_service = PetService(get_memory_pet_repo())
     user_service = UserService(get_memory_user_repo())
@@ -372,14 +373,15 @@ async def test_seed_memory_populates_repos_with_mixed_v1_dataset() -> None:
     dataset = get_dataset("mixed_v1")
     await _seed_memory(dataset)
 
+    from petstore_core.services.order import OrderService
+    from petstore_core.services.pet import PetService
+    from petstore_core.services.user import UserService
+
     from app.dependencies import (
         get_memory_order_repo,
         get_memory_pet_repo,
         get_memory_user_repo,
     )
-    from app.services.order import OrderService
-    from app.services.pet import PetService
-    from app.services.user import UserService
 
     pet_service = PetService(get_memory_pet_repo())
     order_service = OrderService(get_memory_order_repo())

@@ -141,7 +141,7 @@ def create_app() -> FastAPI:
         return RedirectResponse(url="/docs", status_code=308)
 
     @app.exception_handler(404)
-    async def not_found_handler(request: Request, exc):
+    async def not_found_handler(request: Request, exc: Exception) -> PlainTextResponse:
         return PlainTextResponse("😢 404 Not Found", status_code=404)
 
     @app.get("/openapi.json", include_in_schema=False)

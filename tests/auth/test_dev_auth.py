@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import pytest
 from httpx import AsyncClient
+from petstore_core.models.user import UserModel
 
 from app.api.deps import resolve_current_user_from_token
 from app.auth.dev_jwt import issue_dev_jwt
 from app.auth.dev_store import get_dev_user_by_username
 from app.config import Settings
-from app.models.user import UserModel
 
 
 def _dev_user() -> UserModel:

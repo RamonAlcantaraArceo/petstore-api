@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 from petstore_core.config import get_settings
-
-from app.schemas.health import HealthDetails, HealthResponse
+from petstore_core.schemas.health import HealthDetails, HealthResponse
 
 router = APIRouter(tags=["health"])
 

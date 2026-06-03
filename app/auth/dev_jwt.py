@@ -9,7 +9,7 @@ import json
 import time
 from typing import Any, cast
 
-from app.models.user import UserModel
+from petstore_core.models.user import UserModel
 
 ALGORITHM = "HS256"
 

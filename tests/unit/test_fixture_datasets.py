@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import allure
 import pytest
+from petstore_core.schemas.order import OrderStatus
+from petstore_core.schemas.pet import PetStatus
 
 from app.fixtures.datasets import DATASETS, FixtureDataset, get_dataset
-from app.schemas.order import OrderStatus
-from app.schemas.pet import PetStatus
 
 pytestmark = [allure.epic("Fixtures"), allure.feature("Datasets")]
 

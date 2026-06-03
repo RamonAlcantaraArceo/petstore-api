@@ -6,9 +6,9 @@ from unittest.mock import AsyncMock
 
 import pytest
 from petstore_core.errors import NotFoundError, ValidationError
+from petstore_core.schemas.user import User, UserCreate, UserUpdate
+from petstore_core.services.user import UserService
 
-from app.schemas.user import User, UserCreate, UserUpdate
-from app.services.user import UserService
 from tests.factories.user import UserCreateFactory
 
 

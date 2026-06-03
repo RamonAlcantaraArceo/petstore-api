@@ -5,8 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 import factory
-
-from app.schemas.order import OrderCreate, OrderStatus
+from petstore_core.schemas.order import OrderCreate, OrderStatus
 
 
 class OrderCreateFactory(factory.Factory):

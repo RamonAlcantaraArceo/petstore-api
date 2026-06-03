@@ -6,13 +6,13 @@ from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, Query, Response
 from petstore_core.config import Settings
+from petstore_core.models.user import UserModel
 from petstore_core.schemas.user import User, UserCreate, UserLogin, UserUpdate
 from petstore_core.services.user import UserService
 
 from app.api.v1.error_mapping import map_domain_errors
 from app.auth.dev_jwt import issue_dev_jwt
 from app.dependencies import _cached_settings, get_user_service
-from app.models.user import UserModel
 
 protected_router = APIRouter(prefix="/user", tags=["user"])
 unprotected_router = APIRouter(prefix="/user", tags=["user"])

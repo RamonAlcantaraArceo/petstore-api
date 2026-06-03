@@ -95,10 +95,6 @@ markers = [
 source = ["app", "pkg"]
 branch=true
 omit = [
-  "app/db/migrations/*",
-  "app/db/session.py",
-  "app/models/*",
-  "app/repositories/postgres/*",
   "**/__pycache__/*",
   ".venv/*",
 ]
