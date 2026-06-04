@@ -14,6 +14,7 @@ dependencies = [
   "python-multipart>=0.0.29",
   "dotenv>=0.9.9",
   "petstore-core",
+  "email-validator>=2.3.0",
 ]
 
 [project.optional-dependencies]
@@ -65,7 +66,7 @@ version_scheme = "no-guess-dev"
 packages = ["app"]
 
 [tool.uv.sources]
-petstore-core = { path = "pkg" }
+petstore-core = { path = "pkg", editable = true }
 
 [tool.ruff]
 line-length = 100
@@ -91,22 +92,21 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["app"]
+source = ["app", "pkg"]
+branch=true
 omit = [
-  "app/db/migrations/*",
-  "app/db/session.py",
-  "app/models/*",
-  "app/repositories/postgres/*",
   "**/__pycache__/*",
-  "pkg/*",
   ".venv/*",
 ]
 
 [tool.coverage.paths]
 source = [
   "app",
+  "pkg",
   "/workspace/app",
   "/petstore/app",
+  "/workspace/pkg",
+  "/petstore/pkg",
 ]
 
 [tool.coverage.report]

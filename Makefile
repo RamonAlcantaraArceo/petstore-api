@@ -10,19 +10,27 @@ FAIL_UNDER ?= 80
 
 merge-cleanup: check test
 
+check-fix:
+	@$(UV) run --extra dev ruff check . --fix
+	@$(UV) run --extra dev black .
+	@$(UV) run --extra dev mypy app/ pkg/ --fix
+
 check: lint type-check
 
 lint:
-	$(UV) run --extra dev ruff check .
-	$(UV) run --extra dev black --check .
+	@$(UV) run --extra dev ruff check .
+	@$(UV) run --extra dev black --check .
 
 type-check:
-	$(UV) run --extra dev mypy app/
+	@$(UV) run --extra dev mypy app/ pkg/
+
+test-only:
+	@$(UV) run --extra dev pytest $(PYTEST_SUITES) --cov-fail-under=0 --cov=app --cov=pkg --cov-report=xml --alluredir=$(ALLURE_RESULTS_DIR) --clean-alluredir
 
 test:
 	# Preserve pytest's exit code while still generating reports for failed runs.
 	@set +e; \
-	$(UV) run --extra dev pytest $(PYTEST_SUITES) --cov-fail-under=0 --cov=app --cov=petstore_core --cov-report=xml --alluredir=$(ALLURE_RESULTS_DIR) --clean-alluredir; \
+	$(UV) run --extra dev pytest $(PYTEST_SUITES) --cov-fail-under=0 --cov=app --cov=pkg --cov-report=xml --alluredir=$(ALLURE_RESULTS_DIR) --clean-alluredir; \
 	status=$$?; \
 	$(MAKE) reports; \
 	reports_status=$$?; \

@@ -6,9 +6,9 @@ from unittest.mock import AsyncMock
 
 import pytest
 from petstore_core.errors import NotFoundError, ValidationError
+from petstore_core.schemas.order import Order, OrderStatus
+from petstore_core.services.order import OrderService
 
-from app.schemas.order import Order, OrderStatus
-from app.services.order import OrderService
 from tests.factories.order import OrderCreateFactory
 
 

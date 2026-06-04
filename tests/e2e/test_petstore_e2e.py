@@ -83,7 +83,7 @@ async def test_e2e_pet_crud(
         assert any(pet["id"] == pet_id for pet in find_by_status_resp.json())
 
     delete_resp = await remote_client.delete(f"/api/v1/pet/{pet_id}", headers=remote_api_key_header)
-    assert delete_resp.status_code == 200
+    assert delete_resp.status_code == 204
 
     get_after_delete_resp = await remote_client.get(
         f"/api/v1/pet/{pet_id}", headers=remote_api_key_header

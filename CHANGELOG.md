@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-03
+
+### Added
+
+- Adds dev JWT issuance/validation, seeded in-memory dev users, and /auth/dev/login.
+- Wires protected v1 routers and rate limiting to authenticated bearer user identity.
+- Adds auth documentation, MkDocs navigation, and focused auth/rate-limit tests.
+
+### Changed
+
+- Refactors auth and rate limit dependencies to support both API key and JWT auth schemes.
+- Updates API documentation to reflect new auth options and requirements.
+- Refactors petstore-core and removes redundant code from petstore-api related to models, schemas, and services that are now centralized in petstore-core to be shared with petstore-grpc/graphql.
+
+### Fixed
+
+- Migrated all SQLAlchemy ORM model columns from legacy `Column[T]` annotations to the
+  SQLAlchemy 2.x `Mapped[T]` + `mapped_column()` pattern, resolving mypy errors of the
+  form "Invalid conditional operand of type ColumnElement[bool]".
+- Removed now-unnecessary `# type: ignore[assignment]` suppression comments from
+  repository files that were previously required to work around the unannotated columns.
+
 ## [0.2.1] - 2026-06-01
 
 ### Fixed

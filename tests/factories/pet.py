@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import factory
 from faker import Faker
-
-from app.schemas.pet import PetCreate, PetStatus
+from petstore_core.schemas.pet import PetCreate, PetStatus
 
 fake = Faker()
 

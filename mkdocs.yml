@@ -42,6 +42,8 @@ nav:
   - Getting Started: getting-started.md
   - Architecture: architecture.md
   - Configuration: configuration.md
+  - Auth:
+    - Dev Authentication: auth/dev-auth.md
   - Rate Limiting: rate-limiting.md
   - Testing Guide: testing.md
   - Deployment: deployment.md

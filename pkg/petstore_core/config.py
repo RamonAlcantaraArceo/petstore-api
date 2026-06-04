@@ -3,6 +3,7 @@
 import os
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings
 
 
@@ -15,6 +16,8 @@ class Settings(BaseSettings):
         database_pooler_url: Optional PostgreSQL pooler URL for cloud mode.
         api_key: Required API key for authentication.
         app_env: Application environment - "dev" | "staging" | "prod".
+        dev_jwt_secret: Shared secret used to sign development JWTs.
+        dev_jwt_expiration_seconds: Lifetime for development JWTs in seconds.
         debug: Enable debug mode.
         log_level: Logging level.
         api_version: API version prefix.
@@ -37,7 +40,12 @@ class Settings(BaseSettings):
     database_url: str = ""
     database_pooler_url: str = ""
     api_key: str = "dev-api-key"
-    app_env: str = "dev"
+    app_env: str = Field(
+        default="dev",
+        validation_alias=AliasChoices("app_env", "APP_ENV", "ENV"),
+    )
+    dev_jwt_secret: str = "dev-jwt-secret"
+    dev_jwt_expiration_seconds: int = 3600
     debug: bool = False
     log_level: str = "INFO"
     api_version: str = "v1"

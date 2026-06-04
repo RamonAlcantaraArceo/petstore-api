@@ -11,16 +11,18 @@ from petstore_core.services.pet import PetService
 from app.api.v1.error_mapping import map_domain_errors
 from app.dependencies import get_pet_service
 
-router = APIRouter(prefix="/pet", tags=["pet"])
+unprotected_router = APIRouter(prefix="/pet", tags=["pet"])
+protected_router = APIRouter(prefix="/pet", tags=["pet"])
 
 
-@router.post("", response_model=Pet, status_code=200, operation_id="add_pet")
+@protected_router.post("", response_model=Pet, status_code=200, operation_id="add_pet")
 async def add_pet(
     pet: PetCreate,
     service: Annotated[PetService, Depends(get_pet_service)],
 ) -> Pet:
     """Add a new pet to the store.
 
+    \f
     Args:
         pet: Pet data from request body.
         service: Injected PetService.
@@ -31,13 +33,14 @@ async def add_pet(
     return await map_domain_errors(service.add_pet(pet))
 
 
-@router.put("", response_model=Pet, status_code=200, operation_id="update_pet")
+@protected_router.put("", response_model=Pet, status_code=200, operation_id="update_pet")
 async def update_pet(
     pet: PetUpdate,
     service: Annotated[PetService, Depends(get_pet_service)],
 ) -> Pet:
     """Update an existing pet.
 
+    \f
     Args:
         pet: Updated pet data from request body.
         service: Injected PetService.
@@ -48,7 +51,9 @@ async def update_pet(
     return await map_domain_errors(service.update_pet(pet))
 
 
-@router.get("/findByStatus", response_model=list[Pet], operation_id="find_pets_by_status")
+@unprotected_router.get(
+    "/findByStatus", response_model=list[Pet], operation_id="find_pets_by_status"
+)
 async def find_pets_by_status(
     status: Annotated[
         PetStatus | None,
@@ -63,6 +68,7 @@ async def find_pets_by_status(
 ) -> list[Pet]:
     """Find pets by status with optional pagination.
 
+    \f
     Args:
         service: Injected PetService.
         status: Availability status to filter by. When omitted, all pets are
@@ -77,13 +83,14 @@ async def find_pets_by_status(
     return await map_domain_errors(service.find_by_status(status, skip=skip, limit=limit))
 
 
-@router.get("/findByTags", response_model=list[Pet], operation_id="find_pets_by_tags")
+@protected_router.get("/findByTags", response_model=list[Pet], operation_id="find_pets_by_tags")
 async def find_pets_by_tags(
-    tags: Annotated[list[str], Query(description="Tags to filter by")],
+    tags: Annotated[list[str] | None, Query(description="Tags to filter by")] = None,
     service: PetService = Depends(get_pet_service),
 ) -> list[Pet]:
     """Find pets by tags.
 
+    \f
     Args:
         tags: Tag names to filter by.
         service: Injected PetService.
@@ -91,16 +98,19 @@ async def find_pets_by_tags(
     Returns:
         List of pets matching any of the given tags.
     """
+    if tags is None:
+        tags = []
     return await map_domain_errors(service.find_by_tags(tags))
 
 
-@router.get("/{pet_id}", response_model=Pet, operation_id="get_pet_by_id")
+@unprotected_router.get("/{pet_id}", response_model=Pet, operation_id="get_pet_by_id")
 async def get_pet_by_id(
     pet_id: int,
     service: Annotated[PetService, Depends(get_pet_service)],
 ) -> Pet:
     """Find pet by ID.
 
+    \f
     Args:
         pet_id: The pet's unique identifier.
         service: Injected PetService.
@@ -111,7 +121,7 @@ async def get_pet_by_id(
     return await map_domain_errors(service.get_pet(pet_id))
 
 
-@router.post("/{pet_id}", response_model=Pet, operation_id="update_pet_with_form")
+@protected_router.post("/{pet_id}", response_model=Pet, operation_id="update_pet_with_form")
 async def update_pet_with_form(
     pet_id: int,
     service: Annotated[PetService, Depends(get_pet_service)],
@@ -120,6 +130,7 @@ async def update_pet_with_form(
 ) -> Pet:
     """Update a pet with form data.
 
+    \f
     Args:
         pet_id: The pet's unique identifier.
         service: Injected PetService.
@@ -132,25 +143,22 @@ async def update_pet_with_form(
     return await map_domain_errors(service.update_pet_with_form(pet_id, name=name, status=status))
 
 
-@router.delete("/{pet_id}", status_code=200, operation_id="delete_pet")
+@protected_router.delete("/{pet_id}", status_code=204, operation_id="delete_pet")
 async def delete_pet(
     pet_id: int,
     service: Annotated[PetService, Depends(get_pet_service)],
-) -> dict[str, str]:
+) -> None:
     """Delete a pet.
 
+    \f
     Args:
         pet_id: The pet's unique identifier.
         service: Injected PetService.
-
-    Returns:
-        Confirmation message.
     """
     await map_domain_errors(service.delete_pet(pet_id))
-    return {"message": "Pet deleted"}
 
 
-@router.post("/{pet_id}/uploadFile", status_code=200, operation_id="upload_file")
+@protected_router.post("/{pet_id}/uploadFile", status_code=200, operation_id="upload_file")
 async def upload_file(
     pet_id: int,
     service: Annotated[PetService, Depends(get_pet_service)],
@@ -159,6 +167,7 @@ async def upload_file(
 ) -> dict[str, str]:
     """Upload an image for a pet.
 
+    \f
     Args:
         pet_id: The pet's unique identifier.
         service: Injected PetService.

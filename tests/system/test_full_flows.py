@@ -12,7 +12,7 @@ async def test_full_pet_lifecycle(app_client: AsyncClient, api_key_header: dict[
     # 1. Create a user
     user_resp = await app_client.post(
         "/api/v1/user",
-        json={"username": "workflow_user", "email": "workflow@example.com"},
+        json={"username": "workflow_user", "email": "workflow@example.com", "password": "testpass"},
         headers=api_key_header,
     )
     assert user_resp.status_code == 200
@@ -59,12 +59,12 @@ async def test_full_pet_lifecycle(app_client: AsyncClient, api_key_header: dict[
     del_order_resp = await app_client.delete(
         f"/api/v1/store/order/{order_id}", headers=api_key_header
     )
-    assert del_order_resp.status_code == 200
+    assert del_order_resp.status_code == 204
 
     # 8. Delete the pet
     del_pet_resp = await app_client.delete(f"/api/v1/pet/{pet_id}", headers=api_key_header)
-    assert del_pet_resp.status_code == 200
+    assert del_pet_resp.status_code == 204
 
     # 9. Delete the user
     del_user_resp = await app_client.delete(f"/api/v1/user/{username}", headers=api_key_header)
-    assert del_user_resp.status_code == 200
+    assert del_user_resp.status_code == 204

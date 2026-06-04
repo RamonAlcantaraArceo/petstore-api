@@ -17,6 +17,7 @@ async def test_create_user(app_client: AsyncClient, api_key_header: dict[str, st
         "firstName": user_data.first_name,
         "lastName": user_data.last_name,
         "email": user_data.email,
+        "password": user_data.password,
     }
     response = await app_client.post("/api/v1/user", json=payload, headers=api_key_header)
     assert response.status_code == 200
@@ -30,11 +31,12 @@ async def test_get_user_by_username(
 ) -> None:
     """GET /api/v1/user/{username} returns the user."""
     user_data = UserCreateFactory()
-    await app_client.post(
+    created_response = await app_client.post(
         "/api/v1/user",
-        json={"username": user_data.username},
+        json=user_data.model_dump(),
         headers=api_key_header,
     )
+    assert created_response.status_code == 200
     response = await app_client.get(f"/api/v1/user/{user_data.username}", headers=api_key_header)
     assert response.status_code == 200
     assert response.json()["username"] == user_data.username
@@ -51,11 +53,12 @@ async def test_get_user_not_found(app_client: AsyncClient, api_key_header: dict[
 async def test_update_user(app_client: AsyncClient, api_key_header: dict[str, str]) -> None:
     """PUT /api/v1/user/{username} updates the user."""
     user_data = UserCreateFactory()
-    await app_client.post(
+    created_user = await app_client.post(
         "/api/v1/user",
-        json={"username": user_data.username},
+        json=user_data.model_dump(),
         headers=api_key_header,
     )
+    assert created_user.status_code == 200
     update_resp = await app_client.put(
         f"/api/v1/user/{user_data.username}",
         json={"first_name": "NewName"},
@@ -69,13 +72,14 @@ async def test_update_user(app_client: AsyncClient, api_key_header: dict[str, st
 async def test_delete_user(app_client: AsyncClient, api_key_header: dict[str, str]) -> None:
     """DELETE /api/v1/user/{username} removes the user."""
     user_data = UserCreateFactory()
-    await app_client.post(
+    created_user = await app_client.post(
         "/api/v1/user",
-        json={"username": user_data.username},
+        json=user_data.model_dump(),
         headers=api_key_header,
     )
+    assert created_user.status_code == 200
     del_resp = await app_client.delete(f"/api/v1/user/{user_data.username}", headers=api_key_header)
-    assert del_resp.status_code == 200
+    assert del_resp.status_code == 204
 
     get_resp = await app_client.get(f"/api/v1/user/{user_data.username}", headers=api_key_header)
     assert get_resp.status_code == 404
@@ -85,17 +89,18 @@ async def test_delete_user(app_client: AsyncClient, api_key_header: dict[str, st
 async def test_user_login(app_client: AsyncClient, api_key_header: dict[str, str]) -> None:
     """GET /api/v1/user/login returns a token."""
     user_data = UserCreateFactory()
-    await app_client.post(
+    created_user = await app_client.post(
         "/api/v1/user",
-        json={"username": user_data.username},
+        json=user_data.model_dump(),
         headers=api_key_header,
     )
+    assert created_user.status_code == 200
     response = await app_client.get(
-        f"/api/v1/user/login?username={user_data.username}&password=testpass",
+        f"/api/v1/user/login?username={user_data.username}&password={user_data.password}",
         headers=api_key_header,
     )
     assert response.status_code == 200
-    assert "token" in response.json()
+    assert "token_type" in response.json()
 
 
 @pytest.mark.asyncio
@@ -110,7 +115,10 @@ async def test_create_users_with_list(
     app_client: AsyncClient, api_key_header: dict[str, str]
 ) -> None:
     """POST /api/v1/user/createWithList creates multiple users."""
-    users = [{"username": f"bulk_user_{i}", "email": f"user{i}@example.com"} for i in range(3)]
+    users = [
+        {"username": f"bulk_user_{i}", "email": f"user{i}@example.com", "password": "testpass"}
+        for i in range(3)
+    ]
     response = await app_client.post(
         "/api/v1/user/createWithList", json=users, headers=api_key_header
     )

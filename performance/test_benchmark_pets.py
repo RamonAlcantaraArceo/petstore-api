@@ -5,10 +5,10 @@ from __future__ import annotations
 import asyncio
 
 import pytest
+from petstore_core.schemas.pet import PetCreate, PetStatus
+from petstore_core.services.pet import PetService
 
 from app.dependencies import get_memory_pet_repo, reset_memory_repos
-from app.schemas.pet import PetCreate, PetStatus
-from app.services.pet import PetService
 
 
 @pytest.fixture(autouse=True)

@@ -31,16 +31,23 @@ async def rate_limited_client() -> AsyncIterator[AsyncClient]:
     prev = {
         "STORAGE_MODE": os.environ.get("STORAGE_MODE"),
         "API_KEY": os.environ.get("API_KEY"),
+        "APP_ENV": os.environ.get("APP_ENV"),
+        "DEV_JWT_SECRET": os.environ.get("DEV_JWT_SECRET"),
         "RATE_LIMIT_REQUESTS": os.environ.get("RATE_LIMIT_REQUESTS"),
         "RATE_LIMIT_WINDOW_SECONDS": os.environ.get("RATE_LIMIT_WINDOW_SECONDS"),
         "RATE_LIMIT_BYPASS_KEY": os.environ.get("RATE_LIMIT_BYPASS_KEY"),
+        # #SEED_DATASET=mixed_v2
+        # "SEED_DATASET": os.environ.get("SEED_DATASET"),
     }
 
     os.environ["STORAGE_MODE"] = "memory"
     os.environ["API_KEY"] = _API_KEY
+    os.environ["APP_ENV"] = "dev"
+    os.environ["DEV_JWT_SECRET"] = "test-dev-jwt-secret"
     os.environ["RATE_LIMIT_REQUESTS"] = str(_LOW_LIMIT)
     os.environ["RATE_LIMIT_WINDOW_SECONDS"] = "60"
     os.environ["RATE_LIMIT_BYPASS_KEY"] = _BYPASS_KEY
+    # os.environ["SEED_DATASET"] = "mixed_v2"
 
     from app.dependencies import _cached_settings  # noqa: PLC2701
 
@@ -72,9 +79,10 @@ async def rate_limited_client() -> AsyncIterator[AsyncClient]:
 @pytest.mark.asyncio
 async def test_rate_limit_triggers_after_threshold(
     rate_limited_client: AsyncClient,
+    api_key_header: dict[str, str],
 ) -> None:
     """Non-exempt endpoint succeeds up to the threshold; the next request returns 429."""
-    headers = {"X-API-Key": _API_KEY}
+    headers = api_key_header
 
     # Requests 1 … _LOW_LIMIT should all succeed (health is exempt, use a real endpoint)
     # Use /api/v1/health which is also exempt to avoid needing actual entities.
@@ -96,9 +104,10 @@ async def test_rate_limit_triggers_after_threshold(
 @pytest.mark.asyncio
 async def test_rate_limit_response_body_and_headers(
     rate_limited_client: AsyncClient,
+    api_key_header: dict[str, str],
 ) -> None:
     """Responses expose rate-limit metadata until throttling occurs."""
-    headers = {"X-API-Key": _API_KEY}
+    headers = api_key_header
 
     first_response = await rate_limited_client.get("/api/v1/pet/1", headers=headers)
     assert first_response.headers["x-ratelimit-limit"] == str(_LOW_LIMIT)
@@ -122,9 +131,10 @@ async def test_rate_limit_response_body_and_headers(
 @pytest.mark.asyncio
 async def test_bypass_key_allows_unlimited_requests(
     rate_limited_client: AsyncClient,
+    api_key_header: dict[str, str],
 ) -> None:
     """Requests with the correct X-Bypass-Key are never rate-limited."""
-    headers = {"X-API-Key": _API_KEY, "X-Bypass-Key": _BYPASS_KEY}
+    headers = {**api_key_header, "X-Bypass-Key": _BYPASS_KEY}
 
     for _ in range(_LOW_LIMIT + 5):
         response = await rate_limited_client.get("/api/v1/pet/99999", headers=headers)
@@ -134,9 +144,10 @@ async def test_bypass_key_allows_unlimited_requests(
 @pytest.mark.asyncio
 async def test_wrong_bypass_key_does_not_bypass_limit(
     rate_limited_client: AsyncClient,
+    api_key_header: dict[str, str],
 ) -> None:
     """Requests with an incorrect X-Bypass-Key are still subject to rate limiting."""
-    headers = {"X-API-Key": _API_KEY, "X-Bypass-Key": "wrong-key"}
+    headers = {**api_key_header, "X-Bypass-Key": "wrong-key"}
 
     for _ in range(_LOW_LIMIT):
         await rate_limited_client.get("/api/v1/pet/99999", headers=headers)
@@ -180,10 +191,10 @@ async def test_unauthenticated_requests_are_also_rate_limited(
     rate_limited_client: AsyncClient,
 ) -> None:
     """Rate limiting applies to unauthenticated requests (keyed by IP)."""
-    # No API key — will get 401 from auth middleware, but rate limit still counts.
+    # No token — auth fails, but rate limiting still counts by client IP.
     for _ in range(_LOW_LIMIT):
-        response = await rate_limited_client.get("/api/v1/pet/1")
-        assert response.status_code == 401  # auth fails, but not rate-limited
+        response = await rate_limited_client.delete("/api/v1/pet/1")
+        assert response.status_code == 401  # not found, but not rate-limited
 
     # The (N+1)-th request from the same IP should be rate-limited before auth.
     response = await rate_limited_client.get("/api/v1/pet/1")

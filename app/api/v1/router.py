@@ -1,33 +1,50 @@
-"""API v1 router — includes all sub-routers."""
+"""API v1 router — includes all protected sub-routers."""
+
+from typing import Any
 
 from fastapi import APIRouter, Depends
-from fastapi.security import APIKeyHeader
 
+from app.api.deps import require_current_user
+from app.api.v1.auth import router as auth_router
 from app.api.v1.health import router as health_router
-from app.api.v1.pets import router as pets_router
+from app.api.v1.pets import (
+    protected_router as protected_pets_router,
+)
+from app.api.v1.pets import (
+    unprotected_router as unprotected_pets_router,
+)
 from app.api.v1.store import router as store_router
-from app.api.v1.users import router as users_router
-
-api_key_scheme = APIKeyHeader(
-    name="X-API-Key", description="API key required to access protected endpoints."
+from app.api.v1.users import (
+    protected_router as protected_users_router,
+)
+from app.api.v1.users import (
+    unprotected_router as unprotected_users_router,
 )
 
-
-def require_api_key(_: str = Depends(api_key_scheme)) -> None:
-    """Dependency to declare the X-API-Key header for OpenAPI/Swagger.
-
-    Args:
-        _ (str): Value of the X-API-Key header, injected by FastAPI's APIKeyHeader dependency.
-
-    Returns:
-        None
-    """
-    pass
+PROTECTED_ROUTE_RESPONSES: dict[int | str, dict[str, Any]] = {
+    401: {"description": "****** missing, invalid, or expired."},
+    403: {"description": "Authenticated user does not have access to this resource."},
+}
 
 
 router = APIRouter(prefix="/api/v1")
 
 router.include_router(health_router)
-router.include_router(pets_router, dependencies=[Depends(require_api_key)])
-router.include_router(store_router, dependencies=[Depends(require_api_key)])
-router.include_router(users_router, dependencies=[Depends(require_api_key)])
+router.include_router(
+    protected_pets_router,
+    dependencies=[Depends(require_current_user)],
+    responses=PROTECTED_ROUTE_RESPONSES,
+)
+router.include_router(unprotected_pets_router)
+router.include_router(
+    store_router,
+    dependencies=[Depends(require_current_user)],
+    responses=PROTECTED_ROUTE_RESPONSES,
+)
+router.include_router(auth_router, dependencies=[], responses={})
+router.include_router(unprotected_users_router, dependencies=[], responses={})
+router.include_router(
+    protected_users_router,
+    dependencies=[Depends(require_current_user)],
+    responses=PROTECTED_ROUTE_RESPONSES,
+)

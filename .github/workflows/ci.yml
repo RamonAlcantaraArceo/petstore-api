@@ -42,7 +42,7 @@ jobs:
           python-version: "3.14"
 
       - name: mypy
-        run: uv run mypy app/
+        run: uv run mypy app/ pkg/
 
   test:
     name: Test
@@ -69,7 +69,7 @@ jobs:
         continue-on-error: true
         run: |
           uv run pytest tests/ \
-            --cov=app --cov=petstore_core --cov-fail-under=0 --cov-report=xml \
+            --cov=app --cov=pkg --cov-fail-under=0 --cov-report=xml \
             -p allure_pytest --alluredir=allure-results/
           uv run coverage combine --append .e2e-coverage/.coverage.service*
           uv run coverage xml -o coverage.xml

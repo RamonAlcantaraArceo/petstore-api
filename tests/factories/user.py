@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import factory
 from faker import Faker
-
-from app.schemas.user import UserCreate
+from petstore_core.schemas.user import UserCreate
 
 fake = Faker()
 

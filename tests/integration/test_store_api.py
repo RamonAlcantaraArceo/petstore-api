@@ -48,10 +48,11 @@ async def test_delete_order(app_client: AsyncClient, api_key_header: dict[str, s
         json={"petId": 2, "quantity": 1, "status": "placed", "complete": False},
         headers=api_key_header,
     )
+    assert create_resp.status_code == 200
     order_id = create_resp.json()["id"]
 
     del_resp = await app_client.delete(f"/api/v1/store/order/{order_id}", headers=api_key_header)
-    assert del_resp.status_code == 200
+    assert del_resp.status_code == 204
 
     get_resp = await app_client.get(f"/api/v1/store/order/{order_id}", headers=api_key_header)
     assert get_resp.status_code == 404
