@@ -10,27 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://ramonalcantaraarceo.github.io/petstore-api/e2e-coverage/">
+        <link rel="canonical" href="https://ramonalcantaraarceo.github.io/petstore-api/auth/dev-auth/">
       
       
+        <link rel="prev" href="../../configuration/">
+      
+      
+        <link rel="next" href="../../rate-limiting/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>E2E Coverage Guide - Petstore API</title>
+        <title>Dev Authentication - Petstore API</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -76,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#e2e-coverage-guide" class="md-skip">
+        <a href="#dev-authentication" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +96,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Petstore API" class="md-header__button md-logo" aria-label="Petstore API" data-md-component="logo">
+    <a href="../.." title="Petstore API" class="md-header__button md-logo" aria-label="Petstore API" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -112,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              E2E Coverage Guide
+              Dev Authentication
             
           </span>
         </div>
@@ -230,7 +234,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Petstore API" class="md-nav__button md-logo" aria-label="Petstore API" data-md-component="logo">
+    <a href="../.." title="Petstore API" class="md-nav__button md-logo" aria-label="Petstore API" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -260,7 +264,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -287,7 +291,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../badges/" class="md-nav__link">
+      <a href="../../badges/" class="md-nav__link">
         
   
   
@@ -314,7 +318,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
+      <a href="../../getting-started/" class="md-nav__link">
         
   
   
@@ -341,7 +345,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
+      <a href="../../architecture/" class="md-nav__link">
         
   
   
@@ -368,7 +372,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../../configuration/" class="md-nav__link">
         
   
   
@@ -392,8 +396,10 @@
       
   
   
+    
   
   
+  
     
     
     
@@ -404,11 +410,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
@@ -429,7 +435,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -444,10 +450,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../auth/dev-auth/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dev Authentication
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -463,6 +496,103 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#seeded-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Seeded users
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-the-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the token
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#token-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supabase-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supabase compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -482,7 +612,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../rate-limiting/" class="md-nav__link">
+      <a href="../../rate-limiting/" class="md-nav__link">
         
   
   
@@ -509,7 +639,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../testing/" class="md-nav__link">
+      <a href="../../testing/" class="md-nav__link">
         
   
   
@@ -536,7 +666,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../deployment/" class="md-nav__link">
+      <a href="../../deployment/" class="md-nav__link">
         
   
   
@@ -563,7 +693,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -642,7 +772,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../allure-history-design/" class="md-nav__link">
+      <a href="../../allure-history-design/" class="md-nav__link">
         
   
   
@@ -670,7 +800,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../allure-quick-reference/" class="md-nav__link">
+      <a href="../../allure-quick-reference/" class="md-nav__link">
         
   
   
@@ -728,7 +858,7 @@
   <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How It Works
+        How it works
       
     </span>
   </a>
@@ -736,10 +866,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-not-docker" class="md-nav__link">
+  <a href="#seeded-users" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Not Docker?
+        Seeded users
       
     </span>
   </a>
@@ -747,60 +877,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#local-execution" class="md-nav__link">
+  <a href="#login" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local Execution
+        Login
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Local Execution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-e2e-only" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. E2E only
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-full-suite-with-merged-coverage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Full suite with merged coverage
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-running-e2e-against-a-remote-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Running E2E against a remote environment
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
+  <a href="#use-the-token" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting
+        Use the token
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#token-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supabase-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supabase compatibility
       
     </span>
   </a>
@@ -827,108 +951,72 @@
   
 
 
-<h1 id="e2e-coverage-guide">E2E Coverage Guide<a class="headerlink" href="#e2e-coverage-guide" title="Permanent link">&para;</a></h1>
-<p>This guide explains how E2E tests run a real service in a separate process and
-how their coverage data is merged with the in-process pytest coverage.</p>
-<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<p>E2E tests need a live service to hit over HTTP. To still contribute to overall
-coverage, the service is launched under <code>coverage run --parallel-mode</code> so that
-each instrumented process writes its own <code>.coverage.*</code> file. After pytest
-finishes, those files are merged into the combined coverage database.</p>
-<p>Implementation:</p>
+<h1 id="dev-authentication">Dev Authentication<a class="headerlink" href="#dev-authentication" title="Permanent link">&para;</a></h1>
+<p>The development environment includes an in-memory authentication layer that uses the same <code>UserModel</code> shape as the real application and issues Supabase-shaped JWTs.</p>
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>tests/e2e/conftest.py</code></li>
-<li>Picks a free localhost port and exports <code>E2E_BASE_URL=http://127.0.0.1:&lt;port&gt;</code>
-    and <code>API_KEY=test-api-key</code> at module import time so <code>tests/conftest.py</code>
-    does not skip <code>remote_only</code> tests during collection.</li>
-<li>Spawns a subprocess equivalent to:
-    <div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>coverage<span class="w"> </span>run<span class="w"> </span>--parallel-mode<span class="w"> </span>--save-signal<span class="o">=</span>USR1<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--rcfile<span class="w"> </span>pyproject.toml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-m<span class="w"> </span>uvicorn<span class="w"> </span>app.main:app<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span>&lt;port&gt;
-</code></pre></div>
-    with <code>COVERAGE_FILE=.e2e-coverage/.coverage.service</code> so each forked
-    worker writes uniquely-named files under <code>.e2e-coverage/</code>.</li>
-<li>When Docker is available a <code>testcontainers</code> Postgres instance is started
-    and the service runs with <code>STORAGE_MODE=local</code> against it (so the
-    postgres repositories contribute to coverage). When Docker is not
-    available the fixture falls back to <code>STORAGE_MODE=memory</code> so developers
-    without Docker can still run E2E tests locally.</li>
-<li>To force memory mode explicitly: <code>E2E_STORAGE_MODE=memory pytest tests/e2e</code>.</li>
-<li>Waits for <code>/health</code> to return <code>status=ok</code> before yielding.</li>
-<li>On teardown, sends <code>SIGUSR1</code> (the coverage <code>--save-signal</code>) so the
-    instrumented process writes <code>.coverage.service.*</code> files, then sends
-    <code>SIGTERM</code> for a clean uvicorn shutdown. (<code>atexit</code> handlers do not run
-    when uvicorn's signal handler exits the process, so an explicit save
-    signal is required.)</li>
-<li>
-<p>If <code>TEST_BASE_URL</code> or <code>E2E_BASE_URL</code> is already set by the caller, the
-    fixture does <strong>not</strong> spawn anything and tests run against that target.</p>
-</li>
-<li>
-<p><code>pyproject.toml</code></p>
-</li>
-<li>
-<p><code>[tool.coverage.paths]</code> maps in-process and subprocess paths to the same
-    canonical source tree so <code>coverage combine</code> reconciles them.</p>
-</li>
-<li>
-<p><code>.github/workflows/ci.yml</code></p>
-</li>
-<li>Runs the full suite (including <code>tests/e2e/</code>) with the local subprocess
-    fixture, then appends the service coverage files and rebuilds <code>coverage.xml</code>.</li>
+<li>Seeded users live in memory only</li>
+<li><code>POST /api/v1/user/auth</code> exchanges a seeded username for a bearer token</li>
+<li>Protected <code>/api/v1/*</code> routes use the shared <code>get_current_user</code> dependency</li>
+<li>In <code>staging</code> and <code>prod</code>, the same dependency is ready to delegate to Supabase JWT validation</li>
 </ul>
-<h2 id="why-not-docker">Why Not Docker?<a class="headerlink" href="#why-not-docker" title="Permanent link">&para;</a></h2>
-<p>The previous design used <code>docker compose</code> to run the API container with a
-bind-mounted <code>.e2e-coverage/</code> volume. In CI the container ran as root and
-produced root-owned coverage files; <code>coverage combine</code> (running as the
-unprivileged GitHub Actions <code>runner</code> user) then failed with <code>PermissionError</code>
-when trying to delete the merged source files. Running the service as a
-host-side subprocess of the test runner sidesteps the entire UID-mapping
-problem and removes the Docker dependency from CI.</p>
-<h2 id="local-execution">Local Execution<a class="headerlink" href="#local-execution" title="Permanent link">&para;</a></h2>
-<h3 id="1-e2e-only">1. E2E only<a class="headerlink" href="#1-e2e-only" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>pytest<span class="w"> </span>tests/e2e<span class="w"> </span>-q
-</code></pre></div>
-<p>Expected:</p>
+<h2 id="seeded-users">Seeded users<a class="headerlink" href="#seeded-users" title="Permanent link">&para;</a></h2>
 <ul>
-<li>A local <code>uvicorn</code> subprocess is started under <code>coverage</code> and torn down by the
-  fixture.</li>
-<li>All E2E tests pass.</li>
-<li><code>.e2e-coverage/.coverage.service.*</code> files are produced.</li>
+<li><code>devuser</code></li>
+<li><code>devadmin</code></li>
 </ul>
-<h3 id="2-full-suite-with-merged-coverage">2. Full suite with merged coverage<a class="headerlink" href="#2-full-suite-with-merged-coverage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-rf<span class="w"> </span>.e2e-coverage<span class="w"> </span>.coverage<span class="w"> </span>coverage.xml
-
-uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>pytest<span class="w"> </span>tests<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--cov<span class="o">=</span>app<span class="w"> </span>--cov-fail-under<span class="o">=</span><span class="m">0</span><span class="w"> </span>--cov-report<span class="o">=</span>xml<span class="w"> </span>-q
-
-uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>coverage<span class="w"> </span>combine<span class="w"> </span>--append<span class="w"> </span>.e2e-coverage/.coverage.service*
-uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>coverage<span class="w"> </span>xml<span class="w"> </span>-o<span class="w"> </span>coverage.xml
-uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>coverage<span class="w"> </span>html<span class="w"> </span>-d<span class="w"> </span>htmlcov-combined
-uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>coverage<span class="w"> </span>report<span class="w"> </span>--fail-under<span class="o">=</span><span class="m">80</span>
+<h2 id="login">Login<a class="headerlink" href="#login" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/v1/user/auth<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;devuser&quot;}&#39;</span>
 </code></pre></div>
-<p>Expected:</p>
-<ul>
-<li>All tests pass.</li>
-<li>Coverage is merged from in-process pytest runs <strong>and</strong> the E2E subprocess.</li>
-<li>Final combined coverage passes the threshold.</li>
-</ul>
-<h3 id="3-running-e2e-against-a-remote-environment">3. Running E2E against a remote environment<a class="headerlink" href="#3-running-e2e-against-a-remote-environment" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nv">TEST_BASE_URL</span><span class="o">=</span>https://staging.example.com<span class="w"> </span><span class="nv">API_KEY</span><span class="o">=</span>...<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>pytest<span class="w"> </span>tests/e2e<span class="w"> </span>-q
+<p>Example response:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;access_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;JWT token&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;token_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bearer&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;devuser&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;first_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Dev&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;last_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dev@example.com&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;phone&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;555-1234&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;user_status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
-<p>The fixture detects the external URL and does not spawn a local service.</p>
-<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h2 id="use-the-token">Use the token<a class="headerlink" href="#use-the-token" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8000/api/v1/store/inventory<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Authorization: ******&#39;</span>
+</code></pre></div>
+<p>If rate-limit bypass is configured, you can also send:</p>
+<div class="highlight"><pre><span></span><code>-H<span class="w"> </span><span class="s1">&#39;X-Bypass-Key: &lt;configured bypass key&gt;&#39;</span>
+</code></pre></div>
+<h2 id="environment-variables">Environment variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>401 in E2E tests:</strong> Ensure <code>API_KEY=test-api-key</code> matches the value used by
-  the spawned service (default in fixture).</li>
-<li><strong>Coverage stays around 75%:</strong> Verify the post-pytest merge step ran:
-  <code>coverage combine --append .e2e-coverage/.coverage.service*</code>.</li>
-<li><strong>Port conflict:</strong> The fixture picks an ephemeral port automatically; ensure
-  no firewall blocks <code>127.0.0.1</code> traffic.</li>
-<li><strong>Service never becomes healthy:</strong> Inspect stdout/stderr from the subprocess
-  (rerun with <code>LOG_LEVEL=INFO</code> and remove <code>--log-level warning</code> locally).</li>
+<li><code>APP_ENV</code> or <code>ENV</code>: <code>dev</code>, <code>staging</code>, or <code>prod</code></li>
+<li><code>DEV_JWT_SECRET</code>: shared secret for development JWT signing</li>
+<li><code>DEV_JWT_EXPIRATION_SECONDS</code>: development token lifetime in seconds</li>
 </ul>
+<h2 id="token-structure">Token structure<a class="headerlink" href="#token-structure" title="Permanent link">&para;</a></h2>
+<p>Development JWTs mimic Supabase claims:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dev@example.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;authenticated&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;user_metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;devuser&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;first_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Dev&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;last_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;phone&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;555-1234&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;user_status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;iat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1717046400</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;exp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1717050000</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="supabase-compatibility">Supabase compatibility<a class="headerlink" href="#supabase-compatibility" title="Permanent link">&para;</a></h2>
+<p>The development issuer is intentionally shaped like Supabase Auth so production code can keep using the same dependency and user-mapping flow when JWKS-backed validation is added.</p>
 
 
 
@@ -984,10 +1072,10 @@ uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </s
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "search.highlight", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "search.highlight", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
