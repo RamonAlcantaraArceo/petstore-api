@@ -1,1 +1,1 @@
-{"id":"832952398285e24fe047d1228485a18e","fullName":"tests.unit.test_user_service#test_logout_returns_none","name":"test_logout_returns_none","status":"passed","testResultsByEnv":{"default":"e5ac6880463f787b83b0cba2b4cef1d9"}}
+{"id":"832952398285e24fe047d1228485a18e","fullName":"tests.unit.test_user_service#test_logout_returns_none","name":"test_logout_returns_none","status":"passed","testResultsByEnv":{"default":"e08499c004391df1f02e30f51d45f8ca"}}
