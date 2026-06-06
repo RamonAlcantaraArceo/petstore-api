@@ -56,7 +56,7 @@ class Settings(BaseSettings):
     e2e_base_url: str = ""
     rate_limit_requests: int = 40
     rate_limit_window_seconds: int = 60
-    rate_limit_bypass_key: str = ""
+    rate_limit_bypass_key: str = "MELON"
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
