@@ -188,13 +188,61 @@ def test_mixed_v2_pets_have_categories() -> None:
 
 
 # ---------------------------------------------------------------------------
+# mixed_v3 dataset
+# ---------------------------------------------------------------------------
+
+
+@allure.story("Mixed V3 Dataset")
+@allure.severity(allure.severity_level.NORMAL)
+def test_mixed_v3_contains_all_pet_statuses() -> None:
+    """mixed_v3 includes pets with available, pending, and sold statuses."""
+    ds = get_dataset("mixed_v3")
+    statuses = {pet.status for pet in ds.pets}
+    assert PetStatus.available in statuses
+    assert PetStatus.pending in statuses
+    assert PetStatus.sold in statuses
+
+
+@allure.story("Mixed V3 Dataset")
+@allure.severity(allure.severity_level.NORMAL)
+def test_mixed_v3_has_over_300_entities_per_table() -> None:
+    """mixed_v3 includes more than 300 pets, orders, and users."""
+    ds = get_dataset("mixed_v3")
+    assert len(ds.pets) > 300
+    assert len(ds.orders) > 300
+    assert len(ds.users) > 300
+
+
+@allure.story("Mixed V3 Dataset")
+@allure.severity(allure.severity_level.NORMAL)
+def test_mixed_v3_order_pet_indices_are_valid() -> None:
+    """All order pet_index values in mixed_v3 reference valid pet positions."""
+    ds = get_dataset("mixed_v3")
+    for order in ds.orders:
+        assert 0 <= order.pet_index < len(ds.pets)
+
+
+@allure.story("Mixed V3 Dataset")
+@allure.severity(allure.severity_level.NORMAL)
+def test_mixed_v3_pet_names_are_varied_and_capped() -> None:
+    """mixed_v3 pet names keep identifier prefix and vary up to length 100."""
+    ds = get_dataset("mixed_v3")
+    lengths = [len(pet.name) for pet in ds.pets]
+    assert min(lengths) >= len("M3-Pet-0001")
+    assert max(lengths) <= 100
+    assert len(set(lengths)) > 1
+    for idx, pet in enumerate(ds.pets):
+        assert pet.name.startswith(f"M3-Pet-{idx + 1:04d}")
+
+
+# ---------------------------------------------------------------------------
 # Cross-dataset invariants
 # ---------------------------------------------------------------------------
 
 
 @allure.story("Dataset Invariants")
 @allure.severity(allure.severity_level.NORMAL)
-@pytest.mark.parametrize("name", ["basic", "mixed_v1", "mixed_v2"])
+@pytest.mark.parametrize("name", ["basic", "mixed_v1", "mixed_v2", "mixed_v3"])
 def test_datasets_have_unique_pet_names(name: str) -> None:
     """Pet names within any single dataset are unique."""
     ds = get_dataset(name)
@@ -204,7 +252,7 @@ def test_datasets_have_unique_pet_names(name: str) -> None:
 
 @allure.story("Dataset Invariants")
 @allure.severity(allure.severity_level.NORMAL)
-@pytest.mark.parametrize("name", ["mixed_v1", "mixed_v2"])
+@pytest.mark.parametrize("name", ["mixed_v1", "mixed_v2", "mixed_v3"])
 def test_datasets_with_orders_reference_sold_or_delivered_pets(name: str) -> None:
     """Orders with delivered status are attached to 'sold' pets."""
     ds = get_dataset(name)

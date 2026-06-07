@@ -91,6 +91,16 @@ def create_app() -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
         # Startup logic
+        logger = structlog.get_logger()
+
+        if settings.rate_limit_bypass_key:
+            logger.info(
+                "rate_limit_bypass_key_configured",
+                bypass_key=settings.rate_limit_bypass_key,
+            )
+        else:
+            logger.info("rate_limit_bypass_disabled")
+
         if settings.storage_mode != "memory":
             from petstore_core.db.session import ensure_db_schema, init_db
 
@@ -207,6 +217,23 @@ def create_app() -> FastAPI:
         )
 
     # Middleware (outermost first)
+    if settings.failure_injection_enabled:
+        from app.middleware.failure_injection import FailureInjectionMiddleware
+
+        app.add_middleware(
+            FailureInjectionMiddleware,
+            probability=settings.failure_injection_probability,
+        )
+
+    if settings.delay_injection_enabled:
+        from app.middleware.delay_injection import DelayInjectionMiddleware
+
+        app.add_middleware(
+            DelayInjectionMiddleware,
+            probability=settings.delay_injection_probability,
+            max_delay_seconds=settings.delay_injection_max_seconds,
+        )
+
     app.add_middleware(CorrelationIdMiddleware)
     app.add_middleware(
         RateLimitMiddleware,

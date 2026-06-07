@@ -25,11 +25,19 @@ class Settings(BaseSettings):
         db_max_overflow: SQLAlchemy max overflow connections.
         db_pool_timeout: SQLAlchemy pool timeout in seconds.
         seed_dataset: Optional fixture dataset name to load at startup
-            (e.g. "basic", "mixed_v1", "mixed_v2"). Empty string disables seeding.
+            (e.g. "basic", "mixed_v1", "mixed_v2", "mixed_v3"). Empty string disables seeding.
         rate_limit_requests: Maximum number of requests allowed per window per client key.
         rate_limit_window_seconds: Duration of the rate-limit window in seconds.
         rate_limit_bypass_key: Secret value for the ``X-Bypass-Key`` header that skips
             rate limiting. Empty string disables the bypass mechanism.
+        failure_injection_enabled: Enable random failure injection middleware for demos.
+        failure_injection_probability: Probability (0.0-1.0) of injecting a failure
+            when failure injection is enabled.
+        delay_injection_enabled: Enable random delay injection middleware for demos.
+        delay_injection_probability: Probability (0.0-1.0) of injecting a delay
+            when delay injection is enabled.
+        delay_injection_max_seconds: Maximum delay in seconds to inject when delay
+            injection is triggered.
 
     Example:
         >>> settings = Settings(api_key="test-key")
@@ -47,7 +55,7 @@ class Settings(BaseSettings):
     dev_jwt_secret: str = "dev-jwt-secret"
     dev_jwt_expiration_seconds: int = 3600
     debug: bool = False
-    log_level: str = "INFO"
+    log_level: str = "DEBUG"
     api_version: str = "v1"
     db_pool_size: int = 5
     db_max_overflow: int = 10
@@ -57,6 +65,11 @@ class Settings(BaseSettings):
     rate_limit_requests: int = 40
     rate_limit_window_seconds: int = 60
     rate_limit_bypass_key: str = "MELON"
+    failure_injection_enabled: bool = False
+    failure_injection_probability: float = 0.1
+    delay_injection_enabled: bool = False
+    delay_injection_probability: float = 0.2
+    delay_injection_max_seconds: float = 2.0
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

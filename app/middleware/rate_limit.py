@@ -6,6 +6,7 @@ import math
 import time
 from collections.abc import Awaitable, Callable
 
+import structlog
 from petstore_core.config import Settings, get_settings
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -115,13 +116,36 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             The downstream response, or a ``429`` response when the limit is
             exceeded.
         """
+        logger = structlog.get_logger()
+
         # Exempt well-known paths (health, docs, OpenAPI schema).
         if request.url.path in EXEMPT_PATHS or request.url.path.startswith("/docs"):
             return await call_next(request)
 
         # Bypass: skip rate limiting when the correct secret header is present.
-        if self._bypass_key and request.headers.get(BYPASS_HEADER, "") == self._bypass_key:
-            return await call_next(request)
+        bypass_header_value = request.headers.get(BYPASS_HEADER, "")
+        if self._bypass_key:
+            if bypass_header_value == self._bypass_key:
+                logger.debug(
+                    "rate_limit_bypass_applied",
+                    path=request.url.path,
+                    method=request.method,
+                    bypass_header_present=True,
+                )
+                return await call_next(request)
+            else:
+                logger.debug(
+                    "rate_limit_bypass_header_mismatch",
+                    path=request.url.path,
+                    bypass_header_present=bool(bypass_header_value),
+                    bypass_header_value_length=len(bypass_header_value),
+                    expected_length=len(self._bypass_key),
+                )
+        else:
+            logger.debug(
+                "rate_limit_bypass_disabled",
+                bypass_header_present=bool(bypass_header_value),
+            )
 
         client_key = _get_client_key(request)
         now = time.time()
@@ -141,11 +165,36 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
         if count > self._max_requests:
             retry_after = max(1, reset_seconds)
+            # Extract relevant headers for debugging
+            relevant_headers = {
+                "X-Bypass-Key": bypass_header_value or "(not present)",
+                "X-Forwarded-For": request.headers.get("X-Forwarded-For", "(not present)"),
+                "Authorization": "(present)" if request.headers.get("Authorization") else "(not present)",
+                "User-Agent": request.headers.get("User-Agent", "(not present)"),
+            }
+            logger.warning(
+                "rate_limit_exceeded",
+                client_key=client_key,
+                count=count,
+                max_requests=self._max_requests,
+                path=request.url.path,
+                method=request.method,
+                retry_after=retry_after,
+                headers=relevant_headers,
+            )
             return JSONResponse(
                 status_code=429,
                 content={"detail": "Rate limit exceeded. Please retry after the window resets."},
                 headers={"Retry-After": str(retry_after)},
             )
+
+        logger.debug(
+            "rate_limit_check_pass",
+            client_key=client_key,
+            count=count,
+            max_requests=self._max_requests,
+            remaining=max(0, self._max_requests - count),
+        )
 
         response = await call_next(request)
         response.headers[RATE_LIMIT_LIMIT_HEADER] = str(self._max_requests)
