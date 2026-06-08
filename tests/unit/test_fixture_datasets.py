@@ -215,6 +215,15 @@ def test_mixed_v3_has_over_300_entities_per_table() -> None:
 
 @allure.story("Mixed V3 Dataset")
 @allure.severity(allure.severity_level.NORMAL)
+def test_mixed_v3_includes_admin_user_with_secret_password() -> None:
+    """mixed_v3 includes a known admin credential for seeded-login scenarios."""
+    ds = get_dataset("mixed_v3")
+    admin_user = next(user for user in ds.users if user.username == "admin")
+    assert admin_user.password == "secret"
+
+
+@allure.story("Mixed V3 Dataset")
+@allure.severity(allure.severity_level.NORMAL)
 def test_mixed_v3_order_pet_indices_are_valid() -> None:
     """All order pet_index values in mixed_v3 reference valid pet positions."""
     ds = get_dataset("mixed_v3")

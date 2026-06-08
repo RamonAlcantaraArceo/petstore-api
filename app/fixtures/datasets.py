@@ -473,8 +473,18 @@ def _build_mixed_v3_users() -> list[UserFixture]:
         "Martinez",
         "Anderson",
     )
-    users: list[UserFixture] = []
-    for idx in range(_MIXED_V3_SIZE):
+    users: list[UserFixture] = [
+        UserFixture(
+            username="admin",
+            email="admin@petstore.example",
+            first_name="Admin",
+            last_name="User",
+            phone="+1-555-300-0000",
+            user_status=2,
+            password="secret",
+        )
+    ]
+    for idx in range(1, _MIXED_V3_SIZE):
         first = first_names[idx % len(first_names)]
         last = last_names[(idx * 3) % len(last_names)]
         users.append(
