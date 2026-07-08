@@ -1,2 +1,0 @@
-{"dataset": "test", "pet_id": 1, "name": "Buddy", "status": "available", "event": "seeded pet", "correlation_id": "", "app_env": "dev", "level": "debug", "timestamp": "2026-07-08T22:20:51.077850Z", "module": "loader", "func_name": "apply_dataset"}
-{"dataset": "test", "pet_id": 2, "name": "Max", "status": "available", "event": "seeded pet", "correlation_id": "", "app_env": "dev", "level": "debug", "timestamp": "2026-07-08T22:20:51.077976Z", "module": "loader", "func_name": "apply_dataset"}

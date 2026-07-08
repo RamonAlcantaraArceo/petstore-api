@@ -1,1 +1,0 @@
-{"path": "/api/v1/pet", "method": "GET", "status_code": 500, "event": "failure_injected", "correlation_id": "", "app_env": "dev", "level": "warning", "timestamp": "2026-07-08T22:20:37.957867Z", "module": "failure_injection", "func_name": "dispatch"}

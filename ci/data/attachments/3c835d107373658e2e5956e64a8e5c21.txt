@@ -1,0 +1,1 @@
+{"path": "/api/v1/pet", "method": "GET", "delay_seconds": 0.42, "event": "delay_injected", "correlation_id": "", "app_env": "dev", "level": "info", "timestamp": "2026-07-08T22:25:31.156840Z", "module": "delay_injection", "func_name": "dispatch"}
