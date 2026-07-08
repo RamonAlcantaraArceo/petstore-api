@@ -1,1 +1,1 @@
-{"id":"815edf7ab63f023c6c1008e5c6e4fb4c","fullName":"tests.unit.test_auth_deps#test_resolve_current_user_from_valid_dev_token","name":"test_resolve_current_user_from_valid_dev_token","status":"passed","testResultsByEnv":{"default":"1547c077ae096aef78b228129fa5e1f6"}}
+{"id":"815edf7ab63f023c6c1008e5c6e4fb4c","fullName":"tests.unit.test_auth_deps#test_resolve_current_user_from_valid_dev_token","name":"test_resolve_current_user_from_valid_dev_token","status":"passed","testResultsByEnv":{"default":"2f31be7412731ff66cf1f9507840d859"}}
