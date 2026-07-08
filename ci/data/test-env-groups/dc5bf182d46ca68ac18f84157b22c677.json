@@ -1,1 +1,1 @@
-{"id":"dc5bf182d46ca68ac18f84157b22c677","fullName":"tests.unit.test_config#test_async_database_url_cloud_adds_ssl_when_missing","name":"test_async_database_url_cloud_adds_ssl_when_missing","status":"passed","testResultsByEnv":{"default":"a4eb48040525d0c6077ab43998de919d"}}
+{"id":"dc5bf182d46ca68ac18f84157b22c677","fullName":"tests.unit.test_config#test_async_database_url_cloud_adds_ssl_when_missing","name":"test_async_database_url_cloud_adds_ssl_when_missing","status":"passed","testResultsByEnv":{"default":"70cdbee33816fc8de29442b72c8072fc"}}
