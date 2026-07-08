@@ -1,1 +1,1 @@
-{"id":"487bd3b563cb03dd2cf328b90f096b39","fullName":"tests.unit.test_user_service#test_delete_user_calls_repo","name":"test_delete_user_calls_repo","status":"passed","testResultsByEnv":{"default":"3e4dda5beab889a348874ac81eed33b2"}}
+{"id":"487bd3b563cb03dd2cf328b90f096b39","fullName":"tests.unit.test_user_service#test_delete_user_calls_repo","name":"test_delete_user_calls_repo","status":"passed","testResultsByEnv":{"default":"8b2b885fced87da59fe351a89f8a7c5a"}}

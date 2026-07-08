@@ -1,1 +1,1 @@
-{"id":"823f9810413708da02ec05a689c6bdfa","fullName":"tests.integration.test_rate_limiting#test_unauthenticated_requests_are_also_rate_limited","name":"test_unauthenticated_requests_are_also_rate_limited","status":"passed","testResultsByEnv":{"default":"8d601f381158359fec574957a51f0b4f"}}
+{"id":"823f9810413708da02ec05a689c6bdfa","fullName":"tests.integration.test_rate_limiting#test_unauthenticated_requests_are_also_rate_limited","name":"test_unauthenticated_requests_are_also_rate_limited","status":"passed","testResultsByEnv":{"default":"e66f801c97801622c2248384c487cf72"}}

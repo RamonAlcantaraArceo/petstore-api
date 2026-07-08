@@ -1,0 +1,1 @@
+{"event": "rate_limit_bypass_disabled", "correlation_id": "", "app_env": "dev", "level": "info", "timestamp": "2026-07-08T22:08:43.120809Z", "module": "main", "func_name": "lifespan"}

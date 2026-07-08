@@ -1,1 +1,1 @@
-{"id":"8eb2558ddac7c21ae5f1d98a76158e47","fullName":"tests.integration.test_rate_limiting#test_openapi_endpoint_is_exempt_from_rate_limiting","name":"test_openapi_endpoint_is_exempt_from_rate_limiting","status":"passed","testResultsByEnv":{"default":"cc6602939070f5897e33fabe35fa9c6f"}}
+{"id":"8eb2558ddac7c21ae5f1d98a76158e47","fullName":"tests.integration.test_rate_limiting#test_openapi_endpoint_is_exempt_from_rate_limiting","name":"test_openapi_endpoint_is_exempt_from_rate_limiting","status":"passed","testResultsByEnv":{"default":"07fcb5d818ca9816250b3644d41f2cca"}}
