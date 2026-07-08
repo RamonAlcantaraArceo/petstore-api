@@ -1,1 +1,1 @@
-{"id":"74ea3922078167811cded19feaa2b3f2","fullName":"tests.unit.test_user_service#test_create_user_raises_value_error_for_empty_username","name":"test_create_user_raises_value_error_for_empty_username","status":"passed","testResultsByEnv":{"default":"6658255830b78a3127193e29e5c926bc"}}
+{"id":"74ea3922078167811cded19feaa2b3f2","fullName":"tests.unit.test_user_service#test_create_user_raises_value_error_for_empty_username","name":"test_create_user_raises_value_error_for_empty_username","status":"passed","testResultsByEnv":{"default":"2328d3da8d98e23334811c9617d9842d"}}

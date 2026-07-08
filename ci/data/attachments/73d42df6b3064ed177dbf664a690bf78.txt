@@ -1,0 +1,2 @@
+{"path": "/api/v1/pet", "bypass_header_present": false, "bypass_header_value_length": 0, "expected_length": 5, "event": "rate_limit_bypass_header_mismatch", "correlation_id": "", "app_env": "dev", "level": "debug", "timestamp": "2026-07-08T20:51:06.165272Z", "module": "rate_limit", "func_name": "dispatch"}
+{"client_key": "user:1", "count": 1, "max_requests": 40, "remaining": 39, "event": "rate_limit_check_pass", "correlation_id": "", "app_env": "dev", "level": "debug", "timestamp": "2026-07-08T20:51:06.165404Z", "module": "rate_limit", "func_name": "dispatch"}

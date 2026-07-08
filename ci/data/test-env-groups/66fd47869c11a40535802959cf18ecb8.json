@@ -1,1 +1,1 @@
-{"id":"66fd47869c11a40535802959cf18ecb8","fullName":"tests.unit.test_rate_limit_middleware#test_health_path_is_exempt","name":"test_health_path_is_exempt","status":"passed","testResultsByEnv":{"default":"7af300c33336d491f78630a03c743e59"}}
+{"id":"66fd47869c11a40535802959cf18ecb8","fullName":"tests.unit.test_rate_limit_middleware#test_health_path_is_exempt","name":"test_health_path_is_exempt","status":"passed","testResultsByEnv":{"default":"81fbe86f89046aed4850ac9030258160"}}

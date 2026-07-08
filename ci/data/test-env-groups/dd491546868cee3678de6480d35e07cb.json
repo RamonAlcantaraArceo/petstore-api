@@ -1,1 +1,1 @@
-{"id":"dd491546868cee3678de6480d35e07cb","fullName":"tests.integration.test_pet_api#test_missing_api_key_returns_401","name":"test_missing_api_key_returns_401","status":"passed","testResultsByEnv":{"default":"bcb9ad5257aa6df951b04ceac958a83b"}}
+{"id":"dd491546868cee3678de6480d35e07cb","fullName":"tests.integration.test_pet_api#test_missing_api_key_returns_401","name":"test_missing_api_key_returns_401","status":"passed","testResultsByEnv":{"default":"4bc72d3fd2d8462071c587579f6f39f7"}}
