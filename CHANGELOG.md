@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed a flaky test (`test_protected_route_rejects_tampered_bearer_token`) caused by
+  an unreliable JWT token-tampering strategy. HMAC-SHA256 produces a 32-byte digest
+  whose base64url encoding is 43 characters; the last character carries only 4
+  significant bits (the lower 2 are unused zero-padding). Single-character substitution
+  at the last position has a ~6.25% chance of decoding to identical bytes, silently
+  passing signature verification. The test now tampers the first character of the
+  signature segment where all 6 bits are significant and the change is always effective.
+
+
 ## [0.3.0] - 2026-06-03
 
 ### Added

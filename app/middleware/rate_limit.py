@@ -169,7 +169,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             relevant_headers = {
                 "X-Bypass-Key": bypass_header_value or "(not present)",
                 "X-Forwarded-For": request.headers.get("X-Forwarded-For", "(not present)"),
-                "Authorization": "(present)" if request.headers.get("Authorization") else "(not present)",
+                "Authorization": (
+                    "(present)" if request.headers.get("Authorization") else "(not present)"
+                ),
                 "User-Agent": request.headers.get("User-Agent", "(not present)"),
             }
             logger.warning(

@@ -83,3 +83,16 @@ Development JWTs mimic Supabase claims:
 ## Supabase compatibility
 
 The development issuer is intentionally shaped like Supabase Auth so production code can keep using the same dependency and user-mapping flow when JWKS-backed validation is added.
+
+## JWT signature internals
+
+Development tokens use HMAC-SHA256. The 32-byte digest is base64url-encoded to a
+43-character string (without `=` padding). The **last character** of that string carries
+only 4 significant bits — the lower 2 bits are unused zero-padding and are ignored by
+base64 decoders. Any two characters that share the same top 4 bits (e.g. `a` and `b`)
+decode to identical bytes, so a single-character substitution at the last position is not
+guaranteed to corrupt the signature.
+
+When writing tests that verify tampered-token rejection, always modify a character other
+than the last one in the signature segment (e.g. the first character), where all 6 bits
+are significant and a substitution always alters the decoded bytes.

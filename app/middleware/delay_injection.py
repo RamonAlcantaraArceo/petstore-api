@@ -28,9 +28,7 @@ class DelayInjectionMiddleware(BaseHTTPMiddleware):
             random value between 0 and max_delay_seconds.
     """
 
-    def __init__(
-        self, app: ASGIApp, probability: float, max_delay_seconds: float
-    ) -> None:
+    def __init__(self, app: ASGIApp, probability: float, max_delay_seconds: float) -> None:
         """Initialise the middleware.
 
         Args:
