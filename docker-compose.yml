@@ -14,6 +14,8 @@ services:
       API_KEY: ${API_KEY:-dev-api-key}
       APP_ENV: dev
       LOG_LEVEL: INFO
+      SEED_DATASET: mixed_v2
+      RATE_LIMIT_BYPASS_KEY: MELON
     security_opt:
       - no-new-privileges:true
     cap_drop:

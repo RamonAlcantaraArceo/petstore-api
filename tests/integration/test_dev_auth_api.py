@@ -66,7 +66,18 @@ async def test_protected_route_rejects_expired_bearer_token(app_client: AsyncCli
 async def test_protected_route_rejects_tampered_bearer_token(app_client: AsyncClient) -> None:
     """Protected routes return 401 for tampered bearer tokens."""
     token = _dev_token()
-    tampered = token[:-1] + ("a" if token[-1] != "a" else "b")
+    # Tamper the first character of the signature segment. Avoiding the last
+    # character is important: HMAC-SHA256 produces 32 bytes whose base64url
+    # encoding is 43 characters. The last character carries only 4 significant
+    # bits (the lower 2 are unused zero-padding), so two characters that differ
+    # only in those padding bits decode to identical bytes. Changing the first
+    # character instead guarantees all 6 bits are significant and the decoded
+    # signature bytes always differ.
+    parts = token.split(".")
+    sig = parts[2]
+    new_first = "b" if sig[0] != "b" else "c"
+    parts[2] = new_first + sig[1:]
+    tampered = ".".join(parts)
 
     response = await app_client.get(
         "/api/v1/store/inventory",

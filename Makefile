@@ -6,7 +6,7 @@ ALLURE_REPORT_DIR ?= allure-report
 E2E_COVERAGE_DIR ?= .e2e-coverage
 FAIL_UNDER ?= 80
 
-.PHONY: merge-cleanup check lint type-check test reports clean-reports
+.PHONY: merge-cleanup check lint type-check test reports clean-reports demo demo-with-failures
 
 merge-cleanup: check test
 
@@ -46,3 +46,12 @@ reports:
 
 clean-reports:
 	rm -rf $(ALLURE_RESULTS_DIR) $(ALLURE_REPORT_DIR) $(E2E_COVERAGE_DIR) .allure/$(ALLURE_HISTORY_REPORT) htmlcov coverage.xml junit.xml
+
+demo:
+	@echo "Starting Petstore API in-memory demo (no failure injection)..."
+	@$(UV) run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+demo-with-failures:
+	@echo "Starting Petstore API in-memory demo with 10% failure injection and 20% delays..."
+	@STORAGE_MODE=memory FAILURE_INJECTION_ENABLED=true FAILURE_INJECTION_PROBABILITY=0.1 DELAY_INJECTION_ENABLED=true DELAY_INJECTION_PROBABILITY=0.2 DELAY_INJECTION_MAX_SECONDS=2.0 $(UV) run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+

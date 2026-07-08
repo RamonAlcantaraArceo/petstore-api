@@ -7,8 +7,8 @@ services:
       POSTGRES_DB: petstore
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    # volumes:
+    #   - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U petstore"]
       interval: 10s
@@ -31,7 +31,9 @@ services:
       DATABASE_URL: postgresql+asyncpg://petstore:${POSTGRES_PASSWORD:-localpassword}@postgres:5432/petstore
       API_KEY: ${API_KEY:-test-api-key}
       APP_ENV: dev
-      LOG_LEVEL: INFO
+      LOG_LEVEL: INFO,
+      SEED_DATASET: mixed_v2
+      RATE_LIMIT_BYPASS_KEY: MELON
     security_opt:
       - no-new-privileges:true
     cap_drop:
@@ -45,5 +47,5 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-volumes:
-  postgres_data:
+# volumes:
+#   postgres_data:

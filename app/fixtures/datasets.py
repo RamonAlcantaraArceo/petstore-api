@@ -2,7 +2,7 @@
 
 Each dataset is a self-contained snapshot of pets, orders, and users that
 can be loaded into any storage backend (in-memory or PostgreSQL) to give
-the service a deterministic starting state.
+the service a consistent starting state.
 
 Available datasets
 ------------------
@@ -12,10 +12,13 @@ mixed_v1  — Dogs, cats, and fish across all pet statuses; orders; users
             with contact details.
 mixed_v2  — Exotic animals with categories and tags across all statuses;
             orders; additional users.
+mixed_v3  — Large-scale dataset with 360 pets, 360 orders, and 360 users
+            spanning diverse statuses, categories, tags, and profiles.
 """
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 
@@ -342,8 +345,177 @@ _MIXED_V2 = FixtureDataset(
     ],
 )
 
+_MIXED_V3_SIZE = 360
+
+
+def _build_mixed_v3_pet_name(index: int) -> str:
+    """Build a mixed_v3 pet name with random right-padding up to 100 chars."""
+    identifier = f"M3-Pet-{index + 1:04d}"
+    target_length = random.randint(len(identifier), 100)
+    padding_length = target_length - len(identifier)
+    if padding_length == 0:
+        return identifier
+    alphabet = "abcdefghijklmnopqrstuvwxyz0123456789-_"
+    suffix = "".join(random.choice(alphabet) for _ in range(padding_length))
+    return f"{identifier}{suffix}"
+
+
+def _build_mixed_v3_pets() -> list[PetFixture]:
+    """Build a large, diverse pet set for stress and demo scenarios."""
+    statuses = [PetStatus.available, PetStatus.pending, PetStatus.sold]
+    category_names = (
+        "Dogs",
+        "Cats",
+        "Birds",
+        "Fish",
+        "Reptiles",
+        "Small Animals",
+        "Farm",
+        "Exotic",
+        "Aquatic",
+        "Working",
+        "Toy",
+        "Herding",
+    )
+    tag_names = (
+        "friendly",
+        "playful",
+        "quiet",
+        "trained",
+        "indoor",
+        "outdoor",
+        "adoptable",
+        "featured",
+        "young",
+        "senior",
+        "vaccinated",
+        "microchipped",
+    )
+    pets: list[PetFixture] = []
+    for idx in range(_MIXED_V3_SIZE):
+        status = statuses[idx % len(statuses)]
+        category_id = (idx % len(category_names)) + 1
+        primary_tag = (idx % len(tag_names)) + 1
+        secondary_tag = ((idx + 4) % len(tag_names)) + 1
+        pets.append(
+            PetFixture(
+                name=_build_mixed_v3_pet_name(idx),
+                photo_urls=[
+                    f"https://img.petstore.local/mixed_v3/{idx + 1:04d}/primary.jpg",
+                    f"https://img.petstore.local/mixed_v3/{idx + 1:04d}/secondary.jpg",
+                ],
+                status=status,
+                category=Category(id=category_id, name=category_names[category_id - 1]),
+                tags=[
+                    Tag(id=primary_tag, name=tag_names[primary_tag - 1]),
+                    Tag(id=secondary_tag, name=tag_names[secondary_tag - 1]),
+                ],
+            )
+        )
+    return pets
+
+
+def _build_mixed_v3_orders() -> list[OrderFixture]:
+    """Build a large order set with valid pet references and varied statuses."""
+    # Sold pets are at indices 2, 5, 8... because pet status cycles every 3 items.
+    sold_pet_indices = [idx for idx in range(_MIXED_V3_SIZE) if idx % 3 == 2]
+    order_statuses = [OrderStatus.placed, OrderStatus.approved, OrderStatus.delivered]
+    orders: list[OrderFixture] = []
+    for idx in range(_MIXED_V3_SIZE):
+        status = order_statuses[idx % len(order_statuses)]
+        ship_date = datetime(
+            2025,
+            (idx % 12) + 1,
+            (idx % 27) + 1,
+            idx % 24,
+            0,
+            tzinfo=UTC,
+        )
+        orders.append(
+            OrderFixture(
+                pet_index=sold_pet_indices[idx % len(sold_pet_indices)],
+                quantity=(idx % 5) + 1,
+                status=status,
+                ship_date=ship_date,
+                complete=status == OrderStatus.delivered,
+            )
+        )
+    return orders
+
+
+def _build_mixed_v3_users() -> list[UserFixture]:
+    """Build a large user set with varied profile fields."""
+    first_names = (
+        "Alex",
+        "Sam",
+        "Jordan",
+        "Taylor",
+        "Morgan",
+        "Casey",
+        "Riley",
+        "Jamie",
+        "Drew",
+        "Avery",
+        "Robin",
+        "Quinn",
+    )
+    last_names = (
+        "Smith",
+        "Johnson",
+        "Williams",
+        "Brown",
+        "Jones",
+        "Miller",
+        "Davis",
+        "Garcia",
+        "Rodriguez",
+        "Wilson",
+        "Martinez",
+        "Anderson",
+    )
+    users: list[UserFixture] = [
+        UserFixture(
+            username="admin",
+            email="admin@petstore.example",
+            first_name="Admin",
+            last_name="User",
+            phone="+1-555-300-0000",
+            user_status=2,
+            password="secret",
+        )
+    ]
+    for idx in range(1, _MIXED_V3_SIZE):
+        first = first_names[idx % len(first_names)]
+        last = last_names[(idx * 3) % len(last_names)]
+        users.append(
+            UserFixture(
+                username=f"m3_user_{idx + 1:04d}",
+                email=f"m3.user.{idx + 1:04d}@petstore.example",
+                first_name=first,
+                last_name=last,
+                phone=f"+1-555-3{idx + 1:04d}",
+                user_status=idx % 3,
+                password=f"pw-{(idx % 17) + 100}",
+            )
+        )
+    return users
+
+
+_MIXED_V3 = FixtureDataset(
+    name="mixed_v3",
+    description=(
+        "Mixed dataset v3: large-scale fixture with 360 pets, 360 orders, and "
+        "360 users, designed for demos, load-like testing, and pagination checks."
+    ),
+    pets=_build_mixed_v3_pets(),
+    orders=_build_mixed_v3_orders(),
+    users=_build_mixed_v3_users(),
+)
+
 # Public registry of all available datasets keyed by name.
-DATASETS: dict[str, FixtureDataset] = {d.name: d for d in [_EMPTY, _BASIC, _MIXED_V1, _MIXED_V2]}
+DATASETS: dict[str, FixtureDataset] = {
+    d.name: d for d in [_EMPTY, _BASIC, _MIXED_V1, _MIXED_V2, _MIXED_V3]
+}
 
 
 def get_dataset(name: str) -> FixtureDataset:

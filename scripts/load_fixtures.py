@@ -11,6 +11,7 @@ Load a specific dataset (defaults to memory mode)::
     uv run python scripts/load_fixtures.py --dataset basic
     uv run python scripts/load_fixtures.py --dataset mixed_v1
     uv run python scripts/load_fixtures.py --dataset mixed_v2
+    uv run python scripts/load_fixtures.py --dataset mixed_v3
 
 Load into a local PostgreSQL instance::
 
