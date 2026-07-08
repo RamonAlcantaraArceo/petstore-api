@@ -147,11 +147,11 @@ async def test_no_delay_when_random_above_probability() -> None:
     mw = _make_middleware(probability=0.5)
     request = _make_request()
 
-    with patch(
-        "app.middleware.delay_injection.asyncio.sleep", new_callable=AsyncMock
-    ) as mock_sleep:
-        with patch("app.middleware.delay_injection.random.random", return_value=0.9):
-            response = await mw.dispatch(request, _ok_response)
+    with (
+        patch("app.middleware.delay_injection.asyncio.sleep", new_callable=AsyncMock) as mock_sleep,
+        patch("app.middleware.delay_injection.random.random", return_value=0.9),
+    ):
+        response = await mw.dispatch(request, _ok_response)
 
     mock_sleep.assert_not_awaited()
     assert response.status_code == 200
