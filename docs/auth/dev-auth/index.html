@@ -589,6 +589,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#jwt-signature-internals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JWT signature internals
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -931,6 +942,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#jwt-signature-internals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JWT signature internals
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1017,6 +1039,16 @@
 </code></pre></div>
 <h2 id="supabase-compatibility">Supabase compatibility<a class="headerlink" href="#supabase-compatibility" title="Permanent link">&para;</a></h2>
 <p>The development issuer is intentionally shaped like Supabase Auth so production code can keep using the same dependency and user-mapping flow when JWKS-backed validation is added.</p>
+<h2 id="jwt-signature-internals">JWT signature internals<a class="headerlink" href="#jwt-signature-internals" title="Permanent link">&para;</a></h2>
+<p>Development tokens use HMAC-SHA256. The 32-byte digest is base64url-encoded to a
+43-character string (without <code>=</code> padding). The <strong>last character</strong> of that string carries
+only 4 significant bits — the lower 2 bits are unused zero-padding and are ignored by
+base64 decoders. Any two characters that share the same top 4 bits (e.g. <code>a</code> and <code>b</code>)
+decode to identical bytes, so a single-character substitution at the last position is not
+guaranteed to corrupt the signature.</p>
+<p>When writing tests that verify tampered-token rejection, always modify a character other
+than the last one in the signature segment (e.g. the first character), where all 6 bits
+are significant and a substitution always alters the decoded bytes.</p>
 
 
 
