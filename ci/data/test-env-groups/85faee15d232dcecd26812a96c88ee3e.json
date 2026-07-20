@@ -1,1 +1,1 @@
-{"id":"85faee15d232dcecd26812a96c88ee3e","fullName":"tests.unit.test_app_factory#test_injection_middlewares_not_registered_when_disabled","name":"test_injection_middlewares_not_registered_when_disabled","status":"passed","testResultsByEnv":{"default":"659e2cf7e587f5475e75ecb5d817403f"}}
+{"id":"85faee15d232dcecd26812a96c88ee3e","fullName":"tests.unit.test_app_factory#test_injection_middlewares_not_registered_when_disabled","name":"test_injection_middlewares_not_registered_when_disabled","status":"passed","testResultsByEnv":{"default":"a9c60164ed6f80e3aa59dd8b044cdea5"}}

@@ -1,0 +1,1 @@
+{"dataset": "basic", "storage_mode": "memory", "event": "seeding storage", "correlation_id": "", "app_env": "dev", "level": "info", "timestamp": "2026-07-20T19:55:42.416865Z", "module": "loader", "func_name": "seed_from_settings"}
