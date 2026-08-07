@@ -5,13 +5,20 @@ from __future__ import annotations
 from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, Query, Response
+from fastapi.security import HTTPAuthorizationCredentials
 from petstore_core.config import Settings
 from petstore_core.models.user import UserModel
 from petstore_core.schemas.user import User, UserCreate, UserLogin, UserUpdate
 from petstore_core.services.user import UserService
 
+from app.api.deps import bearer_scheme
 from app.api.v1.error_mapping import map_domain_errors
 from app.auth.dev_jwt import issue_dev_jwt
+from app.auth.supabase_auth import (
+    SupabaseAuthNotConfiguredError,
+    supabase_sign_in,
+    supabase_sign_out,
+)
 from app.dependencies import _cached_settings, get_user_service
 
 protected_router = APIRouter(prefix="/user", tags=["user"])
@@ -109,33 +116,57 @@ async def login_user(
     Returns:
         UserLogin containing the session token and user information.
     """
+    if settings.app_env in {"staging", "prod"}:
+        from fastapi import HTTPException, status
+
+        try:
+            token_data = await supabase_sign_in(username, password, settings=settings)
+        except SupabaseAuthNotConfiguredError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Supabase Auth is not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY.",
+            ) from exc
+        access_token: str = token_data["access_token"]
+        response.headers["Authorization"] = f"Bearer {access_token}"
+        return UserLogin(access_token=access_token, token_type="bearer")
+
     await map_domain_errors(service.login(username, password))
     user = await map_domain_errors(service.get_user(username))
     user_model = UserModel(**user.model_dump())
 
-    access_token = issue_dev_jwt(
+    dev_token = issue_dev_jwt(
         user=user_model,
         secret=settings.dev_jwt_secret,
         lifetime_seconds=settings.dev_jwt_expiration_seconds,
     )
 
-    response.headers["Authorization"] = f"Bearer {access_token}"
+    response.headers["Authorization"] = f"Bearer {dev_token}"
 
-    return UserLogin(access_token=access_token, token_type="bearer")
+    return UserLogin(access_token=dev_token, token_type="bearer")
 
 
 @protected_router.get("/logout", status_code=200, operation_id="logout_user")
 async def logout_user(
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer_scheme)],
     service: Annotated[UserService, Depends(get_user_service)],
+    settings: Annotated[Settings, Depends(_cached_settings)],
 ) -> dict[str, str]:
     """Log out current logged-in user session.
     \f
     Args:
+        credentials: Bearer credentials from the Authorization header.
         service: Injected UserService.
+        settings: Application settings.
 
     Returns:
         Confirmation message.
     """
+    if settings.app_env in {"staging", "prod"} and credentials is not None:
+        import contextlib
+
+        with contextlib.suppress(SupabaseAuthNotConfiguredError):
+            await supabase_sign_out(credentials.credentials, settings=settings)
+
     await map_domain_errors(service.logout())
     return {"message": "User logged out"}
 

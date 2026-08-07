@@ -6,6 +6,66 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Implemented Supabase HS256 JWT validation in `app/auth/supabase_jwt.py`.
+  `validate_supabase_jwt` now verifies the token signature against
+  `SUPABASE_JWT_SECRET`, checks the `exp` claim, and returns decoded claims.
+  Raises `SupabaseJWTNotConfiguredError` (→ HTTP 503) when the secret is not
+  set, `SupabaseJWTExpiredError` (→ HTTP 401) for expired tokens, and
+  `SupabaseJWTError` (→ HTTP 401) for any other validation failure.
+- Added `supabase_jwt_secret` field to `Settings` (env var `SUPABASE_JWT_SECRET`).
+  Required for staging and production environments.
+- Added `SupabaseJWTExpiredError` to `app/auth/supabase_jwt.py` and wired it
+  into `get_current_user` in `app/api/deps.py` with a distinct 401 response.
+- Added `serve-staging` Makefile target that reliably starts the service using
+  `.env.staging`, bypassing shell-exported variables that would otherwise take
+  precedence over the env file.
+- Added `app/auth/supabase_auth.py` with `supabase_sign_in` and
+  `supabase_sign_out` helpers that call the Supabase Auth REST API
+  (`/auth/v1/token` and `/auth/v1/logout`) using `httpx`.
+- Added `supabase_url` and `supabase_anon_key` fields to `Settings`
+  (env vars `SUPABASE_URL`, `SUPABASE_ANON_KEY`). Required for login/logout
+  in staging and production.
+
+### Changed
+
+- `GET /user/login` now delegates to Supabase Auth in staging/prod (treating
+  the ``username`` field as the Supabase account email) and returns the
+  Supabase access token. Dev environment behavior is unchanged.
+- `GET /user/logout` now calls `supabase_sign_out` to revoke the session on
+  the Supabase side in staging/prod (best-effort; continues even if
+  misconfigured).
+
+### Changed
+
+- `Settings.model_config` now reads `ENV_FILE` from the environment
+  (default: `".env"`), allowing an alternate dotenv file to be selected at
+  process start time without code changes.
+
+### Fixed
+
+- Fixed Python 2-style bare tuple `except DevJWTError, SupabaseJWTError` in
+  `maybe_get_current_user` (replaced with `except (DevJWTError, SupabaseJWTError, HTTPException)`).
+- Fixed 401 on all protected routes in staging/prod: Supabase JWT ``sub``
+  claims are UUIDs (e.g. ``"a1b2c3d4-..."``), not integers. Added
+  ``_sub_to_user_id()`` in `app/api/deps.py` which tries integer parsing first
+  (dev JWTs) then derives a stable positive integer from the UUID's 128-bit
+  value. Previously every Supabase token returned 401 "missing a valid subject".
+- Replaced the HS256-only stub in `app/auth/supabase_jwt.py` with full
+  JWKS-backed ES256 support. The Supabase project uses ES256 (ECDSA P-256)
+  asymmetric signing. `validate_supabase_jwt` now auto-detects the algorithm
+  from the JWT header: ES256 tokens are verified against the public key
+  fetched from ``{supabase_url}/auth/v1/.well-known/jwks.json`` (cached
+  1 hour, with automatic cache invalidation on key rotation); HS256 tokens
+  fall back to ``SUPABASE_JWT_SECRET``. Added ``PyJWT[crypto]`` dependency.
+
+### Tests
+
+- Added `tests/unit/test_supabase_jwt.py` with 8 test cases covering valid
+  token decoding, missing secret, wrong secret, expired tokens, malformed
+  tokens, tampered payloads, unsupported algorithms, and missing `exp` claims.
+
 ### Fixed
 
 - Fixed a flaky test (`test_protected_route_rejects_tampered_bearer_token`) caused by
