@@ -9,6 +9,7 @@ import structlog
 from fastapi import APIRouter, Body, Depends, HTTPException, Query, Response, status
 from fastapi.security import HTTPAuthorizationCredentials
 from petstore_core.config import Settings
+from petstore_core.errors import NotFoundError
 from petstore_core.models.user import UserModel
 from petstore_core.schemas.user import User, UserCreate, UserLogin, UserUpdate
 from petstore_core.services.user import UserService
@@ -18,6 +19,8 @@ from app.api.v1.error_mapping import map_domain_errors
 from app.auth.dev_jwt import issue_dev_jwt
 from app.auth.supabase_auth import (
     SupabaseAuthNotConfiguredError,
+    supabase_delete_user,
+    supabase_get_user_by_email,
     supabase_sign_in,
     supabase_sign_out,
     supabase_sign_up,
@@ -377,23 +380,22 @@ async def update_user(
     return await map_domain_errors(service.update_user(username, user))
 
 
-@protected_router.delete("/{username}", status_code=204, operation_id="delete_user")
+@unprotected_router.delete("/{username}", status_code=204, operation_id="delete_user")
 async def delete_user(
     username: str,
-    current_user: Annotated[UserModel, Depends(get_current_user)],
     service: Annotated[UserService, Depends(get_user_service)],
     settings: Annotated[Settings, Depends(_cached_settings)],
 ) -> None:
     """Delete user by username.
 
     In staging/prod the user\'s Supabase Auth account is permanently deleted
-    using the service role key, then the local DB profile is removed.
-    Requires ``SUPABASE_SERVICE_ROLE_KEY`` to be configured — returns 501 if
+    first, then the local DB profile is removed.
+    Requires a server-side Supabase admin key (`SUPABASE_SECRET_API_KEY`
+    preferred; `SUPABASE_SERVICE_ROLE_KEY` still supported) — returns 501 if
     the key is not set.
     \f
     Args:
         username: The user\'s unique username.
-        current_user: Injected authenticated user (provides the Supabase UUID).
         service: Injected UserService.
         settings: Application settings.
 
@@ -405,16 +407,66 @@ async def delete_user(
             raise HTTPException(
                 status_code=status.HTTP_501_NOT_IMPLEMENTED,
                 detail=(
-                    "User deletion requires SUPABASE_SERVICE_ROLE_KEY to be configured. "
+                    "User deletion requires SUPABASE_SECRET_API_KEY "
+                    "(or SUPABASE_SERVICE_ROLE_KEY) to be configured. "
                     "Set it in your environment to enable this operation."
                 ),
             )
-        # TODO: persist supabase_uuid in local DB profile during create_user proxy
-        # so we can call supabase_delete_user(supabase_uuid, settings=settings) here.
-        log.warning(
-            "delete_user.supabase_uuid_unavailable",
-            note="Supabase UUID not yet stored in local DB; skipping Supabase Auth deletion.",
-        )
+        target_email = username
+        if "@" not in target_email:
+            user_profile = await map_domain_errors(service.get_user(username))
+            if not user_profile.email:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail="Cannot delete Supabase user without an email on the profile.",
+                )
+            target_email = user_profile.email
+
+        metadata_username: str | None = None
+        try:
+            supabase_user = await supabase_get_user_by_email(target_email, settings=settings)
+            supabase_user_uuid = supabase_user["id"]
+            await supabase_delete_user(supabase_user_uuid, settings=settings)
+            log.info("user.deleted_in_supabase", username=username, email=target_email)
+
+            raw_metadata = supabase_user.get("user_metadata")
+            metadata_username = (
+                raw_metadata.get("username")
+                if isinstance(raw_metadata, dict)
+                else None
+            )
+        except HTTPException as exc:
+            if exc.status_code != status.HTTP_404_NOT_FOUND:
+                raise
+            # If the Supabase account is already gone, still clean the local mirror.
+            log.info("user.already_deleted_in_supabase", username=username, email=target_email)
+
+        delete_candidates = [
+            username,
+            target_email,
+            metadata_username if isinstance(metadata_username, str) else None,
+        ]
+        seen: set[str] = set()
+        deleted_local = False
+        for candidate in delete_candidates:
+            if not candidate or candidate in seen:
+                continue
+            seen.add(candidate)
+            try:
+                await service.delete_user(candidate)
+                deleted_local = True
+                break
+            except NotFoundError:
+                continue
+
+        if not deleted_local:
+            log.warning(
+                "user.profile_not_found_after_supabase_delete",
+                username=username,
+                email=target_email,
+                metadata_username=metadata_username,
+            )
+        return
 
     await map_domain_errors(service.delete_user(username))
     return

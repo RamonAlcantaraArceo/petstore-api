@@ -14,11 +14,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added `supabase_update_user()` helper — calls `PUT /auth/v1/user` with the
   user's own bearer token to sync email/phone/metadata changes to Supabase Auth.
 - Added `supabase_delete_user()` helper — calls
-  `DELETE /auth/v1/admin/users/{uuid}` with the service role key for permanent
-  account deletion.
+  `DELETE /auth/v1/admin/users/{uuid}` with a server-side Supabase admin key
+  for permanent account deletion.
+- Added `supabase_get_user_by_email()` helper — resolves Supabase Auth
+  user records (including UUID + metadata) from email via the admin users API.
 - Added `supabase_service_role_key` field to `Settings`
-  (env var `SUPABASE_SERVICE_ROLE_KEY`). Required for admin-level Supabase Auth
-  operations such as deleting a user.
+  with env aliases:
+  `SUPABASE_SECRET_API_KEY` (preferred),
+  `SUPABASE_AUTH_ADMIN_KEY`,
+  and `SUPABASE_SERVICE_ROLE_KEY` (legacy compatibility).
 - Added `GET /user/me` endpoint — returns the currently authenticated user's
   profile resolved from JWT claims. Works in all environments and is the
   recommended way to get "my own profile" in staging/prod where Supabase users
@@ -33,9 +37,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `PUT /user/{username}` now syncs `email`, `phone`, and profile metadata to
   Supabase Auth (via `supabase_update_user()`) before updating the local DB in
   staging/prod. Username changes are rejected (HTTP 422) in staging/prod.
-- `DELETE /user/{username}` gates on `SUPABASE_SERVICE_ROLE_KEY` in
-  staging/prod: returns HTTP 501 if the key is not configured rather than
-  silently leaving a ghost Supabase account.
+- `DELETE /user/{username}` in staging/prod now performs a full Supabase Auth
+  deletion flow: resolve target UUID by email, delete user via Supabase admin
+  API, then delete local mirrored profile by username/email/metadata fallback.
+  If the admin key is missing it returns HTTP 501.
 - `GET /user/{username}` returns HTTP 501 in staging/prod with a message
   directing callers to `GET /user/me` (Supabase users have no username).
 
@@ -50,7 +55,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 | `GET /user/me` | ✅ from JWT claims | ✅ from JWT claims |
 | `GET /user/{username}` | ✅ DB lookup | ❌ 501 — use `/user/me` |
 | `PUT /user/{username}` | ✅ DB update | ✅ Supabase Auth sync + DB update |
-| `DELETE /user/{username}` | ✅ DB delete | ✅ Supabase Admin delete + DB (needs service role key) |
+| `DELETE /user/{username}` | ✅ DB delete | ✅ Supabase Admin delete + DB (needs secret admin API key) |
 
 ### Added
 

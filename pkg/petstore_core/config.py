@@ -30,8 +30,9 @@ class Settings(BaseSettings):
             Required for Supabase Auth sign-in/sign-out in staging and prod.
         supabase_anon_key: Supabase project anon/public API key.
             Required for Supabase Auth sign-in/sign-out in staging and prod.
-        supabase_service_role_key: Supabase service role key (keep secret).
-            Required for admin-level Supabase Auth operations (e.g. delete user).
+        supabase_service_role_key: Supabase server-side admin key (keep secret).
+            Prefer a scoped Supabase Secret API key over the legacy service role
+            key. Required for admin-level Supabase Auth operations (e.g. delete user).
         seed_dataset: Optional fixture dataset name to load at startup
             (e.g. "basic", "mixed_v1", "mixed_v2", "mixed_v3"). Empty string disables seeding.
         rate_limit_requests: Maximum number of requests allowed per window per client key.
@@ -65,7 +66,15 @@ class Settings(BaseSettings):
     supabase_jwt_secret: str = ""
     supabase_url: str = ""
     supabase_anon_key: str = ""
-    supabase_service_role_key: str = ""
+    supabase_service_role_key: str = Field(
+        default="",
+        validation_alias=AliasChoices(
+            "supabase_service_role_key",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "SUPABASE_SECRET_API_KEY",
+            "SUPABASE_AUTH_ADMIN_KEY",
+        ),
+    )
     debug: bool = False
     log_level: str = "DEBUG"
     api_version: str = "v1"

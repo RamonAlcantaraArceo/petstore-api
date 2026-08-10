@@ -1,4 +1,4 @@
-"""Supabase Auth REST API helpers for sign-in and sign-out."""
+"""Supabase Auth REST API helpers for sign-in, sign-up, and user admin flows."""
 
 from __future__ import annotations
 
@@ -231,14 +231,15 @@ async def supabase_delete_user(
     *,
     settings: Settings,
 ) -> None:
-    """Permanently delete a user from Supabase Auth using the service role key.
+    """Permanently delete a user from Supabase Auth using a server-side admin key.
 
     Calls ``DELETE {supabase_url}/auth/v1/admin/users/{uuid}``.
 
     Args:
         user_uuid: The Supabase user UUID to delete.
-        settings: Application settings; must have ``supabase_url`` and
-            ``supabase_service_role_key`` set.
+        settings: Application settings; must have ``supabase_url`` and a
+            Supabase admin key set (``SUPABASE_SECRET_API_KEY`` preferred,
+            ``SUPABASE_SERVICE_ROLE_KEY`` supported for compatibility).
 
     Raises:
         SupabaseAuthNotConfiguredError: If the service role key is missing.
@@ -247,7 +248,7 @@ async def supabase_delete_user(
     """
     if not settings.supabase_url or not settings.supabase_service_role_key:
         raise SupabaseAuthNotConfiguredError(
-            "SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set for admin user deletion."
+            "SUPABASE_URL and SUPABASE_SECRET_API_KEY (or SUPABASE_SERVICE_ROLE_KEY) must be set for admin user deletion."
         )
 
     url = f"{settings.supabase_url.rstrip('/')}/auth/v1/admin/users/{user_uuid}"
@@ -277,6 +278,91 @@ async def supabase_delete_user(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=f"Supabase Auth returned an unexpected error ({response.status_code}).",
         )
+
+
+async def supabase_get_user_by_email(
+    email: str,
+    *,
+    settings: Settings,
+) -> dict[str, Any]:
+    """Resolve a Supabase user record from an email address.
+
+    Uses the Supabase Auth admin list-users endpoint and scans pages until the
+    requested email is found.
+
+    Args:
+        email: Target user email.
+        settings: Application settings; must have ``supabase_url`` and a
+            Supabase admin key set.
+
+    Returns:
+        Supabase Auth user payload, including at least ``id`` and ``email``.
+
+    Raises:
+        SupabaseAuthNotConfiguredError: If required settings are missing.
+        HTTPException 404: If no user with the email exists.
+        HTTPException 503: If Supabase Auth is unreachable.
+    """
+    if not settings.supabase_url or not settings.supabase_service_role_key:
+        raise SupabaseAuthNotConfiguredError(
+            "SUPABASE_URL and SUPABASE_SECRET_API_KEY (or SUPABASE_SERVICE_ROLE_KEY) must be set for admin lookups."
+        )
+
+    url = f"{settings.supabase_url.rstrip('/')}/auth/v1/admin/users"
+    headers = {
+        "apikey": settings.supabase_service_role_key,
+        "Authorization": f"Bearer {settings.supabase_service_role_key}",
+    }
+    target = email.strip().lower()
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            for page in range(1, 11):
+                response = await client.get(
+                    url,
+                    headers=headers,
+                    params={"page": page, "per_page": 200},
+                )
+                if response.status_code != 200:
+                    raise HTTPException(
+                        status_code=status.HTTP_502_BAD_GATEWAY,
+                        detail=(
+                            "Supabase Auth returned an unexpected error "
+                            f"({response.status_code}) while listing users."
+                        ),
+                    )
+
+                payload = response.json()
+                if isinstance(payload, dict):
+                    users = payload.get("users", [])
+                elif isinstance(payload, list):
+                    users = payload
+                else:
+                    users = []
+
+                if not isinstance(users, list):
+                    users = []
+
+                for user in users:
+                    if not isinstance(user, dict):
+                        continue
+                    candidate_email = str(user.get("email", "")).strip().lower()
+                    candidate_id = user.get("id")
+                    if candidate_email == target and isinstance(candidate_id, str) and candidate_id:
+                        return user
+
+                if len(users) < 200:
+                    break
+    except httpx.RequestError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Supabase Auth service is unreachable.",
+        ) from exc
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"User with email '{email}' was not found in Supabase Auth.",
+    )
 
 
 async def supabase_sign_out(
