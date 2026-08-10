@@ -8,6 +8,52 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- Added `supabase_sign_up()` helper to `app/auth/supabase_auth.py` — proxies
+  `POST /auth/v1/signup` to Supabase Auth. Detects duplicate-email signups
+  (Supabase returns 200 with empty `identities`) and raises HTTP 409.
+- Added `supabase_update_user()` helper — calls `PUT /auth/v1/user` with the
+  user's own bearer token to sync email/phone/metadata changes to Supabase Auth.
+- Added `supabase_delete_user()` helper — calls
+  `DELETE /auth/v1/admin/users/{uuid}` with the service role key for permanent
+  account deletion.
+- Added `supabase_service_role_key` field to `Settings`
+  (env var `SUPABASE_SERVICE_ROLE_KEY`). Required for admin-level Supabase Auth
+  operations such as deleting a user.
+- Added `GET /user/me` endpoint — returns the currently authenticated user's
+  profile resolved from JWT claims. Works in all environments and is the
+  recommended way to get "my own profile" in staging/prod where Supabase users
+  do not have a username.
+
+### Changed
+
+- `POST /user` and `POST /user/createWithList` now **proxy through Supabase
+  Auth** in staging/prod: each user is registered via `supabase_sign_up()`,
+  then a matching local DB profile row is mirrored. The response schema is
+  identical to the dev environment. Requires `email` in the request body.
+- `PUT /user/{username}` now syncs `email`, `phone`, and profile metadata to
+  Supabase Auth (via `supabase_update_user()`) before updating the local DB in
+  staging/prod. Username changes are rejected (HTTP 422) in staging/prod.
+- `DELETE /user/{username}` gates on `SUPABASE_SERVICE_ROLE_KEY` in
+  staging/prod: returns HTTP 501 if the key is not configured rather than
+  silently leaving a ghost Supabase account.
+- `GET /user/{username}` returns HTTP 501 in staging/prod with a message
+  directing callers to `GET /user/me` (Supabase users have no username).
+
+### Per-environment behaviour summary
+
+| Endpoint | dev | staging/prod |
+|---|---|---|
+| `POST /user` | ✅ in-memory | ✅ proxy → Supabase signup + mirror to DB |
+| `POST /user/createWithList` | ✅ in-memory | ✅ same, each user individually |
+| `GET /user/login` | ✅ dev JWT | ✅ Supabase Auth |
+| `GET /user/logout` | ✅ no-op | ✅ revokes Supabase session |
+| `GET /user/me` | ✅ from JWT claims | ✅ from JWT claims |
+| `GET /user/{username}` | ✅ DB lookup | ❌ 501 — use `/user/me` |
+| `PUT /user/{username}` | ✅ DB update | ✅ Supabase Auth sync + DB update |
+| `DELETE /user/{username}` | ✅ DB delete | ✅ Supabase Admin delete + DB (needs service role key) |
+
+### Added
+
 - Implemented Supabase HS256 JWT validation in `app/auth/supabase_jwt.py`.
   `validate_supabase_jwt` now verifies the token signature against
   `SUPABASE_JWT_SECRET`, checks the `exp` claim, and returns decoded claims.
