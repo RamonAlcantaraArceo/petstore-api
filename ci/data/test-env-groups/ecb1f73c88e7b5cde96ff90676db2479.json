@@ -1,1 +1,1 @@
-{"id":"ecb1f73c88e7b5cde96ff90676db2479","fullName":"tests.unit.test_supabase_auth#test_sign_in_maps_provider_errors","name":"test_sign_in_maps_provider_errors[500-502-unexpected error (500)]","status":"passed","testResultsByEnv":{"default":"15ae884b164a327600898cfde73733db"}}
+{"id":"ecb1f73c88e7b5cde96ff90676db2479","fullName":"tests.unit.test_supabase_auth#test_sign_in_maps_provider_errors","name":"test_sign_in_maps_provider_errors[400-401-Invalid credentials.]","status":"passed","testResultsByEnv":{"default":"395b9f8d4308922e098e0d338b7c5631"}}
