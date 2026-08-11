@@ -44,13 +44,12 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 # Copy only dependency files for layer caching
 COPY pyproject.toml ./
-COPY requirements-runtime.txt ./
 COPY pkg/ ./pkg/
 RUN touch README.md
 
-# Install production dependencies (no dev extras) with cache mount
+# Install production dependencies only (no dev/perf/docs extras) with cache mount
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system --no-cache-dir -r requirements-runtime.txt
+    uv pip install --system --no-cache-dir --no-dev .
 
 # Verify critical runtime dependencies are present
 RUN python -c "import sys; \
