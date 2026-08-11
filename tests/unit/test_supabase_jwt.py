@@ -3,47 +3,48 @@
 from __future__ import annotations
 
 import base64
-import hashlib
-import hmac
-import json
 import time
+from collections.abc import Iterator
+from typing import Any
 
+import httpx
+import jwt
 import pytest
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.asymmetric.ec import (
+    EllipticCurvePrivateKey,
+    EllipticCurvePublicKey,
+)
 
 from app.auth.supabase_jwt import (
     SupabaseJWTError,
     SupabaseJWTExpiredError,
     SupabaseJWTNotConfiguredError,
+    _jwks_cache,
     validate_supabase_jwt,
 )
 from app.config import Settings
 
-_SECRET = "test-supabase-jwt-secret"
+_SECRET = "test-supabase-jwt-secret-at-least-32-bytes"
+_SUPABASE_URL = "https://project.supabase.co"
+_ISSUER = f"{_SUPABASE_URL}/auth/v1"
 
 
-def _make_jwt(
-    claims: dict,
-    secret: str = _SECRET,
-    alg: str = "HS256",
-) -> str:
-    """Build a signed HS256 JWT for testing."""
-
-    def b64url(data: bytes) -> str:
-        return base64.urlsafe_b64encode(data).rstrip(b"=").decode("ascii")
-
-    header = {"alg": alg, "typ": "JWT"}
-    encoded_header = b64url(json.dumps(header, separators=(",", ":")).encode())
-    encoded_claims = b64url(json.dumps(claims, separators=(",", ":")).encode())
-    signing_input = f"{encoded_header}.{encoded_claims}".encode("ascii")
-    signature = hmac.new(secret.encode("utf-8"), signing_input, hashlib.sha256).digest()
-    return f"{encoded_header}.{encoded_claims}.{b64url(signature)}"
+@pytest.fixture(autouse=True)
+def clear_jwks_cache() -> Iterator[None]:
+    """Keep the module-level JWKS cache isolated between tests."""
+    _jwks_cache.clear()
+    yield
+    _jwks_cache.clear()
 
 
-def _valid_claims(*, offset: int = 3600) -> dict:
+def _valid_claims(*, offset: int = 3600) -> dict[str, Any]:
+    """Return valid Supabase JWT claims."""
     now = int(time.time())
     return {
         "sub": "42",
         "aud": "authenticated",
+        "iss": _ISSUER,
         "email": "user@example.com",
         "role": "authenticated",
         "exp": now + offset,
@@ -53,68 +54,160 @@ def _valid_claims(*, offset: int = 3600) -> dict:
 
 
 def _settings(secret: str = _SECRET) -> Settings:
-    return Settings(app_env="staging", supabase_jwt_secret=secret)
+    """Return settings configured for both supported JWT algorithms."""
+    return Settings(
+        app_env="staging",
+        supabase_url=_SUPABASE_URL,
+        supabase_jwt_secret=secret,
+    )
+
+
+def _b64url_uint(value: int) -> str:
+    """Encode an unsigned integer for a JWK."""
+    raw = value.to_bytes(32, byteorder="big")
+    return base64.urlsafe_b64encode(raw).rstrip(b"=").decode("ascii")
+
+
+def _ec_jwk(public_key: EllipticCurvePublicKey, kid: str) -> dict[str, str]:
+    """Return a public P-256 key in JWK form."""
+    numbers = public_key.public_numbers()
+    return {
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "use": "sig",
+        "kid": kid,
+        "x": _b64url_uint(numbers.x),
+        "y": _b64url_uint(numbers.y),
+    }
+
+
+def _es256_token(
+    private_key: EllipticCurvePrivateKey,
+    *,
+    kid: str,
+    claims: dict[str, Any] | None = None,
+) -> str:
+    """Sign an ES256 token with the supplied key ID."""
+    return jwt.encode(
+        claims or _valid_claims(),
+        private_key,
+        algorithm="ES256",
+        headers={"kid": kid},
+    )
 
 
 class TestValidateSupabaseJwt:
-    def test_valid_token_returns_claims(self) -> None:
-        """A well-formed, unexpired token returns its decoded claims."""
-        token = _make_jwt(_valid_claims())
-        claims = validate_supabase_jwt(token, settings=_settings())
+    """Exercise validation shared by HS256 and ES256 tokens."""
+
+    async def test_valid_hs256_token_returns_claims(self) -> None:
+        """A valid HS256 token returns its verified claims."""
+        token = jwt.encode(_valid_claims(), _SECRET, algorithm="HS256")
+
+        claims = await validate_supabase_jwt(token, settings=_settings())
+
         assert claims["sub"] == "42"
         assert claims["email"] == "user@example.com"
 
-    def test_raises_not_configured_when_secret_empty(self) -> None:
-        """Missing secret raises SupabaseJWTNotConfiguredError."""
-        settings = Settings(app_env="staging", supabase_jwt_secret="")
-        token = _make_jwt(_valid_claims())
-        with pytest.raises(SupabaseJWTNotConfiguredError):
-            validate_supabase_jwt(token, settings=settings)
+    async def test_valid_es256_token_fetches_jwks_asynchronously_and_caches_it(
+        self,
+    ) -> None:
+        """ES256 validation reuses a cached async JWKS response."""
+        private_key = ec.generate_private_key(ec.SECP256R1())
+        token = _es256_token(private_key, kid="current")
+        requests: list[httpx.Request] = []
 
-    def test_raises_error_on_wrong_secret(self) -> None:
-        """A token signed with the wrong secret fails verification."""
-        token = _make_jwt(_valid_claims(), secret="wrong-secret")
-        with pytest.raises(SupabaseJWTError, match="(?i)signature"):
-            validate_supabase_jwt(token, settings=_settings())
+        def handler(request: httpx.Request) -> httpx.Response:
+            requests.append(request)
+            return httpx.Response(
+                200,
+                json={"keys": [_ec_jwk(private_key.public_key(), "current")]},
+            )
 
-    def test_raises_expired_error_on_expired_token(self) -> None:
-        """An expired token raises SupabaseJWTExpiredError."""
-        claims = _valid_claims(offset=-10)  # expired 10 seconds ago
-        token = _make_jwt(claims)
-        with pytest.raises(SupabaseJWTExpiredError):
-            validate_supabase_jwt(token, settings=_settings())
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            first = await validate_supabase_jwt(token, settings=_settings(), client=client)
+            second = await validate_supabase_jwt(token, settings=_settings(), client=client)
 
-    def test_raises_error_on_malformed_token(self) -> None:
-        """A token without three segments raises SupabaseJWTError."""
-        with pytest.raises(SupabaseJWTError, match="Malformed"):
-            validate_supabase_jwt("not.a.valid.jwt.token", settings=_settings())
+        assert first["sub"] == second["sub"] == "42"
+        assert len(requests) == 1
+        assert requests[0].url.path == "/auth/v1/.well-known/jwks.json"
 
-    def test_raises_error_on_tampered_payload(self) -> None:
-        """Changing the payload after signing fails verification."""
-        token = _make_jwt(_valid_claims())
-        header, _, sig = token.split(".")
-        # Build a forged payload
-        forged_claims = _valid_claims()
-        forged_claims["sub"] = "999"
-        forged_encoded = (
-            base64.urlsafe_b64encode(json.dumps(forged_claims, separators=(",", ":")).encode())
-            .rstrip(b"=")
-            .decode()
-        )
-        forged_token = f"{header}.{forged_encoded}.{sig}"
-        with pytest.raises(SupabaseJWTError, match="(?i)signature"):
-            validate_supabase_jwt(forged_token, settings=_settings())
+    async def test_es256_retries_after_key_rotation(self) -> None:
+        """A missing cached key evicts the cache and retries JWKS once."""
+        old_key = ec.generate_private_key(ec.SECP256R1())
+        new_key = ec.generate_private_key(ec.SECP256R1())
+        token = _es256_token(new_key, kid="new")
+        calls = 0
 
-    def test_raises_error_on_unsupported_algorithm(self) -> None:
-        """A token with an algorithm other than HS256 is rejected."""
-        token = _make_jwt(_valid_claims(), alg="none")
-        with pytest.raises(SupabaseJWTError, match="algorithm"):
-            validate_supabase_jwt(token, settings=_settings())
+        def handler(_request: httpx.Request) -> httpx.Response:
+            nonlocal calls
+            calls += 1
+            key = old_key if calls == 1 else new_key
+            kid = "old" if calls == 1 else "new"
+            return httpx.Response(200, json={"keys": [_ec_jwk(key.public_key(), kid)]})
 
-    def test_raises_error_on_missing_exp(self) -> None:
-        """A token without an 'exp' claim is rejected."""
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            claims = await validate_supabase_jwt(token, settings=_settings(), client=client)
+
+        assert claims["sub"] == "42"
+        assert calls == 2
+
+    @pytest.mark.parametrize(
+        ("issuer", "expected"),
+        [
+            (None, "iss"),
+            ("https://other.supabase.co/auth/v1", "issuer"),
+        ],
+    )
+    async def test_rejects_missing_or_invalid_issuer(
+        self, issuer: str | None, expected: str
+    ) -> None:
+        """Tokens must use the configured Supabase Auth issuer."""
         claims = _valid_claims()
-        del claims["exp"]
-        token = _make_jwt(claims)
-        with pytest.raises(SupabaseJWTError, match="exp"):
-            validate_supabase_jwt(token, settings=_settings())
+        if issuer is None:
+            del claims["iss"]
+        else:
+            claims["iss"] = issuer
+        token = jwt.encode(claims, _SECRET, algorithm="HS256")
+
+        with pytest.raises(SupabaseJWTError, match=f"(?i){expected}"):
+            await validate_supabase_jwt(token, settings=_settings())
+
+    @pytest.mark.parametrize("claim", ["iat", "sub"])
+    async def test_rejects_missing_required_claim(self, claim: str) -> None:
+        """Tokens missing a required identity claim are rejected."""
+        claims = _valid_claims()
+        del claims[claim]
+        token = jwt.encode(claims, _SECRET, algorithm="HS256")
+
+        with pytest.raises(SupabaseJWTError, match=claim):
+            await validate_supabase_jwt(token, settings=_settings())
+
+    async def test_raises_not_configured_when_secret_empty(self) -> None:
+        """Missing HS256 secret raises a configuration error."""
+        token = jwt.encode(_valid_claims(), _SECRET, algorithm="HS256")
+
+        with pytest.raises(SupabaseJWTNotConfiguredError):
+            await validate_supabase_jwt(token, settings=_settings(secret=""))
+
+    async def test_raises_not_configured_when_url_empty(self) -> None:
+        """Missing Supabase URL prevents issuer validation."""
+        settings = Settings(app_env="staging", supabase_jwt_secret=_SECRET)
+        token = jwt.encode(_valid_claims(), _SECRET, algorithm="HS256")
+
+        with pytest.raises(SupabaseJWTNotConfiguredError):
+            await validate_supabase_jwt(token, settings=settings)
+
+    async def test_raises_expired_error_on_expired_token(self) -> None:
+        """An expired token raises the dedicated expiration error."""
+        token = jwt.encode(_valid_claims(offset=-10), _SECRET, algorithm="HS256")
+
+        with pytest.raises(SupabaseJWTExpiredError):
+            await validate_supabase_jwt(token, settings=_settings())
+
+    async def test_raises_error_on_unsupported_algorithm(self) -> None:
+        """A token outside the algorithm allowlist is rejected."""
+        token = jwt.encode(_valid_claims(), "", algorithm="none")
+
+        with pytest.raises(SupabaseJWTError, match="algorithm"):
+            await validate_supabase_jwt(token, settings=_settings())

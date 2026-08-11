@@ -26,7 +26,7 @@ RATE_LIMIT_REMAINING_HEADER = "X-RateLimit-Remaining"
 RATE_LIMIT_RESET_HEADER = "X-RateLimit-Reset"
 
 
-def _get_client_key(request: Request) -> str:
+async def _get_client_key(request: Request) -> str:
     """Return a stable key that identifies the calling client.
 
     Prefers the authenticated user identifier when available; otherwise falls
@@ -43,7 +43,7 @@ def _get_client_key(request: Request) -> str:
     state = getattr(app, "state", None)
     settings = getattr(state, "settings", None)
     auth_settings = settings if isinstance(settings, Settings) else get_settings()
-    user = maybe_get_current_user(request, settings=auth_settings)
+    user = await maybe_get_current_user(request, settings=auth_settings)
     if user is not None and user.id is not None:
         return f"user:{user.id}"
 
@@ -147,7 +147,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                 bypass_header_present=bool(bypass_header_value),
             )
 
-        client_key = _get_client_key(request)
+        client_key = await _get_client_key(request)
         now = time.time()
 
         count, window_start = self._counters.get(client_key, (0, now))

@@ -7,6 +7,10 @@ wrapper modules.
 
 from __future__ import annotations
 
+from pathlib import Path
+
+import cryptography
+import jwt
 from petstore_core.config import get_settings
 from petstore_core.errors import NotFoundError, ValidationError
 from petstore_core.repositories.base import (
@@ -44,3 +48,12 @@ def test_petstore_core_services_import() -> None:
     assert OrderService is not None
     assert PetService is not None
     assert UserService is not None
+
+
+def test_jwt_runtime_dependencies_are_declared_and_importable() -> None:
+    """Verify production requirements include JWT cryptography support."""
+    requirements = Path("requirements-runtime.txt").read_text(encoding="utf-8")
+
+    assert "PyJWT[crypto]>=2.8.0" in requirements
+    assert jwt.__version__
+    assert cryptography.__version__

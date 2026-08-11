@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import contextlib
-from typing import Annotated
+from typing import Annotated, Any
 
 import structlog
 from fastapi import APIRouter, Body, Depends, HTTPException, Query, Response, status
@@ -133,7 +133,9 @@ async def create_user(
             user_status=user.user_status,
         )
         created = await map_domain_errors(service.create_user(local_user))
-        log.info("user.created_via_supabase", supabase_id=supabase_uuid, username=effective_username)
+        log.info(
+            "user.created_via_supabase", supabase_id=supabase_uuid, username=effective_username
+        )
         return created
 
     return await map_domain_errors(service.create_user(user))
@@ -234,7 +236,10 @@ async def login_user(
         except SupabaseAuthNotConfiguredError as exc:
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Supabase Auth is not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY.",
+                detail=(
+                    "Supabase Auth is not configured. Set SUPABASE_URL and "
+                    "SUPABASE_PUBLISHABLE_KEY (or SUPABASE_ANON_KEY)."
+                ),
             ) from exc
         access_token: str = token_data["access_token"]
         response.headers["Authorization"] = f"Bearer {access_token}"
@@ -359,7 +364,7 @@ async def update_user(
                 detail="Username changes are not supported in staging/prod.",
             )
         if credentials is not None:
-            metadata: dict = {}
+            metadata: dict[str, Any] = {}
             if user.first_name is not None:
                 metadata["first_name"] = user.first_name
             if user.last_name is not None:
@@ -431,9 +436,7 @@ async def delete_user(
 
             raw_metadata = supabase_user.get("user_metadata")
             metadata_username = (
-                raw_metadata.get("username")
-                if isinstance(raw_metadata, dict)
-                else None
+                raw_metadata.get("username") if isinstance(raw_metadata, dict) else None
             )
         except HTTPException as exc:
             if exc.status_code != status.HTTP_404_NOT_FOUND:

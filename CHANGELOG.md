@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Security
+
+- Hardened Supabase ES256 and HS256 JWT validation to require the configured
+  `/auth/v1` issuer plus `exp`, `iat`, and `sub` claims while continuing to
+  validate the `authenticated` audience.
+- Refactored JWKS retrieval and authentication call sites to use
+  `httpx.AsyncClient`, preserving the one-hour cache and key-rotation retry
+  without blocking the FastAPI event loop.
+
+### Fixed
+
+- Added `PyJWT[crypto]>=2.8.0` to production runtime requirements and Docker
+  dependency verification so JWT and cryptography imports are available in
+  deployed images.
+- Added `SUPABASE_PUBLISHABLE_KEY` as the preferred alias for
+  `SUPABASE_ANON_KEY` while retaining legacy environment compatibility.
+
+### Changed
+
+- Bumped the application version to `0.3.1`.
+
 ### Added
 
 - Added `supabase_sign_up()` helper to `app/auth/supabase_auth.py` — proxies

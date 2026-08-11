@@ -6,7 +6,6 @@ legacy Supabase projects). Algorithm selection is automatic based on the JWT hea
 
 from __future__ import annotations
 
-import base64
 import json
 import time
 from typing import Any
@@ -36,11 +35,12 @@ class SupabaseJWTExpiredError(SupabaseJWTError):
     """Raised when a Supabase JWT has expired."""
 
 
-def _fetch_jwks(jwks_url: str) -> dict[str, Any]:
+async def _fetch_jwks(jwks_url: str, *, client: httpx.AsyncClient | None = None) -> dict[str, Any]:
     """Fetch JWKS and return a dict keyed by ``kid``, with a 1-hour TTL cache.
 
     Args:
         jwks_url: Full URL to the JWKS endpoint.
+        client: Optional async HTTP client supplied by the caller.
 
     Returns:
         Dict mapping ``kid`` to JWK dict.
@@ -53,7 +53,11 @@ def _fetch_jwks(jwks_url: str) -> dict[str, Any]:
         return cached[1]
 
     try:
-        response = httpx.get(jwks_url, timeout=10.0)
+        if client is None:
+            async with httpx.AsyncClient(timeout=10.0) as owned_client:
+                response = await owned_client.get(jwks_url)
+        else:
+            response = await client.get(jwks_url)
         response.raise_for_status()
     except httpx.RequestError as exc:
         raise SupabaseJWTError(f"Could not reach JWKS endpoint: {jwks_url}") from exc
@@ -61,8 +65,16 @@ def _fetch_jwks(jwks_url: str) -> dict[str, Any]:
         raise SupabaseJWTError(f"JWKS endpoint returned {exc.response.status_code}") from exc
 
     try:
-        keys_by_kid: dict[str, Any] = {k["kid"]: k for k in response.json()["keys"]}
-    except (KeyError, ValueError) as exc:
+        payload = response.json()
+        keys = payload["keys"]
+        if not isinstance(keys, list):
+            raise TypeError("JWKS keys must be a list")
+        keys_by_kid = {
+            key["kid"]: key
+            for key in keys
+            if isinstance(key, dict) and isinstance(key.get("kid"), str)
+        }
+    except (KeyError, TypeError, ValueError) as exc:
         raise SupabaseJWTError("Malformed JWKS response.") from exc
 
     _jwks_cache[jwks_url] = (time.time(), keys_by_kid)
@@ -72,15 +84,17 @@ def _fetch_jwks(jwks_url: str) -> dict[str, Any]:
 def _decode_header_unverified(token: str) -> dict[str, Any]:
     """Decode the JWT header without verifying the signature."""
     try:
-        encoded_header = token.split(".")[0]
-        padding = "=" * (-len(encoded_header) % 4)
-        raw = base64.urlsafe_b64decode(f"{encoded_header}{padding}")
-        return dict(json.loads(raw))
-    except Exception as exc:
+        return dict(pyjwt.get_unverified_header(token))
+    except pyjwt.DecodeError as exc:
         raise SupabaseJWTError("Malformed JWT: could not decode header.") from exc
 
 
-def validate_supabase_jwt(token: str, *, settings: Settings) -> dict[str, Any]:
+async def validate_supabase_jwt(
+    token: str,
+    *,
+    settings: Settings,
+    client: httpx.AsyncClient | None = None,
+) -> dict[str, Any]:
     """Validate a Supabase JWT and return its decoded claims.
 
     Automatically selects the verification strategy based on the JWT header:
@@ -96,6 +110,7 @@ def validate_supabase_jwt(token: str, *, settings: Settings) -> dict[str, Any]:
     Args:
         token: Raw JWT bearer token string.
         settings: Application settings.
+        client: Optional async HTTP client used for JWKS retrieval.
 
     Returns:
         Decoded JWT claims as a dictionary.
@@ -116,7 +131,7 @@ def validate_supabase_jwt(token: str, *, settings: Settings) -> dict[str, Any]:
 
     try:
         if alg == "ES256":
-            claims = _validate_es256(token, header, settings)
+            claims = await _validate_es256(token, header, settings, client=client)
         else:
             claims = _validate_hs256(token, settings)
     except pyjwt.ExpiredSignatureError as exc:
@@ -127,7 +142,13 @@ def validate_supabase_jwt(token: str, *, settings: Settings) -> dict[str, Any]:
     return claims
 
 
-def _validate_es256(token: str, header: dict[str, Any], settings: Settings) -> dict[str, Any]:
+async def _validate_es256(
+    token: str,
+    header: dict[str, Any],
+    settings: Settings,
+    *,
+    client: httpx.AsyncClient | None,
+) -> dict[str, Any]:
     """Validate an ES256 JWT via the Supabase JWKS endpoint."""
     if not settings.supabase_url:
         raise SupabaseJWTNotConfiguredError(
@@ -136,13 +157,13 @@ def _validate_es256(token: str, header: dict[str, Any], settings: Settings) -> d
         )
 
     jwks_url = f"{settings.supabase_url.rstrip('/')}/auth/v1/.well-known/jwks.json"
-    keys_by_kid = _fetch_jwks(jwks_url)
+    keys_by_kid = await _fetch_jwks(jwks_url, client=client)
 
     kid = header.get("kid")
     if not kid or kid not in keys_by_kid:
         # Evict cache and retry once in case keys were rotated
         _jwks_cache.pop(jwks_url, None)
-        keys_by_kid = _fetch_jwks(jwks_url)
+        keys_by_kid = await _fetch_jwks(jwks_url, client=client)
         if not kid or kid not in keys_by_kid:
             raise SupabaseJWTError(f"No JWKS key found for kid={kid!r}.")
 
@@ -154,7 +175,8 @@ def _validate_es256(token: str, header: dict[str, Any], settings: Settings) -> d
         public_key,
         algorithms=["ES256"],
         audience="authenticated",
-        options={"require": ["exp"]},
+        issuer=_issuer(settings),
+        options={"require": ["exp", "iat", "sub"]},
     )
 
 
@@ -171,5 +193,16 @@ def _validate_hs256(token: str, settings: Settings) -> dict[str, Any]:
         settings.supabase_jwt_secret,
         algorithms=["HS256"],
         audience="authenticated",
-        options={"require": ["exp"]},
+        issuer=_issuer(settings),
+        options={"require": ["exp", "iat", "sub"]},
     )
+
+
+def _issuer(settings: Settings) -> str:
+    """Return the expected Supabase Auth issuer."""
+    if not settings.supabase_url:
+        raise SupabaseJWTNotConfiguredError(
+            "SUPABASE_URL is required for JWT validation. "
+            "Set the SUPABASE_URL environment variable."
+        )
+    return f"{settings.supabase_url.rstrip('/')}/auth/v1"

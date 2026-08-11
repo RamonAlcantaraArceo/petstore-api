@@ -28,7 +28,8 @@ class Settings(BaseSettings):
             Required when ``app_env`` is ``"staging"`` or ``"prod"``.
         supabase_url: Supabase project URL (e.g. ``https://<ref>.supabase.co``).
             Required for Supabase Auth sign-in/sign-out in staging and prod.
-        supabase_anon_key: Supabase project anon/public API key.
+        supabase_anon_key: Supabase project anon/publishable API key. Accepts
+            ``SUPABASE_PUBLISHABLE_KEY`` and the legacy ``SUPABASE_ANON_KEY``.
             Required for Supabase Auth sign-in/sign-out in staging and prod.
         supabase_service_role_key: Supabase server-side admin key (keep secret).
             Prefer a scoped Supabase Secret API key over the legacy service role
@@ -65,7 +66,14 @@ class Settings(BaseSettings):
     dev_jwt_expiration_seconds: int = 3600
     supabase_jwt_secret: str = ""
     supabase_url: str = ""
-    supabase_anon_key: str = ""
+    supabase_anon_key: str = Field(
+        default="",
+        validation_alias=AliasChoices(
+            "supabase_anon_key",
+            "SUPABASE_PUBLISHABLE_KEY",
+            "SUPABASE_ANON_KEY",
+        ),
+    )
     supabase_service_role_key: str = Field(
         default="",
         validation_alias=AliasChoices(

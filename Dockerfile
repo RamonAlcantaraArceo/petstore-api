@@ -54,7 +54,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 # Verify critical runtime dependencies are present
 RUN python -c "import sys; \
-required = ['fastapi', 'uvicorn', 'pydantic_settings', 'sqlalchemy', 'asyncpg', 'alembic', 'structlog', 'httpx', 'python_multipart', 'petstore_core']; \
+required = ['fastapi', 'uvicorn', 'pydantic_settings', 'sqlalchemy', 'asyncpg', 'alembic', 'structlog', 'httpx', 'jwt', 'cryptography', 'python_multipart', 'petstore_core']; \
 missing = [m for m in required if __import__('importlib.util', fromlist=['find_spec']).find_spec(m) is None]; \
 print(f'ERROR: Missing modules: {missing}', file=sys.stderr) if missing else print('✓ All runtime dependencies verified successfully'); \
 sys.exit(1 if missing else 0)"

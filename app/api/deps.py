@@ -117,7 +117,7 @@ def _map_claims_to_user_model(claims: Mapping[str, Any]) -> UserModel:
     )
 
 
-def resolve_current_user_from_token(token: str, settings: Settings) -> UserModel:
+async def resolve_current_user_from_token(token: str, settings: Settings) -> UserModel:
     """Resolve a user from a bearer token for the active environment."""
     if settings.app_env == "dev":
         claims = decode_dev_jwt(token, settings.dev_jwt_secret)
@@ -138,7 +138,7 @@ def resolve_current_user_from_token(token: str, settings: Settings) -> UserModel
         return user
 
     if settings.app_env in {"staging", "prod"}:
-        claims = validate_supabase_jwt(token, settings=settings)
+        claims = await validate_supabase_jwt(token, settings=settings)
         return _map_claims_to_user_model(claims)
 
     raise HTTPException(
@@ -147,7 +147,7 @@ def resolve_current_user_from_token(token: str, settings: Settings) -> UserModel
     )
 
 
-def maybe_get_current_user(
+async def maybe_get_current_user(
     request: Request, *, settings: Settings | None = None
 ) -> UserModel | None:
     """Best-effort user resolution used by middleware integrations."""
@@ -160,7 +160,7 @@ def maybe_get_current_user(
         return None
 
     try:
-        user = resolve_current_user_from_token(token, settings or _cached_settings())
+        user = await resolve_current_user_from_token(token, settings or _cached_settings())
     except DevJWTError, SupabaseJWTError, HTTPException:
         return None
 
@@ -186,7 +186,7 @@ async def get_current_user(
         )
 
     try:
-        user = resolve_current_user_from_token(credentials.credentials, settings)
+        user = await resolve_current_user_from_token(credentials.credentials, settings)
     except DevJWTExpiredError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -202,7 +202,7 @@ async def get_current_user(
     except SupabaseJWTNotConfiguredError as exc:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Supabase authentication is not configured. Set SUPABASE_JWT_SECRET.",
+            detail="Supabase JWT validation is not configured.",
         ) from exc
     except SupabaseJWTExpiredError as exc:
         raise HTTPException(

@@ -41,7 +41,8 @@ async def supabase_sign_in(
     """
     if not settings.supabase_url or not settings.supabase_anon_key:
         raise SupabaseAuthNotConfiguredError(
-            "SUPABASE_URL and SUPABASE_ANON_KEY must be set for staging/prod login."
+            "SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY "
+            "(or SUPABASE_ANON_KEY) must be set for staging/prod login."
         )
 
     url = f"{settings.supabase_url.rstrip('/')}/auth/v1/token?grant_type=password"
@@ -110,7 +111,8 @@ async def supabase_sign_up(
     """
     if not settings.supabase_url or not settings.supabase_anon_key:
         raise SupabaseAuthNotConfiguredError(
-            "SUPABASE_URL and SUPABASE_ANON_KEY must be set for staging/prod signup."
+            "SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY "
+            "(or SUPABASE_ANON_KEY) must be set for staging/prod signup."
         )
 
     url = f"{settings.supabase_url.rstrip('/')}/auth/v1/signup"
@@ -187,7 +189,8 @@ async def supabase_update_user(
     """
     if not settings.supabase_url or not settings.supabase_anon_key:
         raise SupabaseAuthNotConfiguredError(
-            "SUPABASE_URL and SUPABASE_ANON_KEY must be set for staging/prod user updates."
+            "SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY "
+            "(or SUPABASE_ANON_KEY) must be set for staging/prod user updates."
         )
 
     url = f"{settings.supabase_url.rstrip('/')}/auth/v1/user"
@@ -385,7 +388,8 @@ async def supabase_sign_out(
     """
     if not settings.supabase_url or not settings.supabase_anon_key:
         raise SupabaseAuthNotConfiguredError(
-            "SUPABASE_URL and SUPABASE_ANON_KEY must be set for staging/prod logout."
+            "SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY "
+            "(or SUPABASE_ANON_KEY) must be set for staging/prod logout."
         )
 
     url = f"{settings.supabase_url.rstrip('/')}/auth/v1/logout"

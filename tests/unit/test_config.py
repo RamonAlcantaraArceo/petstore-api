@@ -207,3 +207,20 @@ def test_get_settings_supports_env_alias(monkeypatch: pytest.MonkeyPatch) -> Non
     settings = get_settings()
 
     assert settings.app_env == "prod"
+
+
+@pytest.mark.parametrize(
+    "variable",
+    ["SUPABASE_PUBLISHABLE_KEY", "SUPABASE_ANON_KEY"],
+)
+def test_get_settings_supports_supabase_public_key_aliases(
+    monkeypatch: pytest.MonkeyPatch, variable: str
+) -> None:
+    """Load the Supabase public key from either supported variable name."""
+    monkeypatch.delenv("SUPABASE_PUBLISHABLE_KEY", raising=False)
+    monkeypatch.delenv("SUPABASE_ANON_KEY", raising=False)
+    monkeypatch.setenv(variable, "public-key")
+
+    settings = get_settings()
+
+    assert settings.supabase_anon_key == "public-key"
