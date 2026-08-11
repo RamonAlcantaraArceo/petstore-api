@@ -47,6 +47,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- Added canonical `POST /user/login` with validated JSON email/password
+  credentials and a unified token-plus-user response. The Petstore-compatible
+  `GET /user/login` now delegates to the same login service and is marked
+  deprecated in OpenAPI and runtime logs.
 - `POST /user` and `POST /user/createWithList` now **proxy through Supabase
   Auth** in staging/prod: each user is registered via `supabase_sign_up()`,
   then a matching local DB profile row is mirrored. The response schema is

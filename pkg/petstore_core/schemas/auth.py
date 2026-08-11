@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 
 from .user import User
 
@@ -40,3 +40,26 @@ class DevLoginResponse(BaseModel):
             }
         },
     }
+
+
+class LoginRequest(BaseModel):
+    """Credentials for the canonical user login endpoint."""
+
+    email: EmailStr = Field(description="Email address registered with the identity provider.")
+    password: str = Field(min_length=1, description="User password.")
+
+
+class LoginUser(BaseModel):
+    """Identity details returned after a successful login."""
+
+    id: str = Field(description="Authenticated user identifier.")
+    email: str | None = Field(default=None, description="Authenticated user's email address.")
+    username: str | None = Field(default=None, description="Authenticated user's username.")
+
+
+class LoginResponse(BaseModel):
+    """Unified response returned by canonical and compatibility login routes."""
+
+    access_token: str = Field(description="JWT access token for authenticated requests.")
+    token_type: str = Field(description="Type of the token, typically 'bearer'.")
+    user: LoginUser = Field(description="Authenticated user details.")

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from unittest.mock import MagicMock
+
 import pytest
 from httpx import AsyncClient
 
@@ -86,21 +88,95 @@ async def test_delete_user(app_client: AsyncClient, api_key_header: dict[str, st
 
 
 @pytest.mark.asyncio
-async def test_user_login(app_client: AsyncClient, api_key_header: dict[str, str]) -> None:
-    """GET /api/v1/user/login returns a token."""
+async def test_post_user_login_is_canonical(
+    app_client: AsyncClient, api_key_header: dict[str, str]
+) -> None:
+    """POST /api/v1/user/login accepts JSON credentials and returns user details."""
     user_data = UserCreateFactory()
+    credentials = {"email": user_data.email, "password": user_data.password}
+    user_payload = user_data.model_dump()
+    user_payload["username"] = user_data.email
     created_user = await app_client.post(
         "/api/v1/user",
-        json=user_data.model_dump(),
+        json=user_payload,
         headers=api_key_header,
     )
     assert created_user.status_code == 200
-    response = await app_client.get(
-        f"/api/v1/user/login?username={user_data.username}&password={user_data.password}",
+    response = await app_client.post(
+        "/api/v1/user/login",
+        json=credentials,
         headers=api_key_header,
     )
+
     assert response.status_code == 200
-    assert "token_type" in response.json()
+    assert response.json()["token_type"] == "bearer"
+    assert response.json()["user"]["email"] == user_data.email
+
+
+@pytest.mark.asyncio
+async def test_post_user_login_rejects_invalid_credentials(
+    app_client: AsyncClient, api_key_header: dict[str, str]
+) -> None:
+    """POST /api/v1/user/login returns a clear authentication error."""
+    response = await app_client.post(
+        "/api/v1/user/login",
+        json={"email": "missing@example.com", "password": "wrong"},
+        headers=api_key_header,
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid credentials."
+
+
+@pytest.mark.asyncio
+async def test_legacy_get_login_matches_post_response_shape(
+    app_client: AsyncClient,
+    api_key_header: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Deprecated GET /api/v1/user/login retains the POST response contract."""
+    warning = MagicMock()
+    monkeypatch.setattr("app.api.v1.users.log.warning", warning)
+    user_data = UserCreateFactory()
+    user_payload = user_data.model_dump()
+    user_payload["username"] = user_data.email
+    created_user = await app_client.post(
+        "/api/v1/user",
+        json=user_payload,
+        headers=api_key_header,
+    )
+    assert created_user.status_code == 200
+
+    post_response = await app_client.post(
+        "/api/v1/user/login",
+        json={"email": user_data.email, "password": user_data.password},
+        headers=api_key_header,
+    )
+    get_response = await app_client.get(
+        "/api/v1/user/login",
+        params={"username": user_data.email, "password": user_data.password},
+        headers=api_key_header,
+    )
+
+    assert post_response.status_code == get_response.status_code == 200
+    assert post_response.json().keys() == get_response.json().keys()
+    assert post_response.json()["user"].keys() == get_response.json()["user"].keys()
+    warning.assert_called_once_with(
+        "deprecated_login_endpoint_used",
+        method="GET",
+        path="/user/login",
+        replacement="POST /user/login",
+    )
+
+
+@pytest.mark.asyncio
+async def test_login_openapi_prefers_post_and_deprecates_get(app_client: AsyncClient) -> None:
+    """OpenAPI marks only the Petstore-compatible GET login as deprecated."""
+    schema = (await app_client.get("/openapi.json")).json()
+    login_operations = schema["paths"]["/api/v1/user/login"]
+
+    assert login_operations["post"].get("deprecated") is not True
+    assert login_operations["get"]["deprecated"] is True
 
 
 @pytest.mark.asyncio

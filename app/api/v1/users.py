@@ -11,17 +11,17 @@ from fastapi.security import HTTPAuthorizationCredentials
 from petstore_core.config import Settings
 from petstore_core.errors import NotFoundError
 from petstore_core.models.user import UserModel
-from petstore_core.schemas.user import User, UserCreate, UserLogin, UserUpdate
+from petstore_core.schemas.auth import LoginRequest, LoginResponse
+from petstore_core.schemas.user import User, UserCreate, UserUpdate
 from petstore_core.services.user import UserService
 
 from app.api.deps import bearer_scheme, get_current_user
 from app.api.v1.error_mapping import map_domain_errors
-from app.auth.dev_jwt import issue_dev_jwt
+from app.auth.login import perform_login
 from app.auth.supabase_auth import (
     SupabaseAuthNotConfiguredError,
     supabase_delete_user,
     supabase_get_user_by_email,
-    supabase_sign_in,
     supabase_sign_out,
     supabase_sign_up,
     supabase_update_user,
@@ -211,53 +211,53 @@ async def create_users_with_list(
     return await map_domain_errors(service.create_users_with_list(users))
 
 
-@unprotected_router.get("/login", operation_id="login_user", response_model=UserLogin)
+@unprotected_router.post(
+    "/login",
+    operation_id="login_user",
+    response_model=LoginResponse,
+    summary="Log in with email and password",
+)
 async def login_user(
+    credentials: LoginRequest,
+    response: Response,
+    service: Annotated[UserService, Depends(get_user_service)],
+    settings: Annotated[Settings, Depends(_cached_settings)],
+) -> LoginResponse:
+    """Log a user in through the canonical JSON credential flow."""
+    login = await perform_login(
+        str(credentials.email),
+        credentials.password,
+        service=service,
+        settings=settings,
+    )
+    response.headers["Authorization"] = f"Bearer {login.access_token}"
+    return login
+
+
+@unprotected_router.get(
+    "/login",
+    operation_id="login_user_legacy",
+    response_model=LoginResponse,
+    deprecated=True,
+    summary="Log in with query parameters (deprecated)",
+)
+async def login_user_legacy(
     username: Annotated[str, Query(description="The username for login")],
     password: Annotated[str, Query(description="The password for login")],
     response: Response,
     service: Annotated[UserService, Depends(get_user_service)],
     settings: Annotated[Settings, Depends(_cached_settings)],
-) -> UserLogin:
-    """Log user into the system.
-    \f
-    Args:
-        username: The username to log in with (email for Supabase environments).
-        password: The password to log in with.
-        service: Injected UserService.
-        settings: Application settings.
-
-    Returns:
-        UserLogin containing the session token and user information.
-    """
-    if settings.app_env in _IS_SUPABASE_ENV:
-        try:
-            token_data = await supabase_sign_in(username, password, settings=settings)
-        except SupabaseAuthNotConfiguredError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=(
-                    "Supabase Auth is not configured. Set SUPABASE_URL and "
-                    "SUPABASE_PUBLISHABLE_KEY (or SUPABASE_ANON_KEY)."
-                ),
-            ) from exc
-        access_token: str = token_data["access_token"]
-        response.headers["Authorization"] = f"Bearer {access_token}"
-        return UserLogin(access_token=access_token, token_type="bearer")
-
-    await map_domain_errors(service.login(username, password))
-    user = await map_domain_errors(service.get_user(username))
-    user_model = UserModel(**user.model_dump())
-
-    dev_token = issue_dev_jwt(
-        user=user_model,
-        secret=settings.dev_jwt_secret,
-        lifetime_seconds=settings.dev_jwt_expiration_seconds,
+) -> LoginResponse:
+    """Log a user in through the deprecated Petstore-compatible flow."""
+    log.warning(
+        "deprecated_login_endpoint_used",
+        method="GET",
+        path="/user/login",
+        replacement="POST /user/login",
     )
-
-    response.headers["Authorization"] = f"Bearer {dev_token}"
-
-    return UserLogin(access_token=dev_token, token_type="bearer")
+    login = await perform_login(username, password, service=service, settings=settings)
+    response.headers["Authorization"] = f"Bearer {login.access_token}"
+    return login
 
 
 @protected_router.get("/logout", status_code=200, operation_id="logout_user")
