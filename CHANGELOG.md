@@ -23,10 +23,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added `SUPABASE_PUBLISHABLE_KEY` as the preferred alias for
   `SUPABASE_ANON_KEY` while retaining legacy environment compatibility.
 
-### Changed
-
-- Bumped the application version to `0.3.1`.
-
 ### Added
 
 - Added `supabase_sign_up()` helper to `app/auth/supabase_auth.py` — proxies

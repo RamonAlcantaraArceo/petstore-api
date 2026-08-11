@@ -1,6 +1,6 @@
 [project]
 name = "petstore-api"
-version = "0.3.1"
+dynamic = ["version"]
 requires-python = ">=3.14"
 dependencies = [
   "fastapi>=0.136.3",
@@ -49,8 +49,19 @@ cli = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.vcs]
+tag-pattern = "v(?P<version>.*)"
+
+[tool.hatch.version.raw-options]
+# Use exact tag versions (instead of next-dev guessing) so package versions
+# match release tags directly during tag-driven releases.
+version_scheme = "no-guess-dev"
 
 [tool.hatch.build.targets.wheel]
 packages = ["app"]
