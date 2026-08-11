@@ -39,6 +39,7 @@ WORKDIR /build
 
 # Install uv package manager with cache mount
 ARG UV_VERSION
+ARG VERSION
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-cache-dir uv==${UV_VERSION}
 
@@ -48,7 +49,10 @@ COPY pkg/ ./pkg/
 RUN touch README.md
 
 # Install production dependencies only (no dev/perf/docs extras) with cache mount
+# SETUPTOOLS_SCM_PRETEND_VERSION is required because hatch-vcs reads version from
+# git tags, but the Docker build context has no .git directory.
 RUN --mount=type=cache,target=/root/.cache/uv \
+    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION} \
     uv pip install --system --no-cache-dir .
 
 # Verify critical runtime dependencies are present
