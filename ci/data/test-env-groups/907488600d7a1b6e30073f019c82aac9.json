@@ -1,1 +1,1 @@
-{"id":"907488600d7a1b6e30073f019c82aac9","fullName":"tests.integration.test_user_api#test_post_user_login_rejects_invalid_credentials","name":"test_post_user_login_rejects_invalid_credentials","status":"passed","testResultsByEnv":{"default":"b35adb888709457b88fd8b6dc223db94"}}
+{"id":"907488600d7a1b6e30073f019c82aac9","fullName":"tests.integration.test_user_api#test_post_user_login_rejects_invalid_credentials","name":"test_post_user_login_rejects_invalid_credentials","status":"passed","testResultsByEnv":{"default":"ccf3a110b4ba9e9671a106db383a7aa1"}}

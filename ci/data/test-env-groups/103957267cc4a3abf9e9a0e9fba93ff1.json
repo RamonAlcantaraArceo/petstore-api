@@ -1,1 +1,1 @@
-{"id":"103957267cc4a3abf9e9a0e9fba93ff1","fullName":"tests.unit.test_supabase_jwt.TestValidateSupabaseJwt#test_rejects_missing_required_claim","name":"test_rejects_missing_required_claim[iat]","status":"passed","testResultsByEnv":{"default":"40730281ddce917f75bebc782927df54"}}
+{"id":"103957267cc4a3abf9e9a0e9fba93ff1","fullName":"tests.unit.test_supabase_jwt.TestValidateSupabaseJwt#test_rejects_missing_required_claim","name":"test_rejects_missing_required_claim[sub]","status":"passed","testResultsByEnv":{"default":"4035e13428545b691a7a1c7be850f008"}}
