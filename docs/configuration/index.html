@@ -911,6 +911,26 @@
 <td><em>(empty)</em></td>
 <td>Secret <code>X-Bypass-Key</code> header value that skips rate limiting</td>
 </tr>
+<tr>
+<td><code>SUPABASE_URL</code></td>
+<td><code>""</code></td>
+<td>Supabase project URL; required for staging/production JWT issuer validation</td>
+</tr>
+<tr>
+<td><code>SUPABASE_PUBLISHABLE_KEY</code></td>
+<td><code>""</code></td>
+<td>Preferred Supabase public API key for Auth requests</td>
+</tr>
+<tr>
+<td><code>SUPABASE_ANON_KEY</code></td>
+<td><code>""</code></td>
+<td>Backward-compatible alias for <code>SUPABASE_PUBLISHABLE_KEY</code></td>
+</tr>
+<tr>
+<td><code>SUPABASE_JWT_SECRET</code></td>
+<td><code>""</code></td>
+<td>Shared secret for legacy HS256 Supabase JWTs</td>
+</tr>
 </tbody>
 </table>
 <h2 id="storage-modes">Storage Modes<a class="headerlink" href="#storage-modes" title="Permanent link">&para;</a></h2>
