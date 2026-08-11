@@ -49,7 +49,7 @@ RUN touch README.md
 
 # Install production dependencies only (no dev/perf/docs extras) with cache mount
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system --no-cache-dir --no-dev .
+    uv pip install --system --no-cache-dir .
 
 # Verify critical runtime dependencies are present
 RUN python -c "import sys; \
