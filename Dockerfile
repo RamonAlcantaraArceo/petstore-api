@@ -39,7 +39,6 @@ WORKDIR /build
 
 # Install uv package manager with cache mount
 ARG UV_VERSION
-ARG VERSION
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-cache-dir uv==${UV_VERSION}
 
@@ -48,12 +47,22 @@ COPY pyproject.toml ./
 COPY pkg/ ./pkg/
 RUN touch README.md
 
-# Install production dependencies only (no dev/perf/docs extras) with cache mount
-# SETUPTOOLS_SCM_PRETEND_VERSION is required because hatch-vcs reads version from
-# git tags, but the Docker build context has no .git directory.
+# Install production dependencies only (no dev/perf/docs extras) with cache mount.
+# Strategy: use tomllib to extract [project.dependencies] from pyproject.toml and
+# install third-party deps directly (avoiding the hatch-vcs build backend which
+# requires .git), then install petstore-core from ./pkg as a plain (non-editable)
+# install. [tool.uv.sources] marks petstore-core as editable for local dev, but
+# editable installs create .pth files pointing to /build/pkg which does not exist
+# in the runtime stage — a plain install copies the actual package files instead.
 RUN --mount=type=cache,target=/root/.cache/uv \
-    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION} \
-    uv pip install --system --no-cache-dir .
+    python3 -c " \
+import tomllib; \
+deps = tomllib.load(open('pyproject.toml', 'rb'))['project']['dependencies']; \
+third_party = [d for d in deps if 'petstore' not in d.lower()]; \
+open('/tmp/deps.txt', 'w').write('\n'.join(third_party)); \
+" && \
+    uv pip install --system --no-cache-dir -r /tmp/deps.txt && \
+    uv pip install --system --no-cache-dir ./pkg
 
 # Verify critical runtime dependencies are present
 RUN python -c "import sys; \
