@@ -1,0 +1,1 @@
+{"id":"f64c758931ff2c42844670237e625d22","fullName":"tests.unit.test_user_routes_supabase#test_create_user_requires_email_in_supabase_environment","name":"test_create_user_requires_email_in_supabase_environment","status":"passed","testResultsByEnv":{"default":"4bdaaa2e173a27ff85411502f31be89d"}}
