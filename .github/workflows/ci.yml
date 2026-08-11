@@ -126,3 +126,36 @@ jobs:
         with:
           context: .
           push: false
+          tags: petstore-api:ci
+
+      - name: Start Docker container
+        run: |
+          docker run -d \
+            --name petstore-smoke \
+            -p 8000:8000 \
+            -e STORAGE_MODE=memory \
+            -e API_KEY=ci-smoke-key \
+            petstore-api:ci
+
+      - name: Wait for service to be healthy
+        run: |
+          for i in $(seq 1 20); do
+            STATUS=$(docker inspect --format='{{.State.Health.Status}}' petstore-smoke 2>/dev/null || echo "starting")
+            echo "Attempt $i: health=$STATUS"
+            if [ "$STATUS" = "healthy" ]; then
+              echo "✓ Container is healthy"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "Container did not become healthy in time"
+          docker logs petstore-smoke
+          exit 1
+
+      - name: Smoke test - health endpoint
+        run: |
+          curl --fail --retry 3 --retry-delay 2 http://localhost:8000/health
+
+      - name: Stop and remove container
+        if: always()
+        run: docker rm -f petstore-smoke 2>/dev/null || true

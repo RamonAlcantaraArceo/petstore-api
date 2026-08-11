@@ -52,8 +52,8 @@ def test_petstore_core_services_import() -> None:
 
 def test_jwt_runtime_dependencies_are_declared_and_importable() -> None:
     """Verify production requirements include JWT cryptography support."""
-    requirements = Path("requirements-runtime.txt").read_text(encoding="utf-8")
+    pyproject = Path("pyproject.toml").read_text(encoding="utf-8")
 
-    assert "PyJWT[crypto]>=2.8.0" in requirements
+    assert "PyJWT[crypto]>=2.8.0" in pyproject
     assert jwt.__version__
     assert cryptography.__version__

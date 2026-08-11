@@ -44,17 +44,29 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 # Copy only dependency files for layer caching
 COPY pyproject.toml ./
-COPY requirements-runtime.txt ./
 COPY pkg/ ./pkg/
 RUN touch README.md
 
-# Install production dependencies (no dev extras) with cache mount
+# Install production dependencies only (no dev/perf/docs extras) with cache mount.
+# Strategy: use tomllib to extract [project.dependencies] from pyproject.toml and
+# install third-party deps directly (avoiding the hatch-vcs build backend which
+# requires .git), then install petstore-core from ./pkg as a plain (non-editable)
+# install. [tool.uv.sources] marks petstore-core as editable for local dev, but
+# editable installs create .pth files pointing to /build/pkg which does not exist
+# in the runtime stage — a plain install copies the actual package files instead.
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system --no-cache-dir -r requirements-runtime.txt
+    python3 -c " \
+import tomllib; \
+deps = tomllib.load(open('pyproject.toml', 'rb'))['project']['dependencies']; \
+third_party = [d for d in deps if 'petstore' not in d.lower()]; \
+open('/tmp/deps.txt', 'w').write('\n'.join(third_party)); \
+" && \
+    uv pip install --system --no-cache-dir -r /tmp/deps.txt && \
+    uv pip install --system --no-cache-dir ./pkg
 
 # Verify critical runtime dependencies are present
 RUN python -c "import sys; \
-required = ['fastapi', 'uvicorn', 'pydantic_settings', 'sqlalchemy', 'asyncpg', 'alembic', 'structlog', 'httpx', 'jwt', 'cryptography', 'python_multipart', 'petstore_core']; \
+required = ['fastapi', 'uvicorn', 'pydantic_settings', 'sqlalchemy', 'asyncpg', 'alembic', 'structlog', 'httpx', 'jwt', 'cryptography', 'python_multipart', 'email_validator', 'petstore_core']; \
 missing = [m for m in required if __import__('importlib.util', fromlist=['find_spec']).find_spec(m) is None]; \
 print(f'ERROR: Missing modules: {missing}', file=sys.stderr) if missing else print('✓ All runtime dependencies verified successfully'); \
 sys.exit(1 if missing else 0)"

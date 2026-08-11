@@ -26,6 +26,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added `PyJWT[crypto]>=2.8.0` to production runtime requirements and Docker
   dependency verification so JWT and cryptography imports are available in
   deployed images.
+- Added `email-validator>=2.3.0` to Docker
+  dependency verification to fix `ModuleNotFoundError: No module named 'email_validator'`
+  on container startup.
+- Removed duplicate `requirements-runtime.txt`; Docker now installs production
+  dependencies directly from `pyproject.toml` via `uv pip install --no-dev .`
+  so there is a single source of truth for runtime packages.
+- Removed spurious `dotenv` dependency from `pyproject.toml` (pydantic-settings
+  handles `.env` loading internally; `dotenv` was never imported in the app).
+- Added Docker smoke-test job to CI (`build-image`) that builds the image,
+  starts the container, waits for the health check to pass, and validates the
+  `/health` endpoint before the workflow completes.
 - Added `SUPABASE_PUBLISHABLE_KEY` as the preferred alias for
   `SUPABASE_ANON_KEY` while retaining legacy environment compatibility.
 
