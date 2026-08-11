@@ -26,6 +26,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added `PyJWT[crypto]>=2.8.0` to production runtime requirements and Docker
   dependency verification so JWT and cryptography imports are available in
   deployed images.
+- Added `email-validator>=2.3.0` to `requirements-runtime.txt` and Docker
+  dependency verification to fix `ModuleNotFoundError: No module named 'email_validator'`
+  on container startup.
+- Added `email_validator` to `petstore_core` runtime requirements.
+- Added Docker smoke-test job to CI (`build-image`) that builds the image,
+  starts the container, waits for the health check to pass, and validates the
+  `/health` endpoint before the workflow completes.
 - Added `SUPABASE_PUBLISHABLE_KEY` as the preferred alias for
   `SUPABASE_ANON_KEY` while retaining legacy environment compatibility.
 
