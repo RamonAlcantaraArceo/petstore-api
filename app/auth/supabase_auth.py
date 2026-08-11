@@ -139,7 +139,7 @@ async def supabase_sign_up(
 
     if response.status_code == 422:
         detail = response.json().get("msg") or response.json().get("message") or "Invalid request."
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=detail)
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=detail)
 
     # Supabase returns 200 even for duplicate emails (with empty identity array).
     # Detect this case: response has an id but identities list is empty.
@@ -218,7 +218,7 @@ async def supabase_update_user(
 
     if response.status_code == 422:
         detail = response.json().get("msg") or response.json().get("message") or "Invalid request."
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=detail)
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=detail)
 
     if response.status_code != 200:
         raise HTTPException(

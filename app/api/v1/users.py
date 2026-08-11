@@ -95,7 +95,7 @@ async def create_user(
     if settings.app_env in _IS_SUPABASE_ENV:
         if not user.email:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="email is required when creating users in staging/prod.",
             )
         try:
@@ -169,7 +169,7 @@ async def create_users_with_list(
         for user in users:
             if not user.email:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail=f"email is required for all users in staging/prod (missing for username={user.username!r}).",
                 )
             try:
@@ -360,7 +360,7 @@ async def update_user(
     if settings.app_env in _IS_SUPABASE_ENV:
         if user.username is not None and user.username != username:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Username changes are not supported in staging/prod.",
             )
         if credentials is not None:
@@ -422,7 +422,7 @@ async def delete_user(
             user_profile = await map_domain_errors(service.get_user(username))
             if not user_profile.email:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="Cannot delete Supabase user without an email on the profile.",
                 )
             target_email = user_profile.email

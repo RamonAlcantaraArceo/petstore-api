@@ -28,6 +28,7 @@ from app.config import Settings
 _SECRET = "test-supabase-jwt-secret-at-least-32-bytes"
 _SUPABASE_URL = "https://project.supabase.co"
 _ISSUER = f"{_SUPABASE_URL}/auth/v1"
+_AsyncClient = httpx.AsyncClient
 
 
 @pytest.fixture(autouse=True)
@@ -151,6 +152,87 @@ class TestValidateSupabaseJwt:
 
         assert claims["sub"] == "42"
         assert calls == 2
+
+    async def test_es256_uses_owned_async_client(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Production validation creates an async client when one is not injected."""
+        private_key = ec.generate_private_key(ec.SECP256R1())
+        token = _es256_token(private_key, kid="current")
+        requests: list[httpx.Request] = []
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            requests.append(request)
+            return httpx.Response(
+                200,
+                json={"keys": [_ec_jwk(private_key.public_key(), "current")]},
+            )
+
+        transport = httpx.MockTransport(handler)
+
+        def client_factory(*, timeout: float) -> httpx.AsyncClient:
+            assert timeout == 10.0
+            return _AsyncClient(transport=transport)
+
+        monkeypatch.setattr("app.auth.supabase_jwt.httpx.AsyncClient", client_factory)
+
+        claims = await validate_supabase_jwt(token, settings=_settings())
+
+        assert claims["sub"] == "42"
+        assert len(requests) == 1
+
+    async def test_es256_surfaces_jwks_network_failure(self) -> None:
+        """JWKS transport failures are surfaced as validation errors."""
+        private_key = ec.generate_private_key(ec.SECP256R1())
+        token = _es256_token(private_key, kid="current")
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            raise httpx.ConnectError("connection failed", request=request)
+
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            with pytest.raises(SupabaseJWTError, match="Could not reach JWKS"):
+                await validate_supabase_jwt(token, settings=_settings(), client=client)
+
+    async def test_es256_surfaces_jwks_http_failure(self) -> None:
+        """Non-success JWKS responses retain their provider status."""
+        private_key = ec.generate_private_key(ec.SECP256R1())
+        token = _es256_token(private_key, kid="current")
+        transport = httpx.MockTransport(lambda _request: httpx.Response(503))
+
+        async with httpx.AsyncClient(transport=transport) as client:
+            with pytest.raises(SupabaseJWTError, match="returned 503"):
+                await validate_supabase_jwt(token, settings=_settings(), client=client)
+
+    @pytest.mark.parametrize(
+        "payload",
+        [
+            {},
+            {"keys": "not-a-list"},
+            {"keys": [{"missing": "kid"}]},
+        ],
+    )
+    async def test_es256_rejects_malformed_jwks(self, payload: dict[str, object]) -> None:
+        """Malformed JWKS documents cannot produce trusted verification keys."""
+        private_key = ec.generate_private_key(ec.SECP256R1())
+        token = _es256_token(private_key, kid="current")
+        transport = httpx.MockTransport(lambda _request: httpx.Response(200, json=payload))
+
+        async with httpx.AsyncClient(transport=transport) as client:
+            expected = "Malformed JWKS" if payload != {"keys": [{"missing": "kid"}]} else "No JWKS"
+            with pytest.raises(SupabaseJWTError, match=expected):
+                await validate_supabase_jwt(token, settings=_settings(), client=client)
+
+    async def test_es256_requires_supabase_url(self) -> None:
+        """ES256 validation cannot resolve JWKS or issuer without a project URL."""
+        private_key = ec.generate_private_key(ec.SECP256R1())
+        token = _es256_token(private_key, kid="current")
+        settings = Settings(app_env="staging")
+
+        with pytest.raises(SupabaseJWTNotConfiguredError, match="SUPABASE_URL"):
+            await validate_supabase_jwt(token, settings=settings)
+
+    async def test_rejects_malformed_token_header(self) -> None:
+        """Malformed compact tokens fail before algorithm selection."""
+        with pytest.raises(SupabaseJWTError, match="Malformed JWT"):
+            await validate_supabase_jwt("not-a-jwt", settings=_settings())
 
     @pytest.mark.parametrize(
         ("issuer", "expected"),

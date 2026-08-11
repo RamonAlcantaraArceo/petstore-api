@@ -15,6 +15,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   `httpx.AsyncClient`, preserving the one-hour cache and key-rotation retry
   without blocking the FastAPI event loop.
 
+### Tests
+
+- Added behavior-focused coverage for Supabase Auth provider requests and
+  failures, staging user-route orchestration, paginated admin lookup, JWT JWKS
+  transport failures, malformed key sets, and async-client ownership.
+
 ### Fixed
 
 - Added `PyJWT[crypto]>=2.8.0` to production runtime requirements and Docker
