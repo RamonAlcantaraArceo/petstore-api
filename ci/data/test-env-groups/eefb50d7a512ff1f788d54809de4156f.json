@@ -1,1 +1,1 @@
-{"id":"eefb50d7a512ff1f788d54809de4156f","fullName":"tests.integration.test_user_api#test_post_user_login_is_canonical","name":"test_post_user_login_is_canonical","status":"passed","testResultsByEnv":{"default":"5bf5cbdd44efe303bb752bdbd6d0a2b5"}}
+{"id":"eefb50d7a512ff1f788d54809de4156f","fullName":"tests.integration.test_user_api#test_post_user_login_is_canonical","name":"test_post_user_login_is_canonical","status":"passed","testResultsByEnv":{"default":"260bd45cedb799f3e47ae5ca06f5c00a"}}

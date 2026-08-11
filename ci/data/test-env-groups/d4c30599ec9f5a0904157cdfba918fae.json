@@ -1,1 +1,1 @@
-{"id":"d4c30599ec9f5a0904157cdfba918fae","fullName":"tests.unit.test_user_routes_supabase#test_create_user_maps_missing_supabase_configuration","name":"test_create_user_maps_missing_supabase_configuration","status":"passed","testResultsByEnv":{"default":"7f0694ff41fcdbb5db584e7571f9469a"}}
+{"id":"d4c30599ec9f5a0904157cdfba918fae","fullName":"tests.unit.test_user_routes_supabase#test_create_user_maps_missing_supabase_configuration","name":"test_create_user_maps_missing_supabase_configuration","status":"passed","testResultsByEnv":{"default":"73cbf1d0075b2546109f6d38e68747e5"}}

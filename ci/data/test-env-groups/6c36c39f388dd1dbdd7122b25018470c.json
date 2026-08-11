@@ -1,1 +1,1 @@
-{"id":"6c36c39f388dd1dbdd7122b25018470c","fullName":"tests.integration.test_user_api#test_login_openapi_prefers_post_and_deprecates_get","name":"test_login_openapi_prefers_post_and_deprecates_get","status":"passed","testResultsByEnv":{"default":"86c445509e6a0bb51dccb1a2d3ef121a"}}
+{"id":"6c36c39f388dd1dbdd7122b25018470c","fullName":"tests.integration.test_user_api#test_login_openapi_prefers_post_and_deprecates_get","name":"test_login_openapi_prefers_post_and_deprecates_get","status":"passed","testResultsByEnv":{"default":"5d28f5eb9b72b361efb4fbe5680bbbb2"}}
