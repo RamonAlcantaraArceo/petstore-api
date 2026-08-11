@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from collections.abc import Mapping
 from typing import Annotated, Any
 
@@ -14,6 +15,7 @@ from app.auth.dev_jwt import DevJWTError, DevJWTExpiredError, decode_dev_jwt
 from app.auth.dev_store import get_dev_user
 from app.auth.supabase_jwt import (
     SupabaseJWTError,
+    SupabaseJWTExpiredError,
     SupabaseJWTNotConfiguredError,
     validate_supabase_jwt,
 )
@@ -47,6 +49,34 @@ def _coerce_int(value: Any) -> int | None:
     return None
 
 
+def _sub_to_user_id(sub: Any) -> int | None:
+    """Convert a JWT ``sub`` claim to a stable integer user ID.
+
+    Handles both plain integer strings (dev JWTs) and UUID strings (Supabase).
+    For UUID subs, derives a stable positive integer from the UUID's 128-bit
+    integer representation masked to 31 bits to stay within safe int range.
+
+    Args:
+        sub: The raw ``sub`` claim value.
+
+    Returns:
+        A stable positive integer, or ``None`` if the value is unusable.
+    """
+    if sub is None:
+        return None
+    # Try plain integer first (dev JWTs use numeric sub)
+    as_int = _coerce_int(sub)
+    if as_int is not None:
+        return as_int
+    # Try UUID (Supabase uses UUID sub)
+    if isinstance(sub, str):
+        try:
+            return uuid.UUID(sub).int & 0x7FFF_FFFF
+        except ValueError:
+            pass
+    return None
+
+
 def _string_or_none(value: Any) -> str | None:
     """Return a string value or ``None``."""
     if value is None:
@@ -67,7 +97,7 @@ def _map_claims_to_user_model(claims: Mapping[str, Any]) -> UserModel:
     """Map Supabase-style claims into a ``UserModel`` instance."""
     raw_metadata = claims.get("user_metadata")
     metadata = raw_metadata if isinstance(raw_metadata, Mapping) else {}
-    user_id = _coerce_int(claims.get("sub"))
+    user_id = _sub_to_user_id(claims.get("sub"))
     if user_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -87,7 +117,7 @@ def _map_claims_to_user_model(claims: Mapping[str, Any]) -> UserModel:
     )
 
 
-def resolve_current_user_from_token(token: str, settings: Settings) -> UserModel:
+async def resolve_current_user_from_token(token: str, settings: Settings) -> UserModel:
     """Resolve a user from a bearer token for the active environment."""
     if settings.app_env == "dev":
         claims = decode_dev_jwt(token, settings.dev_jwt_secret)
@@ -108,7 +138,7 @@ def resolve_current_user_from_token(token: str, settings: Settings) -> UserModel
         return user
 
     if settings.app_env in {"staging", "prod"}:
-        claims = validate_supabase_jwt(token, settings=settings)
+        claims = await validate_supabase_jwt(token, settings=settings)
         return _map_claims_to_user_model(claims)
 
     raise HTTPException(
@@ -117,7 +147,7 @@ def resolve_current_user_from_token(token: str, settings: Settings) -> UserModel
     )
 
 
-def maybe_get_current_user(
+async def maybe_get_current_user(
     request: Request, *, settings: Settings | None = None
 ) -> UserModel | None:
     """Best-effort user resolution used by middleware integrations."""
@@ -130,7 +160,7 @@ def maybe_get_current_user(
         return None
 
     try:
-        user = resolve_current_user_from_token(token, settings or _cached_settings())
+        user = await resolve_current_user_from_token(token, settings or _cached_settings())
     except DevJWTError, SupabaseJWTError, HTTPException:
         return None
 
@@ -156,7 +186,7 @@ async def get_current_user(
         )
 
     try:
-        user = resolve_current_user_from_token(credentials.credentials, settings)
+        user = await resolve_current_user_from_token(credentials.credentials, settings)
     except DevJWTExpiredError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -172,7 +202,13 @@ async def get_current_user(
     except SupabaseJWTNotConfiguredError as exc:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Supabase authentication is not configured yet.",
+            detail="Supabase JWT validation is not configured.",
+        ) from exc
+    except SupabaseJWTExpiredError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication token has expired.",
+            headers={"WWW-Authenticate": "Bearer"},
         ) from exc
     except SupabaseJWTError as exc:
         raise HTTPException(

@@ -18,6 +18,10 @@ All settings are loaded from environment variables. Copy `.env.example` to `.env
 | `RATE_LIMIT_REQUESTS` | `40` | Max requests per window per API key / client IP |
 | `RATE_LIMIT_WINDOW_SECONDS` | `60` | Rate-limit window duration (seconds) |
 | `RATE_LIMIT_BYPASS_KEY` | _(empty)_ | Secret `X-Bypass-Key` header value that skips rate limiting |
+| `SUPABASE_URL` | `""` | Supabase project URL; required for staging/production JWT issuer validation |
+| `SUPABASE_PUBLISHABLE_KEY` | `""` | Preferred Supabase public API key for Auth requests |
+| `SUPABASE_ANON_KEY` | `""` | Backward-compatible alias for `SUPABASE_PUBLISHABLE_KEY` |
+| `SUPABASE_JWT_SECRET` | `""` | Shared secret for legacy HS256 Supabase JWTs |
 
 ## Storage Modes
 

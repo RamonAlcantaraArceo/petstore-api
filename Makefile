@@ -6,7 +6,7 @@ ALLURE_REPORT_DIR ?= allure-report
 E2E_COVERAGE_DIR ?= .e2e-coverage
 FAIL_UNDER ?= 80
 
-.PHONY: merge-cleanup check lint type-check test reports clean-reports demo demo-with-failures
+.PHONY: merge-cleanup check lint type-check test reports clean-reports demo demo-with-failures serve-staging
 
 merge-cleanup: check test
 
@@ -54,4 +54,8 @@ demo:
 demo-with-failures:
 	@echo "Starting Petstore API in-memory demo with 10% failure injection and 20% delays..."
 	@STORAGE_MODE=memory FAILURE_INJECTION_ENABLED=true FAILURE_INJECTION_PROBABILITY=0.1 DELAY_INJECTION_ENABLED=true DELAY_INJECTION_PROBABILITY=0.2 DELAY_INJECTION_MAX_SECONDS=2.0 $(UV) run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+serve-staging:
+	@echo "Starting Petstore API pointed at staging (reads .env.staging)..."
+	@env $(shell grep -v '^\s*#' .env.staging | grep '=' | tr -d ' ') $(UV) run --no-env-file uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 

@@ -5,18 +5,6 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 
-class UserLogin(BaseModel):
-    """Schema for user login response.
-    \f
-    Attributes:
-        access_token: JWT token issued upon successful login.
-        token_type: Type of the issued token (e.g., "bearer").
-    """
-
-    access_token: str = Field(description="JWT token issued upon successful login.")
-    token_type: str = Field(description="Type of the issued token (e.g., 'bearer').")
-
-
 class UserBase(BaseModel):
     """Base user schema with shared fields.
     \f

@@ -24,6 +24,16 @@ class Settings(BaseSettings):
         db_pool_size: SQLAlchemy connection pool size.
         db_max_overflow: SQLAlchemy max overflow connections.
         db_pool_timeout: SQLAlchemy pool timeout in seconds.
+        supabase_jwt_secret: Shared JWT secret from the Supabase project dashboard.
+            Required when ``app_env`` is ``"staging"`` or ``"prod"``.
+        supabase_url: Supabase project URL (e.g. ``https://<ref>.supabase.co``).
+            Required for Supabase Auth sign-in/sign-out in staging and prod.
+        supabase_anon_key: Supabase project anon/publishable API key. Accepts
+            ``SUPABASE_PUBLISHABLE_KEY`` and the legacy ``SUPABASE_ANON_KEY``.
+            Required for Supabase Auth sign-in/sign-out in staging and prod.
+        supabase_service_role_key: Supabase server-side admin key (keep secret).
+            Prefer a scoped Supabase Secret API key over the legacy service role
+            key. Required for admin-level Supabase Auth operations (e.g. delete user).
         seed_dataset: Optional fixture dataset name to load at startup
             (e.g. "basic", "mixed_v1", "mixed_v2", "mixed_v3"). Empty string disables seeding.
         rate_limit_requests: Maximum number of requests allowed per window per client key.
@@ -54,6 +64,25 @@ class Settings(BaseSettings):
     )
     dev_jwt_secret: str = "dev-jwt-secret"
     dev_jwt_expiration_seconds: int = 3600
+    supabase_jwt_secret: str = ""
+    supabase_url: str = ""
+    supabase_anon_key: str = Field(
+        default="",
+        validation_alias=AliasChoices(
+            "supabase_anon_key",
+            "SUPABASE_PUBLISHABLE_KEY",
+            "SUPABASE_ANON_KEY",
+        ),
+    )
+    supabase_service_role_key: str = Field(
+        default="",
+        validation_alias=AliasChoices(
+            "supabase_service_role_key",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "SUPABASE_SECRET_API_KEY",
+            "SUPABASE_AUTH_ADMIN_KEY",
+        ),
+    )
     debug: bool = False
     log_level: str = "DEBUG"
     api_version: str = "v1"
@@ -71,7 +100,10 @@ class Settings(BaseSettings):
     delay_injection_probability: float = 0.2
     delay_injection_max_seconds: float = 2.0
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = {
+        "env_file": os.getenv("ENV_FILE", ".env"),
+        "env_file_encoding": "utf-8",
+    }
 
     @property
     def async_database_url(self) -> str:

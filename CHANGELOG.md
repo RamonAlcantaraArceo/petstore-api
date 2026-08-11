@@ -6,6 +6,144 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Security
+
+- Hardened Supabase ES256 and HS256 JWT validation to require the configured
+  `/auth/v1` issuer plus `exp`, `iat`, and `sub` claims while continuing to
+  validate the `authenticated` audience.
+- Refactored JWKS retrieval and authentication call sites to use
+  `httpx.AsyncClient`, preserving the one-hour cache and key-rotation retry
+  without blocking the FastAPI event loop.
+
+### Tests
+
+- Added behavior-focused coverage for Supabase Auth provider requests and
+  failures, staging user-route orchestration, paginated admin lookup, JWT JWKS
+  transport failures, malformed key sets, and async-client ownership.
+
+### Fixed
+
+- Added `PyJWT[crypto]>=2.8.0` to production runtime requirements and Docker
+  dependency verification so JWT and cryptography imports are available in
+  deployed images.
+- Added `SUPABASE_PUBLISHABLE_KEY` as the preferred alias for
+  `SUPABASE_ANON_KEY` while retaining legacy environment compatibility.
+
+### Added
+
+- Added `supabase_sign_up()` helper to `app/auth/supabase_auth.py` — proxies
+  `POST /auth/v1/signup` to Supabase Auth. Detects duplicate-email signups
+  (Supabase returns 200 with empty `identities`) and raises HTTP 409.
+- Added `supabase_update_user()` helper — calls `PUT /auth/v1/user` with the
+  user's own bearer token to sync email/phone/metadata changes to Supabase Auth.
+- Added `supabase_delete_user()` helper — calls
+  `DELETE /auth/v1/admin/users/{uuid}` with a server-side Supabase admin key
+  for permanent account deletion.
+- Added `supabase_get_user_by_email()` helper — resolves Supabase Auth
+  user records (including UUID + metadata) from email via the admin users API.
+- Added `supabase_service_role_key` field to `Settings`
+  with env aliases:
+  `SUPABASE_SECRET_API_KEY` (preferred),
+  `SUPABASE_AUTH_ADMIN_KEY`,
+  and `SUPABASE_SERVICE_ROLE_KEY` (legacy compatibility).
+- Added `GET /user/me` endpoint — returns the currently authenticated user's
+  profile resolved from JWT claims. Works in all environments and is the
+  recommended way to get "my own profile" in staging/prod where Supabase users
+  do not have a username.
+
+### Changed
+
+- Added canonical `POST /user/login` with validated JSON email/password
+  credentials and a unified token-plus-user response. The Petstore-compatible
+  `GET /user/login` now delegates to the same login service and is marked
+  deprecated in OpenAPI and runtime logs.
+- `POST /user` and `POST /user/createWithList` now **proxy through Supabase
+  Auth** in staging/prod: each user is registered via `supabase_sign_up()`,
+  then a matching local DB profile row is mirrored. The response schema is
+  identical to the dev environment. Requires `email` in the request body.
+- `PUT /user/{username}` now syncs `email`, `phone`, and profile metadata to
+  Supabase Auth (via `supabase_update_user()`) before updating the local DB in
+  staging/prod. Username changes are rejected (HTTP 422) in staging/prod.
+- `DELETE /user/{username}` in staging/prod now performs a full Supabase Auth
+  deletion flow: resolve target UUID by email, delete user via Supabase admin
+  API, then delete local mirrored profile by username/email/metadata fallback.
+  If the admin key is missing it returns HTTP 501.
+- `GET /user/{username}` returns HTTP 501 in staging/prod with a message
+  directing callers to `GET /user/me` (Supabase users have no username).
+
+### Per-environment behaviour summary
+
+| Endpoint | dev | staging/prod |
+|---|---|---|
+| `POST /user` | ✅ in-memory | ✅ proxy → Supabase signup + mirror to DB |
+| `POST /user/createWithList` | ✅ in-memory | ✅ same, each user individually |
+| `GET /user/login` | ✅ dev JWT | ✅ Supabase Auth |
+| `GET /user/logout` | ✅ no-op | ✅ revokes Supabase session |
+| `GET /user/me` | ✅ from JWT claims | ✅ from JWT claims |
+| `GET /user/{username}` | ✅ DB lookup | ❌ 501 — use `/user/me` |
+| `PUT /user/{username}` | ✅ DB update | ✅ Supabase Auth sync + DB update |
+| `DELETE /user/{username}` | ✅ DB delete | ✅ Supabase Admin delete + DB (needs secret admin API key) |
+
+### Added
+
+- Implemented Supabase HS256 JWT validation in `app/auth/supabase_jwt.py`.
+  `validate_supabase_jwt` now verifies the token signature against
+  `SUPABASE_JWT_SECRET`, checks the `exp` claim, and returns decoded claims.
+  Raises `SupabaseJWTNotConfiguredError` (→ HTTP 503) when the secret is not
+  set, `SupabaseJWTExpiredError` (→ HTTP 401) for expired tokens, and
+  `SupabaseJWTError` (→ HTTP 401) for any other validation failure.
+- Added `supabase_jwt_secret` field to `Settings` (env var `SUPABASE_JWT_SECRET`).
+  Required for staging and production environments.
+- Added `SupabaseJWTExpiredError` to `app/auth/supabase_jwt.py` and wired it
+  into `get_current_user` in `app/api/deps.py` with a distinct 401 response.
+- Added `serve-staging` Makefile target that reliably starts the service using
+  `.env.staging`, bypassing shell-exported variables that would otherwise take
+  precedence over the env file.
+- Added `app/auth/supabase_auth.py` with `supabase_sign_in` and
+  `supabase_sign_out` helpers that call the Supabase Auth REST API
+  (`/auth/v1/token` and `/auth/v1/logout`) using `httpx`.
+- Added `supabase_url` and `supabase_anon_key` fields to `Settings`
+  (env vars `SUPABASE_URL`, `SUPABASE_ANON_KEY`). Required for login/logout
+  in staging and production.
+
+### Changed
+
+- `GET /user/login` now delegates to Supabase Auth in staging/prod (treating
+  the ``username`` field as the Supabase account email) and returns the
+  Supabase access token. Dev environment behavior is unchanged.
+- `GET /user/logout` now calls `supabase_sign_out` to revoke the session on
+  the Supabase side in staging/prod (best-effort; continues even if
+  misconfigured).
+
+### Changed
+
+- `Settings.model_config` now reads `ENV_FILE` from the environment
+  (default: `".env"`), allowing an alternate dotenv file to be selected at
+  process start time without code changes.
+
+### Fixed
+
+- Fixed Python 2-style bare tuple `except DevJWTError, SupabaseJWTError` in
+  `maybe_get_current_user` (replaced with `except (DevJWTError, SupabaseJWTError, HTTPException)`).
+- Fixed 401 on all protected routes in staging/prod: Supabase JWT ``sub``
+  claims are UUIDs (e.g. ``"a1b2c3d4-..."``), not integers. Added
+  ``_sub_to_user_id()`` in `app/api/deps.py` which tries integer parsing first
+  (dev JWTs) then derives a stable positive integer from the UUID's 128-bit
+  value. Previously every Supabase token returned 401 "missing a valid subject".
+- Replaced the HS256-only stub in `app/auth/supabase_jwt.py` with full
+  JWKS-backed ES256 support. The Supabase project uses ES256 (ECDSA P-256)
+  asymmetric signing. `validate_supabase_jwt` now auto-detects the algorithm
+  from the JWT header: ES256 tokens are verified against the public key
+  fetched from ``{supabase_url}/auth/v1/.well-known/jwks.json`` (cached
+  1 hour, with automatic cache invalidation on key rotation); HS256 tokens
+  fall back to ``SUPABASE_JWT_SECRET``. Added ``PyJWT[crypto]`` dependency.
+
+### Tests
+
+- Added `tests/unit/test_supabase_jwt.py` with 8 test cases covering valid
+  token decoding, missing secret, wrong secret, expired tokens, malformed
+  tokens, tampered payloads, unsupported algorithms, and missing `exp` claims.
+
 ### Fixed
 
 - Fixed a flaky test (`test_protected_route_rejects_tampered_bearer_token`) caused by

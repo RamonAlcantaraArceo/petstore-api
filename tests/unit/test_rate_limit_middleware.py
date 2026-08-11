@@ -90,26 +90,26 @@ def _authorization_for(username: str) -> str:
 
 @allure.story("Client Key Resolution")
 @allure.severity(allure.severity_level.MINOR)
-def test_get_client_key_uses_authenticated_user_id() -> None:
+async def test_get_client_key_uses_authenticated_user_id() -> None:
     """_get_client_key returns a user-prefixed key when a valid bearer token is present."""
     request = _make_request(
         authorization=_authorization_for("devuser"),
         client_ip="10.0.0.1",
     )
-    assert _get_client_key(request) == "user:1"
+    assert await _get_client_key(request) == "user:1"
 
 
 @allure.story("Client Key Resolution")
 @allure.severity(allure.severity_level.MINOR)
-def test_get_client_key_falls_back_to_ip() -> None:
+async def test_get_client_key_falls_back_to_ip() -> None:
     """_get_client_key returns an IP-prefixed key when auth is absent."""
     request = _make_request(authorization="", client_ip="10.0.0.2")
-    assert _get_client_key(request) == "ip:10.0.0.2"
+    assert await _get_client_key(request) == "ip:10.0.0.2"
 
 
 @allure.story("Client Key Resolution")
 @allure.severity(allure.severity_level.MINOR)
-def test_get_client_key_uses_forwarded_for() -> None:
+async def test_get_client_key_uses_forwarded_for() -> None:
     """_get_client_key prefers the first IP in X-Forwarded-For over the direct client."""
     scope: dict[str, object] = {
         "type": "http",
@@ -123,15 +123,15 @@ def test_get_client_key_uses_forwarded_for() -> None:
         "client": ("10.0.0.1", 9000),
     }
     request = Request(scope)  # type: ignore[arg-type]
-    assert _get_client_key(request) == "ip:1.2.3.4"
+    assert await _get_client_key(request) == "ip:1.2.3.4"
 
 
 @allure.story("Client Key Resolution")
 @allure.severity(allure.severity_level.MINOR)
-def test_get_client_key_falls_back_to_ip_for_invalid_token() -> None:
+async def test_get_client_key_falls_back_to_ip_for_invalid_token() -> None:
     """_get_client_key falls back to IP when the bearer token is invalid."""
     request = _make_request(authorization="******", client_ip="10.0.0.3")
-    assert _get_client_key(request) == "ip:10.0.0.3"
+    assert await _get_client_key(request) == "ip:10.0.0.3"
 
 
 # ---------------------------------------------------------------------------

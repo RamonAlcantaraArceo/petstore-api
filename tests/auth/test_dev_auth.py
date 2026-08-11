@@ -43,13 +43,13 @@ async def test_dev_login_rejects_unknown_username(
     assert response.json()["detail"] == "Unknown development username."
 
 
-def test_resolve_current_user_from_valid_dev_token() -> None:
+async def test_resolve_current_user_from_valid_dev_token() -> None:
     """A valid development token resolves to the seeded ``UserModel`` instance."""
     settings = Settings(app_env="dev", dev_jwt_secret="test-dev-jwt-secret")
     user = _dev_user()
     token = issue_dev_jwt(user, settings.dev_jwt_secret)
 
-    resolved = resolve_current_user_from_token(token, settings)
+    resolved = await resolve_current_user_from_token(token, settings)
 
     assert resolved.id == 1
     assert resolved.username == "devuser"
@@ -93,7 +93,9 @@ async def test_protected_route_rejects_tampered_token(app_client: AsyncClient) -
     """Protected routes return 401 for tampered bearer tokens."""
     user = _dev_user()
     token = issue_dev_jwt(user, "test-dev-jwt-secret")
-    tampered = token[:-1] + ("a" if token[-1] != "a" else "b")
+    header, payload, signature = token.split(".")
+    tampered_signature = ("a" if signature[0] != "a" else "b") + signature[1:]
+    tampered = f"{header}.{payload}.{tampered_signature}"
 
     response = await app_client.get(
         "/api/v1/store/inventory",
@@ -103,13 +105,13 @@ async def test_protected_route_rejects_tampered_token(app_client: AsyncClient) -
     assert response.status_code == 401
 
 
-def test_environment_switching_uses_supabase_path(
+async def test_environment_switching_uses_supabase_path(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Non-dev environments delegate token validation to the Supabase path."""
     settings = Settings(app_env="staging")
 
-    def _fake_validate(token: str, *, settings: Settings) -> dict[str, object]:
+    async def _fake_validate(token: str, *, settings: Settings) -> dict[str, object]:
         assert token == "supabase-token"
         assert settings.app_env == "staging"
         return {
@@ -126,17 +128,17 @@ def test_environment_switching_uses_supabase_path(
 
     monkeypatch.setattr("app.api.deps.validate_supabase_jwt", _fake_validate)
 
-    resolved = resolve_current_user_from_token("supabase-token", settings)
+    resolved = await resolve_current_user_from_token("supabase-token", settings)
 
     assert resolved.id == 42
     assert resolved.username == "stage-user"
 
 
-def test_environment_switching_dev_uses_dev_store() -> None:
+async def test_environment_switching_dev_uses_dev_store() -> None:
     """Dev environment resolution continues to use the in-memory store."""
     settings = Settings(app_env="dev", dev_jwt_secret="test-dev-jwt-secret")
     token = issue_dev_jwt(_dev_user(), settings.dev_jwt_secret)
 
-    resolved = resolve_current_user_from_token(token, settings)
+    resolved = await resolve_current_user_from_token(token, settings)
 
     assert resolved.email == "dev@example.com"
