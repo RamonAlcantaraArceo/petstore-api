@@ -915,6 +915,7 @@ uv<span class="w"> </span>sync<span class="w"> </span>--python<span class="w"> <
 <span class="c1"># Set environment variables</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">STORAGE_MODE</span><span class="o">=</span>memory
 <span class="nb">export</span><span class="w"> </span><span class="nv">API_KEY</span><span class="o">=</span>dev-api-key
+<span class="nb">export</span><span class="w"> </span><span class="nv">DEV_IN_MEMORY_AUTH_ENABLED</span><span class="o">=</span><span class="nb">true</span>
 
 <span class="c1"># Start the server</span>
 uv<span class="w"> </span>run<span class="w"> </span>uvicorn<span class="w"> </span>app.main:app<span class="w"> </span>--reload

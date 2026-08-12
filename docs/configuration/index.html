@@ -841,6 +841,8 @@
 
 <h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
 <p>All settings are loaded from environment variables. Copy <code>.env.example</code> to <code>.env</code> for local development.</p>
+<p>Environment variables already exported in your shell take precedence over values
+in <code>.env</code>.</p>
 <h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -870,6 +872,11 @@
 <td><code>APP_ENV</code></td>
 <td><code>dev</code></td>
 <td>Application environment: <code>dev</code> | <code>staging</code> | <code>prod</code></td>
+</tr>
+<tr>
+<td><code>DEV_IN_MEMORY_AUTH_ENABLED</code></td>
+<td><code>true</code></td>
+<td>Dev-only feature flag for in-memory user authentication and identity storage</td>
 </tr>
 <tr>
 <td><code>DEBUG</code></td>
@@ -939,6 +946,9 @@
 <li><strong><code>local</code></strong>: Connects to a local PostgreSQL via <code>DATABASE_URL</code>.</li>
 <li><strong><code>cloud</code></strong>: Connects to AWS RDS PostgreSQL.</li>
 </ul>
+<p>When <code>APP_ENV=dev</code>, user authentication can stay fully in-memory by keeping
+<code>DEV_IN_MEMORY_AUTH_ENABLED=true</code> (default). Set it to <code>false</code> only if you
+explicitly want dev traffic to use Supabase token validation.</p>
 
 
 

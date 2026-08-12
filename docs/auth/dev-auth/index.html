@@ -978,7 +978,8 @@
 <h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Seeded users live in memory only</li>
-<li><code>POST /api/v1/user/auth</code> exchanges a seeded username for a bearer token</li>
+<li>Users created through <code>POST /api/v1/user</code> are also registered in the in-memory auth store</li>
+<li><code>POST /api/v1/user/auth</code> exchanges a dev-store username for a bearer token</li>
 <li>Protected <code>/api/v1/*</code> routes use the shared <code>get_current_user</code> dependency</li>
 <li>In <code>staging</code> and <code>prod</code>, the same dependency is ready to delegate to Supabase JWT validation</li>
 </ul>
@@ -1017,6 +1018,7 @@
 <h2 id="environment-variables">Environment variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>APP_ENV</code> or <code>ENV</code>: <code>dev</code>, <code>staging</code>, or <code>prod</code></li>
+<li><code>DEV_IN_MEMORY_AUTH_ENABLED</code>: enable/disable dev in-memory auth flow</li>
 <li><code>DEV_JWT_SECRET</code>: shared secret for development JWT signing</li>
 <li><code>DEV_JWT_EXPIRATION_SECONDS</code>: development token lifetime in seconds</li>
 </ul>
