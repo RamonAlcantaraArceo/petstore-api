@@ -1,1 +1,1 @@
-{"id":"79e33012cf3d5e5bfbc706a7af41fe0b","fullName":"tests.unit.test_supabase_jwt.TestValidateSupabaseJwt#test_raises_error_on_unsupported_algorithm","name":"test_raises_error_on_unsupported_algorithm","status":"passed","testResultsByEnv":{"default":"7a8656b9e1ecb6860dad1578a4ae281b"}}
+{"id":"79e33012cf3d5e5bfbc706a7af41fe0b","fullName":"tests.unit.test_supabase_jwt.TestValidateSupabaseJwt#test_raises_error_on_unsupported_algorithm","name":"test_raises_error_on_unsupported_algorithm","status":"passed","testResultsByEnv":{"default":"9d319797bb948b878d4a5b6018c69041"}}
