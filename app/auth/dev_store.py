@@ -32,7 +32,7 @@ def _seed_users() -> tuple[dict[int, UserModel], dict[int, str | None]]:
             user_status=1,
         ),
     }
-    passwords = {
+    passwords: dict[int, str | None] = {
         1: "dev-password-placeholder",
         2: "dev-password-placeholder",
     }
