@@ -13,10 +13,10 @@ class MemoryUserRepository:
     State is held in-process and lost on restart.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, *, starting_id: int = 0) -> None:
         """Initialize an empty in-memory user store."""
         self._store: dict[str, User] = {}
-        self._counter: int = 0
+        self._counter: int = starting_id
         self._lock: asyncio.Lock = asyncio.Lock()
 
     async def get_by_username(self, username: str) -> User | None:

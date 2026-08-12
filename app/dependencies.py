@@ -45,7 +45,7 @@ def get_memory_order_repo() -> MemoryOrderRepository:
     return _memory_order_repo
 
 
-def get_memory_user_repo() -> MemoryUserRepository:
+def get_memory_user_repo(*, starting_id: int = 0) -> MemoryUserRepository:
     """Return the shared in-memory User repository singleton.
 
     Returns:
@@ -53,7 +53,7 @@ def get_memory_user_repo() -> MemoryUserRepository:
     """
     global _memory_user_repo
     if _memory_user_repo is None:
-        _memory_user_repo = MemoryUserRepository()
+        _memory_user_repo = MemoryUserRepository(starting_id=starting_id)
     return _memory_user_repo
 
 
@@ -143,7 +143,14 @@ async def get_user_service(
         A configured UserService instance.
     """
     if settings.storage_mode == "memory":
-        yield UserService(get_memory_user_repo())
+        starting_id = 0
+        if settings.app_env == "dev" and settings.dev_in_memory_auth_enabled:
+            from app.auth.dev_store import list_dev_users
+
+            existing_ids = [user.id for user in list_dev_users()]
+            if existing_ids:
+                starting_id = max(existing_ids)
+        yield UserService(get_memory_user_repo(starting_id=starting_id))
         return
     from petstore_core.db.session import get_session_factory
     from petstore_core.repositories.postgres.user import PostgresUserRepository

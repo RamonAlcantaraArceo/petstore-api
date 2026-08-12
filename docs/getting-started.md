@@ -39,6 +39,7 @@ uv sync --python 3.14 --extra dev
 # Set environment variables
 export STORAGE_MODE=memory
 export API_KEY=dev-api-key
+export DEV_IN_MEMORY_AUTH_ENABLED=true
 
 # Start the server
 uv run uvicorn app.main:app --reload

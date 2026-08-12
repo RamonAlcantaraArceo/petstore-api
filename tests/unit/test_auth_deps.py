@@ -98,3 +98,26 @@ async def test_resolve_current_user_from_token_uses_supabase_path(
 
     assert resolved.id == 42
     assert resolved.username == "stage-user"
+
+
+async def test_resolve_current_user_from_token_uses_supabase_when_dev_flag_disabled(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Dev environment can delegate token validation to Supabase when flag is disabled."""
+    settings = Settings(app_env="dev", dev_in_memory_auth_enabled=False)
+
+    async def _fake_validate(token: str, *, settings: Settings) -> dict[str, object]:
+        assert token == "supabase-token"
+        assert settings.app_env == "dev"
+        return {
+            "sub": "42",
+            "email": "dev-supabase@example.com",
+            "user_metadata": {"username": "dev-supabase-user"},
+        }
+
+    monkeypatch.setattr("app.api.deps.validate_supabase_jwt", _fake_validate)
+
+    resolved = await resolve_current_user_from_token("supabase-token", settings)
+
+    assert resolved.id == 42
+    assert resolved.email == "dev-supabase@example.com"

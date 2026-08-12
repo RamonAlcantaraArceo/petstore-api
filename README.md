@@ -62,6 +62,7 @@ uv run <command>  # e.g., uv run pytest, uv run ruff check .
 | `API_KEY`      | `dev-api-key` | API key for authentication                   |
 | `DATABASE_URL` | —             | PostgreSQL connection URL                    |
 | `APP_ENV`      | `dev`         | Environment: `dev` \| `staging` \| `prod`    |
+| `DEV_IN_MEMORY_AUTH_ENABLED` | `true` | Dev-only flag to keep auth/users fully in memory |
 | `LOG_LEVEL`    | `INFO`        | Log level                                    |
 
 ## Running Tests

@@ -5,7 +5,8 @@ The development environment includes an in-memory authentication layer that uses
 ## How it works
 
 - Seeded users live in memory only
-- `POST /api/v1/user/auth` exchanges a seeded username for a bearer token
+- Users created through `POST /api/v1/user` are also registered in the in-memory auth store
+- `POST /api/v1/user/auth` exchanges a dev-store username for a bearer token
 - Protected `/api/v1/*` routes use the shared `get_current_user` dependency
 - In `staging` and `prod`, the same dependency is ready to delegate to Supabase JWT validation
 
@@ -56,6 +57,7 @@ If rate-limit bypass is configured, you can also send:
 ## Environment variables
 
 - `APP_ENV` or `ENV`: `dev`, `staging`, or `prod`
+- `DEV_IN_MEMORY_AUTH_ENABLED`: enable/disable dev in-memory auth flow
 - `DEV_JWT_SECRET`: shared secret for development JWT signing
 - `DEV_JWT_EXPIRATION_SECONDS`: development token lifetime in seconds
 

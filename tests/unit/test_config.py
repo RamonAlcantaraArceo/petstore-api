@@ -224,3 +224,14 @@ def test_get_settings_supports_supabase_public_key_aliases(
     settings = get_settings()
 
     assert settings.supabase_anon_key == "public-key"
+
+
+def test_get_settings_supports_dev_in_memory_auth_flag(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Load the development in-memory auth feature flag from environment."""
+    monkeypatch.setenv("DEV_IN_MEMORY_AUTH_ENABLED", "false")
+
+    settings = get_settings()
+
+    assert settings.dev_in_memory_auth_enabled is False

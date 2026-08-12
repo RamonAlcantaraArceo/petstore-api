@@ -357,6 +357,12 @@ async def test_seed_memory_populates_repos_with_basic_dataset() -> None:
         user = await user_service.get_user(user_fixture.username)
         assert user.username == user_fixture.username
 
+    from app.auth.dev_store import authenticate_dev_user, get_dev_user_by_username
+
+    for user_fixture in dataset.users:
+        assert get_dev_user_by_username(user_fixture.username) is not None
+        assert authenticate_dev_user(user_fixture.username, user_fixture.password) is not None
+
     reset_memory_repos()
 
 

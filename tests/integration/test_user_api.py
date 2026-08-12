@@ -94,11 +94,9 @@ async def test_post_user_login_is_canonical(
     """POST /api/v1/user/login accepts JSON credentials and returns user details."""
     user_data = UserCreateFactory()
     credentials = {"email": user_data.email, "password": user_data.password}
-    user_payload = user_data.model_dump()
-    user_payload["username"] = user_data.email
     created_user = await app_client.post(
         "/api/v1/user",
-        json=user_payload,
+        json=user_data.model_dump(),
         headers=api_key_header,
     )
     assert created_user.status_code == 200
@@ -138,11 +136,9 @@ async def test_legacy_get_login_matches_post_response_shape(
     warning = MagicMock()
     monkeypatch.setattr("app.api.v1.users.log.warning", warning)
     user_data = UserCreateFactory()
-    user_payload = user_data.model_dump()
-    user_payload["username"] = user_data.email
     created_user = await app_client.post(
         "/api/v1/user",
-        json=user_payload,
+        json=user_data.model_dump(),
         headers=api_key_header,
     )
     assert created_user.status_code == 200
@@ -167,6 +163,29 @@ async def test_legacy_get_login_matches_post_response_shape(
         path="/user/login",
         replacement="POST /user/login",
     )
+
+
+@pytest.mark.asyncio
+async def test_dev_login_auth_endpoint_accepts_user_created_via_user_api(
+    app_client: AsyncClient, api_key_header: dict[str, str]
+) -> None:
+    """POST /api/v1/user/auth can issue tokens for newly created in-memory users."""
+    user_data = UserCreateFactory()
+    created_user = await app_client.post(
+        "/api/v1/user",
+        json=user_data.model_dump(),
+        headers=api_key_header,
+    )
+    assert created_user.status_code == 200
+
+    response = await app_client.post(
+        "/api/v1/user/auth",
+        json={"username": user_data.username},
+        headers=api_key_header,
+    )
+
+    assert response.status_code == 200
+    assert response.json()["user"]["username"] == user_data.username
 
 
 @pytest.mark.asyncio
