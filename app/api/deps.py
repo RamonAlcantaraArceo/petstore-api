@@ -119,7 +119,7 @@ def _map_claims_to_user_model(claims: Mapping[str, Any]) -> UserModel:
 
 async def resolve_current_user_from_token(token: str, settings: Settings) -> UserModel:
     """Resolve a user from a bearer token for the active environment."""
-    if settings.app_env == "dev":
+    if settings.app_env == "dev" and settings.dev_in_memory_auth_enabled:
         claims = decode_dev_jwt(token, settings.dev_jwt_secret)
         user_id = _coerce_int(claims.get("sub"))
         if user_id is None:
@@ -137,7 +137,9 @@ async def resolve_current_user_from_token(token: str, settings: Settings) -> Use
             )
         return user
 
-    if settings.app_env in {"staging", "prod"}:
+    if settings.app_env in {"staging", "prod"} or (
+        settings.app_env == "dev" and not settings.dev_in_memory_auth_enabled
+    ):
         claims = await validate_supabase_jwt(token, settings=settings)
         return _map_claims_to_user_model(claims)
 

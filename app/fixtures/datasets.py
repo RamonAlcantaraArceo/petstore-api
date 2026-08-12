@@ -312,8 +312,8 @@ _MIXED_V2 = FixtureDataset(
     ],
     users=[
         UserFixture(
-            username="admin",
-            email="admin@petstore.example",
+            username="admin1",
+            email="admin1@petstore.example",
             first_name="Admin",
             last_name="User",
             phone="+1-555-000-0001",

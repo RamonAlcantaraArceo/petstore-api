@@ -18,6 +18,8 @@ class Settings(BaseSettings):
         app_env: Application environment - "dev" | "staging" | "prod".
         dev_jwt_secret: Shared secret used to sign development JWTs.
         dev_jwt_expiration_seconds: Lifetime for development JWTs in seconds.
+        dev_in_memory_auth_enabled: Enable in-memory development authentication and
+            user identity persistence for ``app_env="dev"``.
         debug: Enable debug mode.
         log_level: Logging level.
         api_version: API version prefix.
@@ -64,6 +66,7 @@ class Settings(BaseSettings):
     )
     dev_jwt_secret: str = "dev-jwt-secret"
     dev_jwt_expiration_seconds: int = 3600
+    dev_in_memory_auth_enabled: bool = True
     supabase_jwt_secret: str = ""
     supabase_url: str = ""
     supabase_anon_key: str = Field(

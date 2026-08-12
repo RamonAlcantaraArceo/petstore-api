@@ -2,6 +2,9 @@
 
 All settings are loaded from environment variables. Copy `.env.example` to `.env` for local development.
 
+Environment variables already exported in your shell take precedence over values
+in `.env`.
+
 ## Environment Variables
 
 | Variable | Default | Description |
@@ -10,6 +13,7 @@ All settings are loaded from environment variables. Copy `.env.example` to `.env
 | `API_KEY` | `dev-api-key` | Required API key for authentication |
 | `DATABASE_URL` | `""` | PostgreSQL connection URL (required for non-memory mode) |
 | `APP_ENV` | `dev` | Application environment: `dev` \| `staging` \| `prod` |
+| `DEV_IN_MEMORY_AUTH_ENABLED` | `true` | Dev-only feature flag for in-memory user authentication and identity storage |
 | `DEBUG` | `false` | Enable debug mode |
 | `LOG_LEVEL` | `INFO` | Logging level |
 | `DB_POOL_SIZE` | `5` | SQLAlchemy connection pool size |
@@ -28,3 +32,7 @@ All settings are loaded from environment variables. Copy `.env.example` to `.env
 - **`memory`**: All data is held in-process. No external dependencies. Perfect for local dev and unit tests.
 - **`local`**: Connects to a local PostgreSQL via `DATABASE_URL`.
 - **`cloud`**: Connects to AWS RDS PostgreSQL.
+
+When `APP_ENV=dev`, user authentication can stay fully in-memory by keeping
+`DEV_IN_MEMORY_AUTH_ENABLED=true` (default). Set it to `false` only if you
+explicitly want dev traffic to use Supabase token validation.

@@ -11,6 +11,7 @@ strategy = "immediate"
 APP_ENV = "dev"
 LOG_LEVEL = "INFO"
 STORAGE_MODE = "memory"
+DEV_IN_MEMORY_AUTH_ENABLED = true
 
 [http_service]
 auto_start_machines = true

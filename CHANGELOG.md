@@ -64,6 +64,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- Restored dev in-memory user authentication lifecycle behind the new
+  `DEV_IN_MEMORY_AUTH_ENABLED` feature flag. In `APP_ENV=dev`, users created
+  via `/api/v1/user` now sync into the in-memory auth store and can authenticate
+  with `/api/v1/user/login` and `/api/v1/user/auth` without Supabase.
 - Added canonical `POST /user/login` with validated JSON email/password
   credentials and a unified token-plus-user response. The Petstore-compatible
   `GET /user/login` now delegates to the same login service and is marked

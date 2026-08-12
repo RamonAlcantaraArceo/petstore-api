@@ -65,10 +65,11 @@ async def memory_client() -> AsyncIterator[AsyncClient]:
     Yields:
         AsyncClient connected to the test app.
     """
-    os.environ.setdefault("STORAGE_MODE", "memory")
-    os.environ.setdefault("API_KEY", "test-api-key")
-    os.environ.setdefault("APP_ENV", "dev")
-    os.environ.setdefault("DEV_JWT_SECRET", "test-dev-jwt-secret")
+    os.environ["STORAGE_MODE"] = "memory"
+    os.environ["API_KEY"] = "test-api-key"
+    os.environ["APP_ENV"] = "dev"
+    os.environ["DEV_JWT_SECRET"] = "test-dev-jwt-secret"
+    os.environ["DEV_IN_MEMORY_AUTH_ENABLED"] = "true"
 
     from app.dependencies import _cached_settings  # noqa: PLC2701
 
@@ -102,8 +103,9 @@ def auth_header() -> dict[str, str]:
     Returns:
         Dict with Authorization header.
     """
-    os.environ.setdefault("APP_ENV", "dev")
-    os.environ.setdefault("DEV_JWT_SECRET", "test-dev-jwt-secret")
+    os.environ["APP_ENV"] = "dev"
+    os.environ["DEV_JWT_SECRET"] = "test-dev-jwt-secret"
+    os.environ["DEV_IN_MEMORY_AUTH_ENABLED"] = "true"
     user = get_dev_user_by_username("devuser")
     assert user is not None
     token = issue_dev_jwt(user, os.environ["DEV_JWT_SECRET"])

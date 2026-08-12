@@ -142,6 +142,9 @@ async def _seed_memory(dataset: FixtureDataset) -> None:
     Args:
         dataset: Dataset to apply.
     """
+    from petstore_core.models.user import UserModel
+
+    from app.auth.dev_store import upsert_dev_user
     from app.dependencies import (
         get_memory_order_repo,
         get_memory_pet_repo,
@@ -152,6 +155,12 @@ async def _seed_memory(dataset: FixtureDataset) -> None:
     order_service = OrderService(get_memory_order_repo())
     user_service = UserService(get_memory_user_repo())
     await apply_dataset(dataset, pet_service, order_service, user_service)
+    for user_fixture in dataset.users:
+        created = await user_service.get_user(user_fixture.username)
+        upsert_dev_user(
+            UserModel(**created.model_dump(), password=None),
+            password=user_fixture.password,
+        )
 
 
 async def _seed_postgres(dataset: FixtureDataset) -> None:

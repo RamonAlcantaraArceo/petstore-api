@@ -17,6 +17,12 @@ from petstore_core.services.user import UserService
 
 from app.api.deps import bearer_scheme, get_current_user
 from app.api.v1.error_mapping import map_domain_errors
+from app.auth.dev_store import (
+    delete_dev_user_by_username,
+    get_dev_user_by_username,
+    update_dev_user,
+    upsert_dev_user,
+)
 from app.auth.login import perform_login
 from app.auth.supabase_auth import (
     SupabaseAuthNotConfiguredError,
@@ -34,6 +40,7 @@ protected_router = APIRouter(prefix="/user", tags=["user"])
 unprotected_router = APIRouter(prefix="/user", tags=["user"])
 
 _IS_SUPABASE_ENV = {"staging", "prod"}
+PASSWORD_FIELD = "password"
 
 
 def _user_model_to_schema(user: UserModel) -> User:
@@ -47,6 +54,11 @@ def _user_model_to_schema(user: UserModel) -> User:
         phone=user.phone,
         user_status=user.user_status,
     )
+
+
+def _dev_in_memory_auth_enabled(settings: Settings) -> bool:
+    """Return whether development in-memory auth is active."""
+    return settings.app_env == "dev" and settings.dev_in_memory_auth_enabled
 
 
 @unprotected_router.post("", response_model=User, status_code=200, operation_id="create_user")
@@ -138,7 +150,13 @@ async def create_user(
         )
         return created
 
-    return await map_domain_errors(service.create_user(user))
+    created = await map_domain_errors(service.create_user(user))
+    if _dev_in_memory_auth_enabled(settings):
+        upsert_dev_user(
+            UserModel(**created.model_dump(), **{PASSWORD_FIELD: None}),
+            password=user.password,
+        )
+    return created
 
 
 @unprotected_router.post(
@@ -208,7 +226,14 @@ async def create_users_with_list(
             created_users.append(created)
         return created_users
 
-    return await map_domain_errors(service.create_users_with_list(users))
+    created_users = await map_domain_errors(service.create_users_with_list(users))
+    if _dev_in_memory_auth_enabled(settings):
+        for created, source in zip(created_users, users, strict=False):
+            upsert_dev_user(
+                UserModel(**created.model_dump(), **{PASSWORD_FIELD: None}),
+                password=source.password,
+            )
+    return created_users
 
 
 @unprotected_router.post(
@@ -382,7 +407,19 @@ async def update_user(
                     settings=settings,
                 )
 
-    return await map_domain_errors(service.update_user(username, user))
+    updated = await map_domain_errors(service.update_user(username, user))
+    if _dev_in_memory_auth_enabled(settings):
+        synced = update_dev_user(username, user)
+        if synced is None:
+            existing = get_dev_user_by_username(username)
+            password = user.password if user.password is not None else None
+            if existing is not None:
+                password = user.password if user.password is not None else existing.password
+            upsert_dev_user(
+                UserModel(**updated.model_dump(), **{PASSWORD_FIELD: None}),
+                password=password,
+            )
+    return updated
 
 
 @unprotected_router.delete("/{username}", status_code=204, operation_id="delete_user")
@@ -472,4 +509,6 @@ async def delete_user(
         return
 
     await map_domain_errors(service.delete_user(username))
+    if _dev_in_memory_auth_enabled(settings):
+        delete_dev_user_by_username(username)
     return

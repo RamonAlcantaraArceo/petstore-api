@@ -21,7 +21,7 @@ router = APIRouter(prefix="/user", tags=["user"])
     response_model=DevLoginResponse,
     operation_id="dev_login",
     summary="DEV ONLY login",
-    description="DEV ONLY. Exchange a seeded in-memory username for a Supabase-shaped development JWT.",
+    description="DEV ONLY. Exchange an in-memory username for a Supabase-shaped development JWT.",
     responses={
         401: {"description": "Unknown development username."},
         403: {"description": "Development login is disabled outside dev."},
@@ -31,11 +31,16 @@ async def dev_login(
     payload: DevLoginRequest,
     settings: Annotated[Settings, Depends(_cached_settings)],
 ) -> DevLoginResponse:
-    """Issue a development bearer token for a seeded user."""
+    """Issue a development bearer token for an in-memory development user."""
     if settings.app_env != "dev":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Development login is only available when APP_ENV/ENV is set to dev.",
+        )
+    if not settings.dev_in_memory_auth_enabled:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Development in-memory auth is disabled by DEV_IN_MEMORY_AUTH_ENABLED.",
         )
 
     user = get_dev_user_by_username(payload.username)

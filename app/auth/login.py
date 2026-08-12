@@ -14,6 +14,7 @@ from petstore_core.services.user import UserService
 
 from app.api.v1.error_mapping import map_domain_errors
 from app.auth.dev_jwt import issue_dev_jwt
+from app.auth.dev_store import authenticate_dev_user
 from app.auth.supabase_auth import SupabaseAuthNotConfiguredError, supabase_sign_in
 from app.auth.supabase_jwt import validate_supabase_jwt
 
@@ -63,16 +64,28 @@ async def perform_login(
             ),
         )
 
-    try:
-        await service.login(email, password)
-    except ValidationError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials.",
-            headers={"WWW-Authenticate": "Bearer"},
-        ) from exc
-    user = await map_domain_errors(service.get_user(email))
-    user_model = UserModel(**user.model_dump())
+    if settings.app_env == "dev" and settings.dev_in_memory_auth_enabled:
+        user_model = authenticate_dev_user(email, password)
+        if user_model is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid credentials.",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        user = user_model
+    else:
+        try:
+            await service.login(email, password)
+        except ValidationError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid credentials.",
+                headers={"WWW-Authenticate": "Bearer"},
+            ) from exc
+        resolved = await map_domain_errors(service.get_user(email))
+        user_model = _to_user_model(resolved)
+        user = user_model
+
     return LoginResponse(
         access_token=issue_dev_jwt(
             user=user_model,
@@ -99,3 +112,10 @@ def _required_string(values: Mapping[str, Any], key: str) -> str:
 def _optional_string(value: Any) -> str | None:
     """Return a string value when present."""
     return value if isinstance(value, str) else None
+
+
+def _to_user_model(user: Any) -> UserModel:
+    """Convert supported user payloads to ``UserModel``."""
+    if isinstance(user, UserModel):
+        return user
+    return UserModel(**user.model_dump())
