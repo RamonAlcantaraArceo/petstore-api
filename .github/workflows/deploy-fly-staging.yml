@@ -48,9 +48,11 @@ jobs:
           flyctl secrets set --stage API_KEY=${{ secrets.API_KEY }} \
             DATABASE_POOLER_URL=${{ secrets.DATABASE_POOLER_URL }} \
             DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }} \
             SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} \
             SUPABASE_JWT_SECRET=${{ secrets.SUPABASE_JWT_SECRET }} \
             SUPABASE_SECRET_API_KEY=${{ secrets.SUPABASE_SECRET_API_KEY }} \
+            SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
             -c .fly/staging/fly.toml
 
         env:
