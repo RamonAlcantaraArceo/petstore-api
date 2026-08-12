@@ -45,7 +45,7 @@ jobs:
             echo "App petstore-api-staging already exists, skipping creation."
           fi
 
-          flyctl secrets set --stage API_KEY=${{ secrets.API_KEY }} DATABASE_POOLER_URL=${{ secrets.DATABASE_POOLER_URL }} DATABASE_URL=${{ secrets.DATABASE_URL }} -c .fly/staging/fly.toml
+          flyctl secrets set --stage API_KEY=${{ secrets.API_KEY }} DATABASE_POOLER_URL=${{ secrets.DATABASE_POOLER_URL }} DATABASE_URL=${{ secrets.DATABASE_URL }} SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} -c .fly/staging/fly.toml
 
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
