@@ -1,1 +1,1 @@
-{"id":"52248d8a7c00237eeaa53bcf1ca02b20","fullName":"tests.auth.test_dev_auth#test_environment_switching_uses_supabase_path","name":"test_environment_switching_uses_supabase_path","status":"passed","testResultsByEnv":{"default":"447d132a1479e26c695b8d3a4b1882a5"}}
+{"id":"52248d8a7c00237eeaa53bcf1ca02b20","fullName":"tests.auth.test_dev_auth#test_environment_switching_uses_supabase_path","name":"test_environment_switching_uses_supabase_path","status":"passed","testResultsByEnv":{"default":"87e89c66462f475beaef86be6f1a7bda"}}
