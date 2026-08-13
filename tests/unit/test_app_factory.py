@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import allure
 import pytest
 from starlette.testclient import TestClient
@@ -89,6 +91,77 @@ def test_injection_middlewares_not_registered_when_disabled(
         middleware_classes = [m.cls for m in app.user_middleware if hasattr(m, "cls")]
         assert FailureInjectionMiddleware not in middleware_classes
         assert DelayInjectionMiddleware not in middleware_classes
+    finally:
+        _clear_settings_cache()
+
+
+@allure.story("Middleware Registration")
+@allure.severity(allure.severity_level.CRITICAL)
+def test_correlation_id_middleware_wraps_rate_limiting(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Correlation context is established before rate-limit logging runs."""
+    from app.middleware.correlation_id import CorrelationIdMiddleware
+    from app.middleware.rate_limit import RateLimitMiddleware
+
+    monkeypatch.setenv("STORAGE_MODE", "memory")
+    monkeypatch.setenv("APP_ENV", "dev")
+    _clear_settings_cache()
+
+    try:
+        from app.main import create_app
+
+        middleware_classes = [m.cls for m in create_app().user_middleware if hasattr(m, "cls")]
+        assert middleware_classes.index(CorrelationIdMiddleware) < middleware_classes.index(
+            RateLimitMiddleware
+        )
+    finally:
+        _clear_settings_cache()
+
+
+@allure.story("Request Logging")
+@allure.severity(allure.severity_level.CRITICAL)
+def test_request_logs_include_rich_context_and_correlation_id(
+    monkeypatch: pytest.MonkeyPatch,
+    capfd: pytest.CaptureFixture[str],
+) -> None:
+    """Lifecycle and middleware logs carry the request correlation ID."""
+    monkeypatch.setenv("STORAGE_MODE", "memory")
+    monkeypatch.setenv("APP_ENV", "prod")
+    monkeypatch.setenv("LOG_LEVEL", "DEBUG")
+    monkeypatch.setenv("RATE_LIMIT_BYPASS_KEY", "")
+    _clear_settings_cache()
+
+    try:
+        from app.main import create_app
+
+        with TestClient(create_app(), raise_server_exceptions=True) as client:
+            response = client.get(
+                "/api/v1/pet/findByStatus?skip=0",
+                headers={"X-Correlation-ID": "rich-log-test"},
+            )
+        assert response.status_code == 200
+        assert response.status_code == 200
+        records = [
+            json.loads(line) for line in capfd.readouterr().out.splitlines() if line.startswith("{")
+        ]
+        request_records = [
+            record for record in records if record.get("correlation_id") == "rich-log-test"
+        ]
+
+        assert {"request_started", "rate_limit_check_pass", "request_completed"} <= {
+            record["event"] for record in request_records
+        }
+        completed = next(
+            record for record in request_records if record["event"] == "request_completed"
+        )
+        assert completed["http_method"] == "GET"
+        assert completed["http_path"] == "/api/v1/pet/findByStatus"
+        assert completed["http_status_code"] == 200
+        assert completed["duration_ms"] >= 0
+        assert completed["service"] == "petstore-api"
+        assert completed["app_env"] == "prod"
+        # assert "timestamp" in completed
     finally:
         _clear_settings_cache()
 

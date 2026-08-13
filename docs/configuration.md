@@ -36,3 +36,15 @@ in `.env`.
 When `APP_ENV=dev`, user authentication can stay fully in-memory by keeping
 `DEV_IN_MEMORY_AUTH_ENABLED=true` (default). Set it to `false` only if you
 explicitly want dev traffic to use Supabase token validation.
+
+## Request Logging
+
+Every request receives an `X-Correlation-ID` (the incoming value is preserved,
+or a UUID is generated) and returns it in the response. Application, middleware,
+Uvicorn, and access logs use the same logging pipeline and include the
+correlation ID while the request is active.
+
+Request lifecycle events include `request_started`, `request_completed`, and
+`request_failed`. They record the HTTP method and path, client IP, duration, and
+response status where available. Development uses readable console output;
+staging and production emit JSON.
