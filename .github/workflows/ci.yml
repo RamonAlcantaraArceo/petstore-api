@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup environment
         uses: RamonAlcantaraArceo/petstore-test-python/.github/actions/setup-env@main
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup environment
         uses: RamonAlcantaraArceo/petstore-test-python/.github/actions/setup-env@main
@@ -57,7 +57,7 @@ jobs:
       EXPECTED_PYTHON_VERSIONS: "3.14"
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup environment
         uses: RamonAlcantaraArceo/petstore-test-python/.github/actions/setup-env@main
@@ -118,7 +118,7 @@ jobs:
     needs: [lint, type-check, test]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       
       - name: Build Docker image
         id: build
