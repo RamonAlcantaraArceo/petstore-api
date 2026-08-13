@@ -1,5 +1,0 @@
-[34mDEBUG[0m Using selector: EpollSelector
-[32mINFO[0m Starting Petstore API application...me
-[32mINFO[0m Starting Petstore API application...uvicorn
-{"event": "rate_limit_bypass_disabled", "correlation_id": "", "app_env": "dev", "level": "info", "timestamp": "2026-08-13T18:44:30.504814Z", "module": "main", "func_name": "lifespan"}
-[32mINFO[0m HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"

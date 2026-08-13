@@ -1,0 +1,2 @@
+[34mDEBUG[0m Using selector: EpollSelector
+2026-08-13 18:51:39 [debug    ] seeded pet                     dataset=test name=A pet_id=1 status=available

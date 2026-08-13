@@ -1,0 +1,2 @@
+[34mDEBUG[0m Using selector: EpollSelector
+2026-08-13 18:51:44 [warning  ] failure_injected               method=GET path=/api/v1/pet status_code=503

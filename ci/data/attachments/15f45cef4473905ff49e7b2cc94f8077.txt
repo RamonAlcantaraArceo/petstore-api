@@ -1,0 +1,2 @@
+[34mDEBUG[0m Using selector: EpollSelector
+2026-08-13 18:51:39 [info     ] seeding storage                dataset=basic storage_mode=memory

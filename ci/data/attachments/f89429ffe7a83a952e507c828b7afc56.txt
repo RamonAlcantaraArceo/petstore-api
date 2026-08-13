@@ -1,0 +1,4 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function PetCreateFactory.<lambda> at 0x7fb22dde5170> on <BuildStep for <StepBuilder(<FactoryOptions for PetCreateFactory>, strategy='create')>>
+DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function PetCreateFactory.<lambda> at 0x7fb22dde5430> on <BuildStep for <StepBuilder(<FactoryOptions for PetCreateFactory>, strategy='create')>>
+INFO     httpx:_client.py:1740 HTTP Request: POST http://test/api/v1/pet "HTTP/1.1 200 OK"

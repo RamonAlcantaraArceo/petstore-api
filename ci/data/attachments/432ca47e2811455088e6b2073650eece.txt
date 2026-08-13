@@ -1,0 +1,7 @@
+[34mDEBUG[0m Using selector: EpollSelector
+2026-08-13 18:51:41 [debug    ] rate_limit_bypass_disabled     bypass_header_present=False
+2026-08-13 18:51:41 [debug    ] rate_limit_check_pass          client_key=ip:127.0.0.1 count=1 max_requests=1 remaining=0
+2026-08-13 18:51:41 [debug    ] rate_limit_bypass_disabled     bypass_header_present=False
+2026-08-13 18:51:41 [warning  ] rate_limit_exceeded            client_key=ip:127.0.0.1 count=2 headers={'X-Bypass-Key': '(not present)', 'X-Forwarded-For': '(not present)', 'Authorization': '(not present)', 'User-Agent': '(not present)'} max_requests=1 method=GET path=/api/v1/pet retry_after=60
+2026-08-13 18:51:41 [debug    ] rate_limit_bypass_disabled     bypass_header_present=False
+2026-08-13 18:51:41 [debug    ] rate_limit_check_pass          client_key=ip:127.0.0.1 count=1 max_requests=1 remaining=0

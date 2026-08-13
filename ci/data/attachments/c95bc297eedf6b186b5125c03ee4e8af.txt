@@ -1,0 +1,16 @@
+[34mDEBUG[0m Using selector: EpollSelector
+[34mDEBUG[0m connect_tcp.started host='127.0.0.1' port=47379 local_address=None timeout=30 socket_options=None
+[34mDEBUG[0m connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7fb22c319310>
+[34mDEBUG[0m send_request_headers.started request=<Request [b'GET']>
+[34mDEBUG[0m send_request_headers.complete
+[34mDEBUG[0m send_request_body.started request=<Request [b'GET']>
+[34mDEBUG[0m send_request_body.complete
+[34mDEBUG[0m receive_response_headers.started request=<Request [b'GET']>
+[34mDEBUG[0m receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 18:51:55 GMT'), (b'server', b'uvicorn'), (b'content-length', b'102'), (b'content-type', b'application/json'), (b'x-correlation-id', b'0bcc67be-a162-4cd9-9a39-1b05ed3a0165')])
+[32mINFO[0m HTTP Request: GET http://127.0.0.1:47379/api/v1/health "HTTP/1.1 200 OK"
+[34mDEBUG[0m receive_response_body.started request=<Request [b'GET']>
+[34mDEBUG[0m receive_response_body.complete
+[34mDEBUG[0m response_closed.started
+[34mDEBUG[0m response_closed.complete
+[34mDEBUG[0m close.started
+[34mDEBUG[0m close.complete

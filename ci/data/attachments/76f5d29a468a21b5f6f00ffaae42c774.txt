@@ -1,0 +1,6 @@
+[34mDEBUG[0m Using selector: EpollSelector
+[34mDEBUG[0m LazyFunction: Evaluating <function PetCreateFactory.<lambda> at 0x7fb22dde5170> on <BuildStep for <StepBuilder(<FactoryOptions for PetCreateFactory>, strategy='create')>>
+[34mDEBUG[0m LazyFunction: Evaluating <function PetCreateFactory.<lambda> at 0x7fb22dde5430> on <BuildStep for <StepBuilder(<FactoryOptions for PetCreateFactory>, strategy='create')>>
+2026-08-13 18:51:40 [debug    ] rate_limit_bypass_header_mismatch bypass_header_present=False bypass_header_value_length=0 expected_length=5 path=/api/v1/pet
+2026-08-13 18:51:40 [debug    ] rate_limit_check_pass          client_key=user:1 count=1 max_requests=40 remaining=39
+[32mINFO[0m HTTP Request: POST http://test/api/v1/pet "HTTP/1.1 200 OK"

@@ -1,2 +1,0 @@
-[34mDEBUG[0m Using selector: EpollSelector
-{"path": "/api/v1/pet", "method": "GET", "delay_seconds": 0.05, "event": "delay_injected", "correlation_id": "", "app_env": "dev", "level": "info", "timestamp": "2026-08-13T18:44:31.003004Z", "module": "delay_injection", "func_name": "dispatch"}

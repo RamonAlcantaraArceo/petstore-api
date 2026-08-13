@@ -1,0 +1,7 @@
+[34mDEBUG[0m Using selector: EpollSelector
+2026-08-13 18:51:41 [debug    ] rate_limit_bypass_disabled     bypass_header_present=False
+2026-08-13 18:51:41 [debug    ] rate_limit_check_pass          client_key=ip:127.0.0.1 count=1 max_requests=3 remaining=2
+2026-08-13 18:51:41 [debug    ] rate_limit_bypass_disabled     bypass_header_present=False
+2026-08-13 18:51:41 [debug    ] rate_limit_check_pass          client_key=ip:127.0.0.1 count=2 max_requests=3 remaining=1
+2026-08-13 18:51:41 [debug    ] rate_limit_bypass_disabled     bypass_header_present=False
+2026-08-13 18:51:41 [debug    ] rate_limit_check_pass          client_key=ip:127.0.0.1 count=3 max_requests=3 remaining=0

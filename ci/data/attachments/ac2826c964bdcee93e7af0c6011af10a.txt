@@ -1,9 +1,0 @@
-DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7f7da01e2140> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7f7da01e22a0> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7f7da01e2350> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7f7da01e2400> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7f7da01e24b0> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-INFO     httpx:_client.py:1740 HTTP Request: POST http://test/api/v1/user "HTTP/1.1 200 OK"
-INFO     httpx:_client.py:1740 HTTP Request: PUT http://test/api/v1/user/obranch_yG061 "HTTP/1.1 200 OK"
-DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "DELETE /v1.48/containers/e971dfc3779f48aa219b025934cb9b2401a5755f0ff03a8a5cc1172d5e3a2141?v=True&link=False&force=True HTTP/1.1" 204 0

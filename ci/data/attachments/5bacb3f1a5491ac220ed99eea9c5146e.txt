@@ -1,0 +1,4 @@
+[34mDEBUG[0m Using selector: EpollSelector
+2026-08-13 18:51:41 [debug    ] rate_limit_bypass_header_mismatch bypass_header_present=False bypass_header_value_length=0 expected_length=5 path=/api/v1/user/nonexistent_user
+2026-08-13 18:51:41 [debug    ] rate_limit_check_pass          client_key=user:1 count=1 max_requests=40 remaining=39
+[32mINFO[0m HTTP Request: GET http://test/api/v1/user/nonexistent_user "HTTP/1.1 404 Not Found"

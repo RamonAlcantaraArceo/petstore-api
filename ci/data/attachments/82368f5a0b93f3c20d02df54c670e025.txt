@@ -1,2 +1,0 @@
-[34mDEBUG[0m Using selector: EpollSelector
-{"path": "/api/v1/pet", "method": "GET", "status_code": 503, "event": "failure_injected", "correlation_id": "", "app_env": "dev", "level": "warning", "timestamp": "2026-08-13T18:44:31.614106Z", "module": "failure_injection", "func_name": "dispatch"}

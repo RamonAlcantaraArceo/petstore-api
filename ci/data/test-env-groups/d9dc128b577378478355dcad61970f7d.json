@@ -1,1 +1,1 @@
-{"id":"d9dc128b577378478355dcad61970f7d","fullName":"tests.e2e.test_petstore_e2e#test_e2e_health","name":"test_e2e_health[/health]","status":"passed","testResultsByEnv":{"default":"3b80c447f7b929e7044d18937ca430a8"}}
+{"id":"d9dc128b577378478355dcad61970f7d","fullName":"tests.e2e.test_petstore_e2e#test_e2e_health","name":"test_e2e_health[/api/v1/health]","status":"passed","testResultsByEnv":{"default":"709d3f34cf748504937c5b67a0f148a3"}}
