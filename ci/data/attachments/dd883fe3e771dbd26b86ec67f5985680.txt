@@ -1,0 +1,1 @@
+{"dataset": "test", "pet_id": 1, "name": "Rex", "status": "available", "event": "seeded pet", "correlation_id": "", "app_env": "dev", "level": "debug", "timestamp": "2026-08-13T06:06:26.734900Z", "module": "loader", "func_name": "apply_dataset"}
