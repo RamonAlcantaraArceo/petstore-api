@@ -1,1 +1,1 @@
-{"id":"6c1d328ab48e501ffda5fa25de1e7aa3","fullName":"tests.integration.test_user_api#test_delete_user","name":"test_delete_user","status":"passed","testResultsByEnv":{"default":"3d2be82e7cc094b92f0147b6755ff782"}}
+{"id":"6c1d328ab48e501ffda5fa25de1e7aa3","fullName":"tests.integration.test_user_api#test_delete_user","name":"test_delete_user","status":"passed","testResultsByEnv":{"default":"760340f4d83435d9ede0c9900c3d5487"}}
