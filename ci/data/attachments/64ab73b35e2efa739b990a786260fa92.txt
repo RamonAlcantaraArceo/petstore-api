@@ -1,0 +1,218 @@
+[debug    ] Trying paths: ['/home/runner/.docker/config.json', '/home/runner/.dockercfg'] app_env=dev func_name=find_config_file module=config service=petstore-api
+[debug    ] Found file at path: /home/runner/.docker/config.json app_env=dev func_name=find_config_file module=config service=petstore-api
+[debug    ] Found 'auths' section          app_env=dev func_name=load_config module=auth service=petstore-api
+[debug    ] Found entry (registry='https://index.docker.io/v1/', username='githubactions') app_env=dev func_name=parse_auth module=auth service=petstore-api
+[debug    ] http://localhost:None "GET /version HTTP/1.1" 200 822 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] Creating Ryuk container        app_env=dev func_name=start module=container service=petstore-api
+[debug    ] Creating new Reaper for session: 4bc29bdb-a750-4b56-b4dd-5ccec7068f49 app_env=dev func_name=_create_instance module=container service=petstore-api
+[debug    ] Trying paths: ['/home/runner/.docker/config.json', '/home/runner/.dockercfg'] app_env=dev func_name=find_config_file module=config service=petstore-api
+[debug    ] Found file at path: /home/runner/.docker/config.json app_env=dev func_name=find_config_file module=config service=petstore-api
+[debug    ] Found 'auths' section          app_env=dev func_name=load_config module=auth service=petstore-api
+[debug    ] Found entry (registry='https://index.docker.io/v1/', username='githubactions') app_env=dev func_name=parse_auth module=auth service=petstore-api
+[debug    ] http://localhost:None "GET /version HTTP/1.1" 200 822 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] Trying paths: ['/home/runner/.docker/config.json', '/home/runner/.dockercfg'] app_env=dev func_name=find_config_file module=config service=petstore-api
+[debug    ] Found file at path: /home/runner/.docker/config.json app_env=dev func_name=find_config_file module=config service=petstore-api
+[debug    ] Found 'auths' section          app_env=dev func_name=load_config module=auth service=petstore-api
+[debug    ] Found entry (registry='https://index.docker.io/v1/', username='githubactions') app_env=dev func_name=parse_auth module=auth service=petstore-api
+[debug    ] http://localhost:None "GET /version HTTP/1.1" 200 822 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[info     ] Pulling image testcontainers/ryuk:0.8.1 app_env=dev func_name=start module=container service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/networks?filters=%7B%22type%22%3A+%5B%22custom%22%5D%7D HTTP/1.1" 200 3 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/containers/create?name=testcontainers-ryuk-4bc29bdb-a750-4b56-b4dd-5ccec7068f49 HTTP/1.1" 404 55 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] Looking for auth config        app_env=dev func_name=get_config_header module=auth service=petstore-api
+[debug    ] Looking for auth entry for 'docker.io' app_env=dev func_name=resolve_authconfig module=auth service=petstore-api
+[debug    ] Found 'https://index.docker.io/v1/' app_env=dev func_name=resolve_authconfig module=auth service=petstore-api
+[debug    ] Found auth config              app_env=dev func_name=get_config_header module=auth service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/images/create?tag=0.8.1&fromImage=testcontainers%2Fryuk HTTP/1.1" 200 None app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/images/testcontainers/ryuk:0.8.1/json HTTP/1.1" 200 1682 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/containers/create?name=testcontainers-ryuk-4bc29bdb-a750-4b56-b4dd-5ccec7068f49 HTTP/1.1" 201 88 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/containers/611bc2f2b618712997557ab5df66611e08f5b03721f19ec76b1e4954517bcd26/json HTTP/1.1" 200 None app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/containers/611bc2f2b618712997557ab5df66611e08f5b03721f19ec76b1e4954517bcd26/start HTTP/1.1" 204 0 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[info     ] Container started: 611bc2f2b618 app_env=dev func_name=start module=container service=petstore-api
+[debug    ] fetching status of container <testcontainers.core.container.DockerContainer object at 0x7f1f03864ec0> app_env=dev func_name=_get_status_tc_container module=wait_strategies service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/containers/611bc2f2b618712997557ab5df66611e08f5b03721f19ec76b1e4954517bcd26/json HTTP/1.1" 200 None app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] status is now running          app_env=dev func_name=running module=wait_strategies service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/containers/611bc2f2b618712997557ab5df66611e08f5b03721f19ec76b1e4954517bcd26/json HTTP/1.1" 200 None app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[info     ] Pulling image postgres:16-alpine app_env=dev func_name=start module=container service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/networks?filters=%7B%22type%22%3A+%5B%22custom%22%5D%7D HTTP/1.1" 200 3 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/containers/create HTTP/1.1" 404 48 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] Looking for auth config        app_env=dev func_name=get_config_header module=auth service=petstore-api
+[debug    ] Looking for auth entry for 'docker.io' app_env=dev func_name=resolve_authconfig module=auth service=petstore-api
+[debug    ] Found 'https://index.docker.io/v1/' app_env=dev func_name=resolve_authconfig module=auth service=petstore-api
+[debug    ] Found auth config              app_env=dev func_name=get_config_header module=auth service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/images/create?tag=16-alpine&fromImage=postgres HTTP/1.1" 200 None app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/images/postgres:16-alpine/json HTTP/1.1" 200 None app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/containers/create HTTP/1.1" 201 88 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/containers/19cb6a6492827873b1106544b220f77315e723579d89b6187275fcea2ff1e131/json HTTP/1.1" 200 None app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/containers/19cb6a6492827873b1106544b220f77315e723579d89b6187275fcea2ff1e131/start HTTP/1.1" 204 0 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[info     ] Container started: 19cb6a649282 app_env=dev func_name=start module=container service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/containers/19cb6a6492827873b1106544b220f77315e723579d89b6187275fcea2ff1e131/exec HTTP/1.1" 201 74 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/exec/d24182539e389ca21ceb55ec7d3c2717b9dbba97f5d93074bb9a30f66cae3926/start HTTP/1.1" 101 0 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/exec/d24182539e389ca21ceb55ec7d3c2717b9dbba97f5d93074bb9a30f66cae3926/json HTTP/1.1" 200 464 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] ExecWaitStrategy: Command failed with exit code 2, expected 0. Retrying... app_env=dev func_name=wait_until_ready module=wait_strategies service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/containers/19cb6a6492827873b1106544b220f77315e723579d89b6187275fcea2ff1e131/exec HTTP/1.1" 201 74 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/exec/ac69e0a238779cf7559ef6bf7a4edd29b3f182ed43e6f684184caa06a423ebc3/start HTTP/1.1" 101 0 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/exec/ac69e0a238779cf7559ef6bf7a4edd29b3f182ed43e6f684184caa06a423ebc3/json HTTP/1.1" 200 464 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] ExecWaitStrategy: Command failed with exit code 2, expected 0. Retrying... app_env=dev func_name=wait_until_ready module=wait_strategies service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/containers/19cb6a6492827873b1106544b220f77315e723579d89b6187275fcea2ff1e131/exec HTTP/1.1" 201 74 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "POST /v1.48/exec/79f3b4af254fb33b8711b24e891e6f2e8aa39f7817a9b34a68df7ecf4d4f6af9/start HTTP/1.1" 101 0 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/exec/79f3b4af254fb33b8711b24e891e6f2e8aa39f7817a9b34a68df7ecf4d4f6af9/json HTTP/1.1" 200 464 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] ExecWaitStrategy: Command succeeded with exit code 0 after 2.11s app_env=dev func_name=wait_until_ready module=wait_strategies service=petstore-api
+[debug    ] fetching status of container <testcontainers.postgres.PostgresContainer object at 0x7f1f038642f0> app_env=dev func_name=_get_status_tc_container module=wait_strategies service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/containers/19cb6a6492827873b1106544b220f77315e723579d89b6187275fcea2ff1e131/json HTTP/1.1" 200 None app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] status is now running          app_env=dev func_name=running module=wait_strategies service=petstore-api
+[debug    ] http://localhost:None "GET /v1.48/containers/19cb6a6492827873b1106544b220f77315e723579d89b6187275fcea2ff1e131/json HTTP/1.1" 200 None app_env=dev func_name=_make_request module=connectionpool service=petstore-api
+[debug    ] connect_tcp.started host='127.0.0.1' port=59189 local_address=None timeout=2.0 socket_options=None app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused')) app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.started host='127.0.0.1' port=59189 local_address=None timeout=2.0 socket_options=None app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused')) app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.started host='127.0.0.1' port=59189 local_address=None timeout=2.0 socket_options=None app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused')) app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.started host='127.0.0.1' port=59189 local_address=None timeout=2.0 socket_options=None app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused')) app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.started host='127.0.0.1' port=59189 local_address=None timeout=2.0 socket_options=None app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused')) app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.started host='127.0.0.1' port=59189 local_address=None timeout=2.0 socket_options=None app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused')) app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.started host='127.0.0.1' port=59189 local_address=None timeout=2.0 socket_options=None app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused')) app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.started host='127.0.0.1' port=59189 local_address=None timeout=2.0 socket_options=None app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f1f038656a0> app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'GET']> app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'GET']> app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'GET']> app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'102'), (b'content-type', b'application/json'), (b'x-correlation-id', b'c55bf656-c09d-4c39-8a8c-ac7fbb2cdb07')]) app_env=dev func_name=trace module=_trace service=petstore-api
+[info     ] HTTP Request: GET http://127.0.0.1:59189/health "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'GET']> app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] close.started                  app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] close.complete                 app_env=dev func_name=trace module=_trace service=petstore-api
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[debug    ] connect_tcp.started host='127.0.0.1' port=59189 local_address=None timeout=30 socket_options=None app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7f1f0393e900> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'POST']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'POST']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'POST']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'533'), (b'content-type', b'application/json'), (b'x-ratelimit-limit', b'40'), (b'x-ratelimit-remaining', b'39'), (b'x-ratelimit-reset', b'60'), (b'x-correlation-id', b'b4dcea2f-ee7c-4c5d-ae58-21768ac21d9a')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: POST http://127.0.0.1:59189/api/v1/user/auth "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'POST']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'POST']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'POST']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'POST']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'87'), (b'content-type', b'application/json'), (b'x-ratelimit-limit', b'40'), (b'x-ratelimit-remaining', b'39'), (b'x-ratelimit-reset', b'60'), (b'x-correlation-id', b'67d2cdd6-4606-44be-b1dd-66a6e2ae3068')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: POST http://127.0.0.1:59189/api/v1/pet "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'POST']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'87'), (b'content-type', b'application/json'), (b'x-ratelimit-limit', b'40'), (b'x-ratelimit-remaining', b'38'), (b'x-ratelimit-reset', b'60'), (b'x-correlation-id', b'3a93adf8-45a4-4269-98e6-8b2fef088b3f')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: GET http://127.0.0.1:59189/api/v1/pet/1 "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'PUT']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'PUT']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'PUT']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'85'), (b'content-type', b'application/json'), (b'x-ratelimit-limit', b'40'), (b'x-ratelimit-remaining', b'37'), (b'x-ratelimit-reset', b'60'), (b'x-correlation-id', b'b14094da-d352-4145-9871-0656710ca601')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: PUT http://127.0.0.1:59189/api/v1/pet "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'PUT']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'85'), (b'content-type', b'application/json'), (b'x-ratelimit-limit', b'40'), (b'x-ratelimit-remaining', b'36'), (b'x-ratelimit-reset', b'60'), (b'x-correlation-id', b'701ab0e4-a669-4a59-aef5-a635ce76c7dc')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: GET http://127.0.0.1:59189/api/v1/pet/1 "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'87'), (b'content-type', b'application/json'), (b'x-ratelimit-limit', b'40'), (b'x-ratelimit-remaining', b'35'), (b'x-ratelimit-reset', b'60'), (b'x-correlation-id', b'6761c34c-0ab2-4a53-a5fe-58db346a1cdb')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: GET http://127.0.0.1:59189/api/v1/pet/findByStatus?status=pending "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'PUT']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'PUT']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'PUT']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'82'), (b'content-type', b'application/json'), (b'x-ratelimit-limit', b'40'), (b'x-ratelimit-remaining', b'34'), (b'x-ratelimit-reset', b'60'), (b'x-correlation-id', b'2dbbfc0d-5a0e-4b64-bfc6-d2bbb507ad8c')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: PUT http://127.0.0.1:59189/api/v1/pet "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'PUT']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'82'), (b'content-type', b'application/json'), (b'x-ratelimit-limit', b'40'), (b'x-ratelimit-remaining', b'33'), (b'x-ratelimit-reset', b'60'), (b'x-correlation-id', b'56ce70c9-f3ef-4f26-90ce-f156abf8f26e')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: GET http://127.0.0.1:59189/api/v1/pet/1 "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'84'), (b'content-type', b'application/json'), (b'x-ratelimit-limit', b'40'), (b'x-ratelimit-remaining', b'32'), (b'x-ratelimit-reset', b'60'), (b'x-correlation-id', b'd4bc9172-6494-4c45-bca6-41a5eb0ff3b1')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: GET http://127.0.0.1:59189/api/v1/pet/findByStatus?status=sold "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'DELETE']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'DELETE']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'DELETE']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 204, b'No Content', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-type', b'application/json'), (b'x-ratelimit-limit', b'40'), (b'x-ratelimit-remaining', b'31'), (b'x-ratelimit-reset', b'60'), (b'x-correlation-id', b'8185e33f-31e1-4051-b4a3-aaa78fa80107')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: DELETE http://127.0.0.1:59189/api/v1/pet/1 "HTTP/1.1 204 No Content" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'DELETE']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 404, b'Not Found', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'18'), (b'content-type', b'text/plain; charset=utf-8'), (b'x-ratelimit-limit', b'40'), (b'x-ratelimit-remaining', b'30'), (b'x-ratelimit-reset', b'60'), (b'x-correlation-id', b'9a49a95e-3ba5-448c-bc6e-b07b929ecf0d')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: GET http://127.0.0.1:59189/api/v1/pet/1 "HTTP/1.1 404 Not Found" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] close.started                  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] close.complete                 app_env=dev func_name=atrace module=_trace service=petstore-api

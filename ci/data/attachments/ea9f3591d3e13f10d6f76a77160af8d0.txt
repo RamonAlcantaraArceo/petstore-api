@@ -1,0 +1,17 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='127.0.0.1' port=59189 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7f1f03e3ccd0>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'102'), (b'content-type', b'application/json'), (b'x-correlation-id', b'38ccbee6-405c-4d8b-b563-b7a8e05acac8')])
+INFO     httpx:_client.py:1740 HTTP Request: GET http://127.0.0.1:59189/health "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "DELETE /v1.48/containers/19cb6a6492827873b1106544b220f77315e723579d89b6187275fcea2ff1e131?v=True&link=False&force=True HTTP/1.1" 204 0

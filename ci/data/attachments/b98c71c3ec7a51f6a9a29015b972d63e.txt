@@ -1,0 +1,18 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[debug    ] connect_tcp.started host='127.0.0.1' port=59189 local_address=None timeout=30 socket_options=None app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7f1f03e3ccd0> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Thu, 13 Aug 2026 20:51:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'102'), (b'content-type', b'application/json'), (b'x-correlation-id', b'38ccbee6-405c-4d8b-b563-b7a8e05acac8')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: GET http://127.0.0.1:59189/health "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] close.started                  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] close.complete                 app_env=dev func_name=atrace module=_trace service=petstore-api
+Saving coverage data...
+[debug    ] http://localhost:None "DELETE /v1.48/containers/19cb6a6492827873b1106544b220f77315e723579d89b6187275fcea2ff1e131?v=True&link=False&force=True HTTP/1.1" 204 0 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
