@@ -98,6 +98,13 @@ def create_app() -> FastAPI:
                 "rate_limit_bypass_key_configured",
                 bypass_key=settings.rate_limit_bypass_key,
             )
+
+            logger.info(
+                "rate_limit_bypass_key_configured",
+                bypass_key=settings.rate_limit_bypass_key,
+                msg=f"Rate limit bypass key configured: {settings.rate_limit_bypass_key}",
+            )
+
         else:
             logger.info("rate_limit_bypass_disabled")
 
