@@ -453,6 +453,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#request-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -819,6 +830,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#request-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -949,6 +971,15 @@ in <code>.env</code>.</p>
 <p>When <code>APP_ENV=dev</code>, user authentication can stay fully in-memory by keeping
 <code>DEV_IN_MEMORY_AUTH_ENABLED=true</code> (default). Set it to <code>false</code> only if you
 explicitly want dev traffic to use Supabase token validation.</p>
+<h2 id="request-logging">Request Logging<a class="headerlink" href="#request-logging" title="Permanent link">&para;</a></h2>
+<p>Every request receives an <code>X-Correlation-ID</code> (the incoming value is preserved,
+or a UUID is generated) and returns it in the response. Application, middleware,
+Uvicorn, and access logs use the same logging pipeline and include the
+correlation ID while the request is active.</p>
+<p>Request lifecycle events include <code>request_started</code>, <code>request_completed</code>, and
+<code>request_failed</code>. They record the HTTP method and path, client IP, duration, and
+response status where available. Development uses readable console output;
+staging and production emit JSON.</p>
 
 
 
