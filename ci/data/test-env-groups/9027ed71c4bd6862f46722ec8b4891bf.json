@@ -1,1 +1,1 @@
-{"id":"9027ed71c4bd6862f46722ec8b4891bf","fullName":"tests.integration.test_dev_auth_api#test_protected_route_rejects_missing_bearer_token","name":"test_protected_route_rejects_missing_bearer_token","status":"passed","testResultsByEnv":{"default":"51d380cbdb5d796e46d6b54ad087b198"}}
+{"id":"9027ed71c4bd6862f46722ec8b4891bf","fullName":"tests.integration.test_dev_auth_api#test_protected_route_rejects_missing_bearer_token","name":"test_protected_route_rejects_missing_bearer_token","status":"passed","testResultsByEnv":{"default":"1531ab22f3922346c758bfeae2af0b0a"}}

@@ -1,1 +1,1 @@
-{"id":"502dc41b1ef0f2bd4db5f26f0499a26b","fullName":"tests.unit.test_supabase_jwt.TestValidateSupabaseJwt#test_rejects_malformed_token_header","name":"test_rejects_malformed_token_header","status":"passed","testResultsByEnv":{"default":"7fcbf43a3d3ff4e3fe1d86d7c73b585c"}}
+{"id":"502dc41b1ef0f2bd4db5f26f0499a26b","fullName":"tests.unit.test_supabase_jwt.TestValidateSupabaseJwt#test_rejects_malformed_token_header","name":"test_rejects_malformed_token_header","status":"passed","testResultsByEnv":{"default":"72721c24e21294532f8f59aa0e27c11c"}}

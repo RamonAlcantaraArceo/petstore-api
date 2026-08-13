@@ -1,1 +1,1 @@
-{"id":"1fd3fa12ac325942765144f217ff234b","fullName":"tests.integration.test_dev_auth_api#test_dev_login_route_returns_seeded_user","name":"test_dev_login_route_returns_seeded_user","status":"passed","testResultsByEnv":{"default":"aaff9d7680ab0a92a4eecf298fc71a87"}}
+{"id":"1fd3fa12ac325942765144f217ff234b","fullName":"tests.integration.test_dev_auth_api#test_dev_login_route_returns_seeded_user","name":"test_dev_login_route_returns_seeded_user","status":"passed","testResultsByEnv":{"default":"5478fa0cfd4e1ae3026638897a37fc99"}}
