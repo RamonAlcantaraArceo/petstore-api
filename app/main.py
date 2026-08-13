@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import sys
 import warnings
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -22,6 +23,36 @@ from app.middleware.rate_limit import BYPASS_HEADER, RateLimitMiddleware
 
 warnings.filterwarnings("error", message="Duplicate Operation ID")
 
+def _basic_logging_config(log_level: str) -> None:
+    """Configure basic logging to stdout.
+
+    Args:
+        log_level: The log level string (e.g. "INFO").
+    """
+    COLORS = {
+        "INFO": "\033[32m",     # green
+        "WARNING": "\033[33m",  # yellow
+        "ERROR": "\033[31m",    # red
+        "DEBUG": "\033[34m",    # blue
+        "CRITICAL": "\033[1;31m", # bold red
+    }
+
+    class ColorFormatter(logging.Formatter):
+        def format(self, record):
+            color = COLORS.get(record.levelname, "")
+            reset = "\033[0m"
+            record.levelname = f"{color}{record.levelname}{reset}"
+            return super().format(record)
+
+    # Create handler
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(ColorFormatter("%(levelname)s %(message)s"))
+
+    # Attach handler to root logger
+    root = logging.getLogger()
+    root.handlers.clear()          # remove default handler installed by uvicorn/basicConfig
+    root.addHandler(handler)
+    root.setLevel(log_level.upper())
 
 def configure_logging(log_level: str, app_env: str) -> None:
     """Configure structlog for structured JSON output.
@@ -87,21 +118,16 @@ def create_app() -> FastAPI:
     """
     settings = get_settings()
     configure_logging(settings.log_level, settings.app_env)
+    _basic_logging_config(settings.log_level)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
         # Startup logic
         logger = structlog.get_logger()
 
-        import logging
-        import sys
-        logging.basicConfig(
-            level=logging.INFO,
-            stream=sys.stdout,
-            format="\u001B[32m INFO\u001B[0m %(message)s",
-        )
-        logging.getLogger().info("Starting Petstore API application...")
-        logging.getLogger("uvicorn").info("Starting Petstore API application...")
+
+        logging.getLogger().info("Starting Petstore API application...me")
+        logging.getLogger("uvicorn").info("Starting Petstore API application...uvicorn")
         if settings.rate_limit_bypass_key:
             logger.info(
                 "rate_limit_bypass_key_configured",
