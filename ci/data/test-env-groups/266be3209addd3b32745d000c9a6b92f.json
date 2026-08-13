@@ -1,1 +1,1 @@
-{"id":"266be3209addd3b32745d000c9a6b92f","fullName":"tests.unit.test_supabase_auth#test_sign_out_sends_session_token","name":"test_sign_out_sends_session_token","status":"passed","testResultsByEnv":{"default":"bf094c0d786df9570913f0d17cf88594"}}
+{"id":"266be3209addd3b32745d000c9a6b92f","fullName":"tests.unit.test_supabase_auth#test_sign_out_sends_session_token","name":"test_sign_out_sends_session_token","status":"passed","testResultsByEnv":{"default":"9f547cc42b89ca5a775d9500b6c80b21"}}

@@ -1,1 +1,1 @@
-{"id":"6febce340c8f19be79653653ce45e16f","fullName":"tests.integration.test_user_api#test_create_user","name":"test_create_user","status":"passed","testResultsByEnv":{"default":"00603b6cef050f2a2694473fb8c24f9a"}}
+{"id":"6febce340c8f19be79653653ce45e16f","fullName":"tests.integration.test_user_api#test_create_user","name":"test_create_user","status":"passed","testResultsByEnv":{"default":"05a7dc263e0b46ea0cafc69d30558452"}}
