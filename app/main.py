@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+from structlog.dev import ConsoleRenderer, LogLevelColumnFormatter, _pad
 import logging
 import sys
+from typing import cast
 import warnings
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -62,6 +64,9 @@ def configure_logging(log_level: str, app_env: str) -> None:
         app_env: The application environment (e.g. "dev").
     """
     from app.middleware.correlation_id import correlation_id_var
+    # log_level = "DEBUG"
+    print(f"Logging configured with level {log_level} and app_env {app_env}")
+    _basic_logging_config(log_level)
 
     def add_correlation_id(
         logger: object, method: str, event_dict: structlog.types.EventDict
@@ -83,20 +88,24 @@ def configure_logging(log_level: str, app_env: str) -> None:
     structlog.configure(
         processors=[
             structlog.contextvars.merge_contextvars,
-            add_correlation_id,
+            # add_correlation_id,
             structlog.processors.add_log_level,
-            structlog.processors.TimeStamper(fmt="iso"),
             structlog.processors.CallsiteParameterAdder(
                 [
                     structlog.processors.CallsiteParameter.MODULE,
                     structlog.processors.CallsiteParameter.FUNC_NAME,
                 ]
             ),
-            structlog.processors.JSONRenderer(),
+            structlog.dev.ConsoleRenderer(
+                colors=True,
+                sort_keys=True,
+                pad_level=True,
+            ),
         ],
+        
         wrapper_class=structlog.make_filtering_bound_logger(
             getattr(logging, log_level.upper(), logging.INFO)
-        ),
+            ),
         context_class=dict,
         logger_factory=structlog.PrintLoggerFactory(),
         cache_logger_on_first_use=True,
@@ -117,22 +126,18 @@ def create_app() -> FastAPI:
         A fully configured FastAPI application instance.
     """
     settings = get_settings()
-    # configure_logging(settings.log_level, settings.app_env)
-    _basic_logging_config(settings.log_level)
+    configure_logging(settings.log_level, settings.app_env)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
         # Startup logic
         struct_logger = structlog.get_logger()
-        logger = logging.getLogger("uvicorn")
 
         if settings.rate_limit_bypass_key:
             struct_logger.info(
                 "rate_limit_bypass_key_configured",
                 bypass_key=settings.rate_limit_bypass_key,
             )
-
-            logger.info(f"Rate limit bypass key configured: {settings.rate_limit_bypass_key}")
 
         else:
             struct_logger.info("rate_limit_bypass_disabled")
