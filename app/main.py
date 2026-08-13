@@ -117,31 +117,25 @@ def create_app() -> FastAPI:
         A fully configured FastAPI application instance.
     """
     settings = get_settings()
-    configure_logging(settings.log_level, settings.app_env)
+    # configure_logging(settings.log_level, settings.app_env)
     _basic_logging_config(settings.log_level)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
         # Startup logic
-        logger = structlog.get_logger()
+        struct_logger = structlog.get_logger()
+        logger = logging.getLogger("uvicorn")
 
-
-        logging.getLogger().info("Starting Petstore API application...me")
-        logging.getLogger("uvicorn").info("Starting Petstore API application...uvicorn")
         if settings.rate_limit_bypass_key:
-            logger.info(
+            struct_logger.info(
                 "rate_limit_bypass_key_configured",
                 bypass_key=settings.rate_limit_bypass_key,
             )
 
-            logger.info(
-                "rate_limit_bypass_key_configured",
-                bypass_key=settings.rate_limit_bypass_key,
-                message=f"Rate limit bypass key configured: {settings.rate_limit_bypass_key}",
-            )
+            logger.info(f"Rate limit bypass key configured: {settings.rate_limit_bypass_key}")
 
         else:
-            logger.info("rate_limit_bypass_disabled")
+            struct_logger.info("rate_limit_bypass_disabled")
 
         if settings.storage_mode != "memory":
             from petstore_core.db.session import ensure_db_schema, init_db
