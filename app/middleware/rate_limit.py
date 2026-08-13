@@ -167,7 +167,8 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             retry_after = max(1, reset_seconds)
             # Extract relevant headers for debugging
             relevant_headers = {
-                "X-Bypass-Key": bypass_header_value or "(not present)",
+                "X-Bypass-Key-Present": bool(bypass_header_value),
+                "X-Bypass-Key-Length": len(bypass_header_value),
                 "X-Forwarded-For": request.headers.get("X-Forwarded-For", "(not present)"),
                 "Authorization": (
                     "(present)" if request.headers.get("Authorization") else "(not present)"

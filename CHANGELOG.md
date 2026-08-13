@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Logging
+
+- Added correlation-aware request lifecycle logs with HTTP method, path, client
+  IP, response status, content length, and duration.
+- Unified structlog, standard-library, and Uvicorn logs under one formatter,
+  using readable development output and structured JSON in staging/production.
+- Fixed middleware ordering and correlation enrichment so rate-limit and other
+  request-scoped logs include the matching correlation ID.
+- Prevented configured and supplied rate-limit bypass keys from being written
+  to startup or request logs.
+
 ### Security
 
 - Hardened Supabase ES256 and HS256 JWT validation to require the configured

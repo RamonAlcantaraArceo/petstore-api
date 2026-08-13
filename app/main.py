@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-from structlog.dev import ConsoleRenderer, LogLevelColumnFormatter, _pad
 import logging
 import sys
-from typing import cast
 import warnings
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -25,53 +23,20 @@ from app.middleware.rate_limit import BYPASS_HEADER, RateLimitMiddleware
 
 warnings.filterwarnings("error", message="Duplicate Operation ID")
 
-def _basic_logging_config(log_level: str) -> None:
-    """Configure basic logging to stdout.
-
-    Args:
-        log_level: The log level string (e.g. "INFO").
-    """
-    COLORS = {
-        "INFO": "\033[32m",     # green
-        "WARNING": "\033[33m",  # yellow
-        "ERROR": "\033[31m",    # red
-        "DEBUG": "\033[34m",    # blue
-        "CRITICAL": "\033[1;31m", # bold red
-    }
-
-    class ColorFormatter(logging.Formatter):
-        def format(self, record):
-            color = COLORS.get(record.levelname, "")
-            reset = "\033[0m"
-            record.levelname = f"{color}{record.levelname}{reset}"
-            return super().format(record)
-
-    # Create handler
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(ColorFormatter("%(levelname)s %(message)s"))
-
-    # Attach handler to root logger
-    root = logging.getLogger()
-    root.handlers.clear()          # remove default handler installed by uvicorn/basicConfig
-    root.addHandler(handler)
-    root.setLevel(log_level.upper())
 
 def configure_logging(log_level: str, app_env: str) -> None:
-    """Configure structlog for structured JSON output.
+    """Configure application and standard-library logs through structlog.
 
     Args:
         log_level: The log level string (e.g. "INFO").
         app_env: The application environment (e.g. "dev").
     """
     from app.middleware.correlation_id import correlation_id_var
-    # log_level = "DEBUG"
-    print(f"Logging configured with level {log_level} and app_env {app_env}")
-    _basic_logging_config(log_level)
 
-    def add_correlation_id(
+    def add_service_context(
         logger: object, method: str, event_dict: structlog.types.EventDict
     ) -> structlog.types.EventDict:
-        """Add the current correlation ID to every log entry.
+        """Add request and service context to every log entry.
 
         Args:
             logger: The structlog logger.
@@ -79,35 +44,62 @@ def configure_logging(log_level: str, app_env: str) -> None:
             event_dict: The current log event dict.
 
         Returns:
-            The event dict with correlation_id added.
+            The event dict with service context added.
         """
-        event_dict["correlation_id"] = correlation_id_var.get("")
+        correlation_id = correlation_id_var.get("")
+        if correlation_id:
+            event_dict["correlation_id"] = correlation_id
         event_dict["app_env"] = app_env
+        event_dict["service"] = "petstore-api"
         return event_dict
 
-    structlog.configure(
+    level = getattr(logging, log_level.upper(), logging.INFO)
+    shared_processors: list[structlog.types.Processor] = [
+        structlog.contextvars.merge_contextvars,
+        add_service_context,
+        structlog.processors.add_log_level,
+        # structlog.processors.TimeStamper(fmt="iso", utc=True),
+        structlog.processors.CallsiteParameterAdder(
+            [
+                structlog.processors.CallsiteParameter.MODULE,
+                structlog.processors.CallsiteParameter.FUNC_NAME,
+            ]
+        ),
+    ]
+    renderer: structlog.types.Processor
+    if app_env == "dev":
+        renderer = structlog.dev.ConsoleRenderer(colors=sys.stdout.isatty(), sort_keys=True)
+    else:
+        renderer = structlog.processors.JSONRenderer(sort_keys=True)
+
+    formatter = structlog.stdlib.ProcessorFormatter(
         processors=[
-            structlog.contextvars.merge_contextvars,
-            # add_correlation_id,
-            structlog.processors.add_log_level,
-            structlog.processors.CallsiteParameterAdder(
-                [
-                    structlog.processors.CallsiteParameter.MODULE,
-                    structlog.processors.CallsiteParameter.FUNC_NAME,
-                ]
-            ),
-            structlog.dev.ConsoleRenderer(
-                colors=True,
-                sort_keys=True,
-                pad_level=True,
-            ),
+            structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+            renderer,
         ],
-        
-        wrapper_class=structlog.make_filtering_bound_logger(
-            getattr(logging, log_level.upper(), logging.INFO)
-            ),
+        foreign_pre_chain=shared_processors,
+    )
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(formatter)
+
+    root_logger = logging.getLogger()
+    root_logger.handlers.clear()
+    root_logger.addHandler(handler)
+    root_logger.setLevel(level)
+
+    # Uvicorn installs dedicated handlers before importing the app. Route its
+    # server and access records through the same correlation-aware formatter.
+    for logger_name in ("uvicorn", "uvicorn.error", "uvicorn.access"):
+        uvicorn_logger = logging.getLogger(logger_name)
+        uvicorn_logger.handlers.clear()
+        uvicorn_logger.propagate = True
+        uvicorn_logger.setLevel(level)
+
+    structlog.configure(
+        processors=[*shared_processors, structlog.stdlib.ProcessorFormatter.wrap_for_formatter],
+        wrapper_class=structlog.make_filtering_bound_logger(level),
         context_class=dict,
-        logger_factory=structlog.PrintLoggerFactory(),
+        logger_factory=structlog.stdlib.LoggerFactory(),
         cache_logger_on_first_use=True,
     )
 
@@ -136,7 +128,7 @@ def create_app() -> FastAPI:
         if settings.rate_limit_bypass_key:
             struct_logger.info(
                 "rate_limit_bypass_key_configured",
-                bypass_key=settings.rate_limit_bypass_key,
+                bypass_key_length=len(settings.rate_limit_bypass_key),
             )
 
         else:
@@ -257,7 +249,7 @@ def create_app() -> FastAPI:
             title=f"{app.title} - ReDoc",
         )
 
-    # Middleware (outermost first)
+    # Starlette executes the most recently added middleware first.
     if settings.failure_injection_enabled:
         from app.middleware.failure_injection import FailureInjectionMiddleware
 
@@ -275,13 +267,13 @@ def create_app() -> FastAPI:
             max_delay_seconds=settings.delay_injection_max_seconds,
         )
 
-    app.add_middleware(CorrelationIdMiddleware)
     app.add_middleware(
         RateLimitMiddleware,
         max_requests=settings.rate_limit_requests,
         window_seconds=settings.rate_limit_window_seconds,
         bypass_key=settings.rate_limit_bypass_key,
     )
+    app.add_middleware(CorrelationIdMiddleware)
 
     # Routes
     app.include_router(health_router)
