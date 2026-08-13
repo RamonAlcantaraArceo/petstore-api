@@ -93,6 +93,15 @@ def create_app() -> FastAPI:
         # Startup logic
         logger = structlog.get_logger()
 
+        import logging
+        import sys
+        logging.basicConfig(
+            level=logging.INFO,
+            stream=sys.stdout,
+            format="%(levelname)s %(message)s",
+        )
+        logging.getLogger().info("Starting Petstore API application...")
+        logging.getLogger("uvicorn").info("Starting Petstore API application...")
         if settings.rate_limit_bypass_key:
             logger.info(
                 "rate_limit_bypass_key_configured",
