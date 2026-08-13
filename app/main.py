@@ -98,7 +98,7 @@ def create_app() -> FastAPI:
         logging.basicConfig(
             level=logging.INFO,
             stream=sys.stdout,
-            format="%(levelname)s %(message)s",
+            format="\u001B[32m INFO\u001B[0m %(message)s",
         )
         logging.getLogger().info("Starting Petstore API application...")
         logging.getLogger("uvicorn").info("Starting Petstore API application...")
@@ -111,7 +111,7 @@ def create_app() -> FastAPI:
             logger.info(
                 "rate_limit_bypass_key_configured",
                 bypass_key=settings.rate_limit_bypass_key,
-                msg=f"Rate limit bypass key configured: {settings.rate_limit_bypass_key}",
+                message=f"Rate limit bypass key configured: {settings.rate_limit_bypass_key}",
             )
 
         else:
