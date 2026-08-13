@@ -1,1 +1,1 @@
-{"id":"fddea20eea6ba748afbb5b1afdf1e9b5","fullName":"tests.unit.test_supabase_jwt.TestValidateSupabaseJwt#test_es256_uses_owned_async_client","name":"test_es256_uses_owned_async_client","status":"passed","testResultsByEnv":{"default":"4a2bf45d70387ba113301ca260a2af85"}}
+{"id":"fddea20eea6ba748afbb5b1afdf1e9b5","fullName":"tests.unit.test_supabase_jwt.TestValidateSupabaseJwt#test_es256_uses_owned_async_client","name":"test_es256_uses_owned_async_client","status":"passed","testResultsByEnv":{"default":"60b4963a995be43daa05fe29bf1d1879"}}

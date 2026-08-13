@@ -1,1 +1,1 @@
-{"id":"ba75925821efc1d6747ebc23065ae6b6","fullName":"tests.integration.test_dev_auth_api#test_protected_route_rejects_expired_bearer_token","name":"test_protected_route_rejects_expired_bearer_token","status":"passed","testResultsByEnv":{"default":"e5bdde3530cca4e170163d449cb22461"}}
+{"id":"ba75925821efc1d6747ebc23065ae6b6","fullName":"tests.integration.test_dev_auth_api#test_protected_route_rejects_expired_bearer_token","name":"test_protected_route_rejects_expired_bearer_token","status":"passed","testResultsByEnv":{"default":"8a89bb3febc56869a69b6c45df873954"}}
