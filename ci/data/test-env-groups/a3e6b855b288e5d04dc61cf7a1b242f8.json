@@ -1,1 +1,1 @@
-{"id":"a3e6b855b288e5d04dc61cf7a1b242f8","fullName":"tests.unit.test_auth_deps#test_resolve_current_user_from_token_uses_supabase_path","name":"test_resolve_current_user_from_token_uses_supabase_path","status":"passed","testResultsByEnv":{"default":"008310dea10368f3bb5dc6fe44be8c20"}}
+{"id":"a3e6b855b288e5d04dc61cf7a1b242f8","fullName":"tests.unit.test_auth_deps#test_resolve_current_user_from_token_uses_supabase_path","name":"test_resolve_current_user_from_token_uses_supabase_path","status":"passed","testResultsByEnv":{"default":"6be67365d9615b8d078f4c6e034d6f9f"}}
