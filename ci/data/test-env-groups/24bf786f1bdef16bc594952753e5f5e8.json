@@ -1,1 +1,1 @@
-{"id":"24bf786f1bdef16bc594952753e5f5e8","fullName":"tests.unit.test_user_service#test_update_user_raises_404_when_not_found","name":"test_update_user_raises_404_when_not_found","status":"passed","testResultsByEnv":{"default":"cd5737587dc660e80ef530a665e308fb"}}
+{"id":"24bf786f1bdef16bc594952753e5f5e8","fullName":"tests.unit.test_user_service#test_update_user_raises_404_when_not_found","name":"test_update_user_raises_404_when_not_found","status":"passed","testResultsByEnv":{"default":"538a20b2c00fb9a8549975bcc5b9c104"}}

@@ -1,1 +1,1 @@
-{"id":"d1a175348a306e88cdbd653cfdd58db1","fullName":"tests.unit.test_order_service#test_delete_order_calls_repo","name":"test_delete_order_calls_repo","status":"passed","testResultsByEnv":{"default":"6f7935aa84ab48fcc5aa7c0ac5422db0"}}
+{"id":"d1a175348a306e88cdbd653cfdd58db1","fullName":"tests.unit.test_order_service#test_delete_order_calls_repo","name":"test_delete_order_calls_repo","status":"passed","testResultsByEnv":{"default":"96460374414256c170731d7d03befa33"}}

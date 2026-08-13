@@ -1,1 +1,1 @@
-{"id":"78dbcd0decb6c6255f2d2d3d366c0d04","fullName":"tests.unit.test_user_service#test_logout_does_not_raise","name":"test_logout_does_not_raise","status":"passed","testResultsByEnv":{"default":"86ea0b7409ad8c573844c64504e08e6c"}}
+{"id":"78dbcd0decb6c6255f2d2d3d366c0d04","fullName":"tests.unit.test_user_service#test_logout_does_not_raise","name":"test_logout_does_not_raise","status":"passed","testResultsByEnv":{"default":"43b509f7fed423e0e1a782f0b9ba3b3b"}}

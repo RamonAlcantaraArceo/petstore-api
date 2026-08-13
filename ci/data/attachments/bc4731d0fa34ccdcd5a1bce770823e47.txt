@@ -1,1 +1,0 @@
-{"bypass_key": "test-bypass-secret", "event": "rate_limit_bypass_key_configured", "correlation_id": "", "app_env": "dev", "level": "info", "timestamp": "2026-08-13T06:38:50.788756Z", "module": "main", "func_name": "lifespan"}
