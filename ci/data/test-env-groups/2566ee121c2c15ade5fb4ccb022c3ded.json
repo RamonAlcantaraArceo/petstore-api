@@ -1,1 +1,1 @@
-{"id":"2566ee121c2c15ade5fb4ccb022c3ded","fullName":"tests.integration.test_pet_api#test_delete_pet","name":"test_delete_pet","status":"passed","testResultsByEnv":{"default":"e3a9108bcbb639982bb51ef03952b755"}}
+{"id":"2566ee121c2c15ade5fb4ccb022c3ded","fullName":"tests.integration.test_pet_api#test_delete_pet","name":"test_delete_pet","status":"passed","testResultsByEnv":{"default":"647411b9cdecbf8d923221fb5995dde0"}}
