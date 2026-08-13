@@ -1,0 +1,2 @@
+[34mDEBUG[0m Using selector: EpollSelector
+[32mINFO[0m HTTP Request: PUT https://project.supabase.co/auth/v1/user "HTTP/1.1 422 Unprocessable Entity"

@@ -1,0 +1,2 @@
+[34mDEBUG[0m Using selector: EpollSelector
+{"dataset": "test", "pet_id": 1, "name": "Rex", "status": "available", "event": "seeded pet", "correlation_id": "", "app_env": "dev", "level": "debug", "timestamp": "2026-08-13T18:44:30.660763Z", "module": "loader", "func_name": "apply_dataset"}

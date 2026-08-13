@@ -1,0 +1,4 @@
+[34mDEBUG[0m Using selector: EpollSelector
+{"path": "/api/v1/user/login", "bypass_header_present": false, "bypass_header_value_length": 0, "expected_length": 5, "event": "rate_limit_bypass_header_mismatch", "correlation_id": "", "app_env": "dev", "level": "debug", "timestamp": "2026-08-13T18:44:33.931442Z", "module": "rate_limit", "func_name": "dispatch"}
+{"client_key": "user:1", "count": 1, "max_requests": 40, "remaining": 39, "event": "rate_limit_check_pass", "correlation_id": "", "app_env": "dev", "level": "debug", "timestamp": "2026-08-13T18:44:33.931622Z", "module": "rate_limit", "func_name": "dispatch"}
+[32mINFO[0m HTTP Request: POST http://test/api/v1/user/login "HTTP/1.1 401 Unauthorized"

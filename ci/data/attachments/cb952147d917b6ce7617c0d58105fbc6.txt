@@ -1,0 +1,2 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+INFO     httpx:_client.py:1740 HTTP Request: POST https://project.supabase.co/auth/v1/token?grant_type=password "HTTP/1.1 400 Bad Request"

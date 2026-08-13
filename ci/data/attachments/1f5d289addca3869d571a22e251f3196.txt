@@ -1,0 +1,2 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+INFO     httpx:_client.py:1740 HTTP Request: PUT https://project.supabase.co/auth/v1/user "HTTP/1.1 422 Unprocessable Entity"

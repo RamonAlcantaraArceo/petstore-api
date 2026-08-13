@@ -1,0 +1,2 @@
+[34mDEBUG[0m Using selector: EpollSelector
+[32mINFO[0m HTTP Request: GET https://project.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/1.1 500 Internal Server Error"

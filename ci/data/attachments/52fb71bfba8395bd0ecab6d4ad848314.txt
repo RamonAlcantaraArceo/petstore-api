@@ -1,0 +1,5 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+INFO     httpx:_client.py:1740 HTTP Request: GET http://test/api/v1/pet/1 "HTTP/1.1 404 Not Found"
+INFO     httpx:_client.py:1740 HTTP Request: GET http://test/api/v1/pet/1 "HTTP/1.1 404 Not Found"
+INFO     httpx:_client.py:1740 HTTP Request: GET http://test/api/v1/pet/1 "HTTP/1.1 404 Not Found"
+INFO     httpx:_client.py:1740 HTTP Request: GET http://test/api/v1/pet/1 "HTTP/1.1 429 Too Many Requests"

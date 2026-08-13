@@ -1,0 +1,2 @@
+[34mDEBUG[0m Using selector: EpollSelector
+[32mINFO[0m HTTP Request: POST https://project.supabase.co/auth/v1/logout "HTTP/1.1 204 No Content"
