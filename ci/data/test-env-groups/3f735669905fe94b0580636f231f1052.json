@@ -1,1 +1,1 @@
-{"id":"3f735669905fe94b0580636f231f1052","fullName":"tests.unit.test_auth_deps#test_resolve_current_user_from_token_handles_uuid_sub","name":"test_resolve_current_user_from_token_handles_uuid_sub","status":"passed","testResultsByEnv":{"default":"b920423c99512474ce3e81d7ec930bdf"}}
+{"id":"3f735669905fe94b0580636f231f1052","fullName":"tests.unit.test_auth_deps#test_resolve_current_user_from_token_handles_uuid_sub","name":"test_resolve_current_user_from_token_handles_uuid_sub","status":"passed","testResultsByEnv":{"default":"5b27ffdf6948c0873f62ceab8cdd3f4d"}}
