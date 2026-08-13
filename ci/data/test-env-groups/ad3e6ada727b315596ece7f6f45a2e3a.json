@@ -1,1 +1,1 @@
-{"id":"ad3e6ada727b315596ece7f6f45a2e3a","fullName":"tests.unit.test_user_routes_supabase#test_update_user_rejects_username_changes","name":"test_update_user_rejects_username_changes","status":"passed","testResultsByEnv":{"default":"a55e732405bf7688f1769e999dd54920"}}
+{"id":"ad3e6ada727b315596ece7f6f45a2e3a","fullName":"tests.unit.test_user_routes_supabase#test_update_user_rejects_username_changes","name":"test_update_user_rejects_username_changes","status":"passed","testResultsByEnv":{"default":"3c3da92a6257014163594b85d9c77718"}}
