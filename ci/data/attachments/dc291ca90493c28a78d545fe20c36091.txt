@@ -1,2 +1,0 @@
-[34mDEBUG[0m Using selector: EpollSelector
-2026-08-13 18:51:43 [info     ] user.deleted_in_supabase       email=user@example.com username=user

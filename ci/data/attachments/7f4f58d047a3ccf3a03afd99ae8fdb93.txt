@@ -1,0 +1,10 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[debug    ] seeded pet                     app_env=dev dataset=mixed_v1 func_name=apply_dataset module=loader name=Buddy pet_id=1 service=petstore-api status=available
+[debug    ] seeded pet                     app_env=dev dataset=mixed_v1 func_name=apply_dataset module=loader name=Whiskers pet_id=2 service=petstore-api status=available
+[debug    ] seeded pet                     app_env=dev dataset=mixed_v1 func_name=apply_dataset module=loader name=Charlie pet_id=3 service=petstore-api status=pending
+[debug    ] seeded pet                     app_env=dev dataset=mixed_v1 func_name=apply_dataset module=loader name=Goldie pet_id=4 service=petstore-api status=sold
+[debug    ] seeded pet                     app_env=dev dataset=mixed_v1 func_name=apply_dataset module=loader name=Shadow pet_id=5 service=petstore-api status=sold
+[debug    ] seeded order                   app_env=dev dataset=mixed_v1 func_name=apply_dataset module=loader order_id=1 pet_id=4 service=petstore-api status=delivered
+[debug    ] seeded order                   app_env=dev dataset=mixed_v1 func_name=apply_dataset module=loader order_id=2 pet_id=5 service=petstore-api status=approved
+[debug    ] seeded user                    app_env=dev dataset=mixed_v1 func_name=apply_dataset module=loader service=petstore-api user_id=1 username=johndoe
+[debug    ] seeded user                    app_env=dev dataset=mixed_v1 func_name=apply_dataset module=loader service=petstore-api user_id=2 username=janedoe

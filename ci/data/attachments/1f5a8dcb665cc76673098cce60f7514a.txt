@@ -1,2 +1,0 @@
-[34mDEBUG[0m Using selector: EpollSelector
-2026-08-13 18:51:44 [info     ] delay_injected                 delay_seconds=0.05 method=GET path=/api/v1/pet

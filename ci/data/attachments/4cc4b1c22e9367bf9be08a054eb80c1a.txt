@@ -1,0 +1,6 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    app.fixtures.loader:loader.py:61 {'dataset': 'basic', 'pet_id': 1, 'name': 'Buddy', 'status': <PetStatus.available: 'available'>, 'event': 'seeded pet', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'debug', 'module': 'loader', 'func_name': 'apply_dataset'}
+DEBUG    app.fixtures.loader:loader.py:61 {'dataset': 'basic', 'pet_id': 2, 'name': 'Max', 'status': <PetStatus.available: 'available'>, 'event': 'seeded pet', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'debug', 'module': 'loader', 'func_name': 'apply_dataset'}
+DEBUG    app.fixtures.loader:loader.py:61 {'dataset': 'basic', 'pet_id': 3, 'name': 'Bella', 'status': <PetStatus.available: 'available'>, 'event': 'seeded pet', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'debug', 'module': 'loader', 'func_name': 'apply_dataset'}
+DEBUG    app.fixtures.loader:loader.py:98 {'dataset': 'basic', 'user_id': 1, 'username': 'johndoe', 'event': 'seeded user', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'debug', 'module': 'loader', 'func_name': 'apply_dataset'}
+DEBUG    app.fixtures.loader:loader.py:98 {'dataset': 'basic', 'user_id': 2, 'username': 'janedoe', 'event': 'seeded user', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'debug', 'module': 'loader', 'func_name': 'apply_dataset'}

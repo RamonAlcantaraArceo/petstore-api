@@ -1,0 +1,2 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+INFO     app.fixtures.loader:loader.py:127 {'dataset': 'basic', 'storage_mode': 'memory', 'event': 'seeding storage', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'info', 'module': 'loader', 'func_name': 'seed_from_settings'}

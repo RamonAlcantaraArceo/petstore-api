@@ -1,0 +1,2 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[info     ] user.already_deleted_in_supabase app_env=dev email=user@example.com func_name=delete_user module=users service=petstore-api username=user@example.com

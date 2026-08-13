@@ -1,0 +1,7 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[debug    ] rate_limit_bypass_disabled     app_env=dev bypass_header_present=False func_name=dispatch module=rate_limit service=petstore-api
+[debug    ] rate_limit_check_pass          app_env=dev client_key=ip:127.0.0.1 count=1 func_name=dispatch max_requests=3 module=rate_limit remaining=2 service=petstore-api
+[debug    ] rate_limit_bypass_disabled     app_env=dev bypass_header_present=False func_name=dispatch module=rate_limit service=petstore-api
+[debug    ] rate_limit_check_pass          app_env=dev client_key=ip:127.0.0.1 count=2 func_name=dispatch max_requests=3 module=rate_limit remaining=1 service=petstore-api
+[debug    ] rate_limit_bypass_disabled     app_env=dev bypass_header_present=False func_name=dispatch module=rate_limit service=petstore-api
+[debug    ] rate_limit_check_pass          app_env=dev client_key=ip:127.0.0.1 count=3 func_name=dispatch max_requests=3 module=rate_limit remaining=0 service=petstore-api

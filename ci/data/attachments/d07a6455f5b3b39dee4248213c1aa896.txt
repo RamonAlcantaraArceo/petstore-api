@@ -1,2 +1,0 @@
-[34mDEBUG[0m Using selector: EpollSelector
-[32mINFO[0m HTTP Request: POST https://project.supabase.co/auth/v1/token?grant_type=password "HTTP/1.1 500 Internal Server Error"

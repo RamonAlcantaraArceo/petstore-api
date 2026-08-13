@@ -1,9 +1,0 @@
-[34mDEBUG[0m Using selector: EpollSelector
-[32mINFO[0m HTTP Request: GET http://test/health "HTTP/1.1 200 OK"
-[32mINFO[0m HTTP Request: GET http://test/health "HTTP/1.1 200 OK"
-[32mINFO[0m HTTP Request: GET http://test/health "HTTP/1.1 200 OK"
-[32mINFO[0m HTTP Request: GET http://test/health "HTTP/1.1 200 OK"
-[32mINFO[0m HTTP Request: GET http://test/health "HTTP/1.1 200 OK"
-[32mINFO[0m HTTP Request: GET http://test/health "HTTP/1.1 200 OK"
-[32mINFO[0m HTTP Request: GET http://test/health "HTTP/1.1 200 OK"
-[32mINFO[0m HTTP Request: GET http://test/health "HTTP/1.1 200 OK"

@@ -1,0 +1,2 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[info     ] user.created_via_supabase      app_env=dev func_name=create_user module=users service=petstore-api supabase_id=supabase-id username=user

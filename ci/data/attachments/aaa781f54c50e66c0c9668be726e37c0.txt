@@ -1,0 +1,2 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+INFO     app.api.v1.users:users.py:482 {'username': 'user@example.com', 'email': 'user@example.com', 'event': 'user.already_deleted_in_supabase', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'info', 'module': 'users', 'func_name': 'delete_user'}

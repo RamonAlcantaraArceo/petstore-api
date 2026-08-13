@@ -1,0 +1,2 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[info     ] seeding storage                app_env=dev dataset=basic func_name=seed_from_settings module=loader service=petstore-api storage_mode=memory

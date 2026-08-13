@@ -1,6 +1,0 @@
-[34mDEBUG[0m Using selector: EpollSelector
-2026-08-13 18:51:39 [debug    ] seeded pet                     dataset=basic name=Buddy pet_id=1 status=available
-2026-08-13 18:51:39 [debug    ] seeded pet                     dataset=basic name=Max pet_id=2 status=available
-2026-08-13 18:51:39 [debug    ] seeded pet                     dataset=basic name=Bella pet_id=3 status=available
-2026-08-13 18:51:39 [debug    ] seeded user                    dataset=basic user_id=1 username=johndoe
-2026-08-13 18:51:39 [debug    ] seeded user                    dataset=basic user_id=2 username=janedoe

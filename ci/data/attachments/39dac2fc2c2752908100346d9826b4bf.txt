@@ -1,7 +1,0 @@
-DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7fb22dde5b10> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7fb22dde5c70> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7fb22dde5d20> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7fb22dde5dd0> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7fb22dde5e80> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-INFO     httpx:_client.py:1740 HTTP Request: POST http://test/api/v1/user "HTTP/1.1 200 OK"

@@ -1,0 +1,2 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[info     ] delay_injected                 app_env=dev delay_seconds=0.05 func_name=dispatch method=GET module=delay_injection path=/api/v1/pet service=petstore-api

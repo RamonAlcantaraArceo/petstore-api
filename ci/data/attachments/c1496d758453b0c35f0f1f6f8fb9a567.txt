@@ -1,0 +1,3 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+Saving coverage data...
+[debug    ] http://localhost:None "DELETE /v1.48/containers/d2930d23a9f48732b4a0e6030845e4cdae1ca8845f21be416d369155b2a8a80a?v=True&link=False&force=True HTTP/1.1" 204 0 app_env=dev func_name=_make_request module=connectionpool service=petstore-api

@@ -1,0 +1,2 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+WARNING  app.middleware.failure_injection:failure_injection.py:62 {'path': '/api/v1/pet', 'method': 'GET', 'status_code': 504, 'event': 'failure_injected', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'warning', 'module': 'failure_injection', 'func_name': 'dispatch'}

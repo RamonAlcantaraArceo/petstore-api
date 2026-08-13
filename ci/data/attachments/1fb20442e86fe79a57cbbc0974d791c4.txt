@@ -1,2 +1,0 @@
-[34mDEBUG[0m Using selector: EpollSelector
-2026-08-13 18:51:39 [debug    ] seeded user                    dataset=test user_id=1 username=alice

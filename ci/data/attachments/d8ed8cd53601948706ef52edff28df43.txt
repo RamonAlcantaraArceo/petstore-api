@@ -1,0 +1,2 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    app.fixtures.loader:loader.py:98 {'dataset': 'test', 'user_id': 1, 'username': 'alice', 'event': 'seeded user', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'debug', 'module': 'loader', 'func_name': 'apply_dataset'}

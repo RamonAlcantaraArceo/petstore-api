@@ -1,0 +1,6 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[debug    ] seeded pet                     app_env=dev dataset=basic func_name=apply_dataset module=loader name=Buddy pet_id=1 service=petstore-api status=available
+[debug    ] seeded pet                     app_env=dev dataset=basic func_name=apply_dataset module=loader name=Max pet_id=2 service=petstore-api status=available
+[debug    ] seeded pet                     app_env=dev dataset=basic func_name=apply_dataset module=loader name=Bella pet_id=3 service=petstore-api status=available
+[debug    ] seeded user                    app_env=dev dataset=basic func_name=apply_dataset module=loader service=petstore-api user_id=1 username=johndoe
+[debug    ] seeded user                    app_env=dev dataset=basic func_name=apply_dataset module=loader service=petstore-api user_id=2 username=janedoe

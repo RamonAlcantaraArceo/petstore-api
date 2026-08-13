@@ -1,0 +1,3 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    app.fixtures.loader:loader.py:61 {'dataset': 'test', 'pet_id': 42, 'name': 'Goldie', 'status': <PetStatus.sold: 'sold'>, 'event': 'seeded pet', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'debug', 'module': 'loader', 'func_name': 'apply_dataset'}
+DEBUG    app.fixtures.loader:loader.py:79 {'dataset': 'test', 'order_id': 1, 'pet_id': 42, 'status': <OrderStatus.placed: 'placed'>, 'event': 'seeded order', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'debug', 'module': 'loader', 'func_name': 'apply_dataset'}

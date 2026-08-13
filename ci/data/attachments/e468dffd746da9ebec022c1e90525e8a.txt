@@ -1,1 +1,0 @@
-DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "DELETE /v1.48/containers/4a2f460a1b0d824e893f80b34185b759a3796139c6e8b1d40a64dc2c9cd2f672?v=True&link=False&force=True HTTP/1.1" 204 0

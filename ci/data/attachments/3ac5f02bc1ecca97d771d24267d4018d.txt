@@ -1,0 +1,2 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[info     ] HTTP Request: DELETE https://project.supabase.co/auth/v1/admin/users/user-id "HTTP/1.1 204 No Content" app_env=dev func_name=_send_single_request module=_client service=petstore-api

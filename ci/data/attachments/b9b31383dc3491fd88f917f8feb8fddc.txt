@@ -1,3 +1,0 @@
-[34mDEBUG[0m Using selector: EpollSelector
-2026-08-13 18:51:42 [info     ] rate_limit_bypass_disabled
-[32mINFO[0m HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"

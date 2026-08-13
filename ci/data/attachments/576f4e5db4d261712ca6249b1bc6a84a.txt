@@ -1,0 +1,2 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[info     ] HTTP Request: POST https://project.supabase.co/auth/v1/signup "HTTP/1.1 422 Unprocessable Entity" app_env=dev func_name=_send_single_request module=_client service=petstore-api

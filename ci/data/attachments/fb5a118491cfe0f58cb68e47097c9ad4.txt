@@ -1,0 +1,2 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+INFO     app.api.v1.users:users.py:148 {'supabase_id': 'supabase-id', 'username': 'user', 'event': 'user.created_via_supabase', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'info', 'module': 'users', 'func_name': 'create_user'}
