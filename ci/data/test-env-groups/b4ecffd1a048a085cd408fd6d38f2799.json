@@ -1,1 +1,1 @@
-{"id":"b4ecffd1a048a085cd408fd6d38f2799","fullName":"tests.auth.test_dev_auth#test_protected_route_accepts_valid_bearer_token","name":"test_protected_route_accepts_valid_bearer_token","status":"passed","testResultsByEnv":{"default":"e8c5a0983710fdf1cb8bb7c7212b20d5"}}
+{"id":"b4ecffd1a048a085cd408fd6d38f2799","fullName":"tests.auth.test_dev_auth#test_protected_route_accepts_valid_bearer_token","name":"test_protected_route_accepts_valid_bearer_token","status":"passed","testResultsByEnv":{"default":"d5336dfbdc7324a0ff5ffc8ae86f14ab"}}

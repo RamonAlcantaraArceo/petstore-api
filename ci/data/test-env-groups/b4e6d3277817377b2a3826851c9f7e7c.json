@@ -1,1 +1,1 @@
-{"id":"b4e6d3277817377b2a3826851c9f7e7c","fullName":"tests.unit.test_supabase_auth#test_delete_user_uses_admin_credentials","name":"test_delete_user_uses_admin_credentials","status":"passed","testResultsByEnv":{"default":"c7ac5828945f07ae2f9d594f7158c2ef"}}
+{"id":"b4e6d3277817377b2a3826851c9f7e7c","fullName":"tests.unit.test_supabase_auth#test_delete_user_uses_admin_credentials","name":"test_delete_user_uses_admin_credentials","status":"passed","testResultsByEnv":{"default":"f522cbc33cd4ad3ba33ca2e9faea87f6"}}

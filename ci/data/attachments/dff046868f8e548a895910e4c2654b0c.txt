@@ -1,1 +1,0 @@
-{"username": "user@example.com", "email": "user@example.com", "event": "user.already_deleted_in_supabase", "correlation_id": "", "app_env": "dev", "level": "info", "timestamp": "2026-08-13T06:19:50.383620Z", "module": "users", "func_name": "delete_user"}

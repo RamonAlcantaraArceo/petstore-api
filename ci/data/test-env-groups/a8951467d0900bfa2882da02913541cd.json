@@ -1,1 +1,1 @@
-{"id":"a8951467d0900bfa2882da02913541cd","fullName":"tests.integration.test_rate_limiting#test_rate_limit_response_body_and_headers","name":"test_rate_limit_response_body_and_headers","status":"passed","testResultsByEnv":{"default":"5db6a31d134f6674dd0a7a4513d0f18b"}}
+{"id":"a8951467d0900bfa2882da02913541cd","fullName":"tests.integration.test_rate_limiting#test_rate_limit_response_body_and_headers","name":"test_rate_limit_response_body_and_headers","status":"passed","testResultsByEnv":{"default":"5a661cff3fc70cf82cbb5adca8df3f40"}}
