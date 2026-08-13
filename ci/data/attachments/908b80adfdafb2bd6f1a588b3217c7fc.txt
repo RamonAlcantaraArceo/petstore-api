@@ -1,0 +1,2 @@
+{"dataset": "test", "user_id": 1, "username": "alice", "event": "seeded user", "correlation_id": "", "app_env": "dev", "level": "debug", "timestamp": "2026-08-13T06:01:26.992050Z", "module": "loader", "func_name": "apply_dataset"}
+{"dataset": "test", "user_id": 2, "username": "bob", "event": "seeded user", "correlation_id": "", "app_env": "dev", "level": "debug", "timestamp": "2026-08-13T06:01:26.992211Z", "module": "loader", "func_name": "apply_dataset"}
