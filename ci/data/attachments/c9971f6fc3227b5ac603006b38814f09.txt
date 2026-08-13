@@ -1,0 +1,1 @@
+{"supabase_id": "supabase-id", "username": "user", "event": "user.created_via_supabase", "correlation_id": "", "app_env": "dev", "level": "info", "timestamp": "2026-08-13T18:31:42.971972Z", "module": "users", "func_name": "create_user"}

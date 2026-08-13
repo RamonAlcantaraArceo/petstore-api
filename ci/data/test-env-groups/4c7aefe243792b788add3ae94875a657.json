@@ -1,1 +1,1 @@
-{"id":"4c7aefe243792b788add3ae94875a657","fullName":"tests.unit.test_supabase_auth#test_delete_user_maps_provider_errors","name":"test_delete_user_maps_provider_errors[500-502]","status":"passed","testResultsByEnv":{"default":"1ec9630951e8e94d38dcd44978bbff4e"}}
+{"id":"4c7aefe243792b788add3ae94875a657","fullName":"tests.unit.test_supabase_auth#test_delete_user_maps_provider_errors","name":"test_delete_user_maps_provider_errors[404-404]","status":"passed","testResultsByEnv":{"default":"91c4995465277943ad4c009712d0bef1"}}
