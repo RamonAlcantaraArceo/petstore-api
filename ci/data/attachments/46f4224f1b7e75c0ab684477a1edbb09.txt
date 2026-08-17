@@ -1,6 +1,0 @@
-DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7effd80f1b10> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7effd80f1c70> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7effd80f1d20> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7effd80f1dd0> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>
-DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function UserCreateFactory.<lambda> at 0x7effd80f1e80> on <BuildStep for <StepBuilder(<FactoryOptions for UserCreateFactory>, strategy='create')>>

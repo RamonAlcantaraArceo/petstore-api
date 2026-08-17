@@ -1,0 +1,16 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[debug    ] connect_tcp.started host='127.0.0.1' port=41409 local_address=None timeout=30 socket_options=None app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7fe513632710> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_headers.complete  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] send_request_body.complete     app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Mon, 17 Aug 2026 19:56:18 GMT'), (b'server', b'uvicorn'), (b'content-length', b'102'), (b'content-type', b'application/json'), (b'x-correlation-id', b'e2a14f42-c121-4ce2-8838-e0368de7a8df')]) app_env=dev func_name=atrace module=_trace service=petstore-api
+[info     ] HTTP Request: GET http://127.0.0.1:41409/api/v1/health "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api
+[debug    ] receive_response_body.started request=<Request [b'GET']> app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] receive_response_body.complete app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.started        app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] response_closed.complete       app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] close.started                  app_env=dev func_name=atrace module=_trace service=petstore-api
+[debug    ] close.complete                 app_env=dev func_name=atrace module=_trace service=petstore-api
