@@ -1,2 +1,0 @@
-DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
-DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "DELETE /v1.48/containers/6f9be56f127899b6b634bd75c77cb4556549656a67b66435d729ec541cf40830?v=True&link=False&force=True HTTP/1.1" 204 0

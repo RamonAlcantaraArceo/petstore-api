@@ -1,1 +1,1 @@
-{"id":"0d9269546a98e3ffb8459bff6c296222","fullName":"tests.unit.test_rate_limit_middleware#test_openapi_path_is_exempt","name":"test_openapi_path_is_exempt","status":"passed","testResultsByEnv":{"default":"505937372d8fe66af6250dcaa3aa7dc9"}}
+{"id":"0d9269546a98e3ffb8459bff6c296222","fullName":"tests.unit.test_rate_limit_middleware#test_openapi_path_is_exempt","name":"test_openapi_path_is_exempt","status":"passed","testResultsByEnv":{"default":"22beaeb05ea0b282a6b2ef1814fe4d30"}}

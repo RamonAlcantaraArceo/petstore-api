@@ -1,4 +1,0 @@
-DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
-INFO     app.middleware.correlation_id:correlation_id.py:55 {'http_method': 'GET', 'http_path': '/health', 'client_ip': '127.0.0.1', 'user_agent': 'python-httpx/0.28.1', 'event': 'request_started', 'correlation_id': 'test-correlation-id', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'info', 'module': 'correlation_id', 'func_name': 'dispatch'}
-INFO     app.middleware.correlation_id:correlation_id.py:76 {'http_method': 'GET', 'http_path': '/health', 'http_status_code': 200, 'client_ip': '127.0.0.1', 'duration_ms': 1.65, 'response_content_length': '103', 'event': 'request_completed', 'correlation_id': 'test-correlation-id', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'info', 'module': 'correlation_id', 'func_name': 'dispatch'}
-INFO     httpx:_client.py:1740 HTTP Request: GET http://test/health "HTTP/1.1 200 OK"
