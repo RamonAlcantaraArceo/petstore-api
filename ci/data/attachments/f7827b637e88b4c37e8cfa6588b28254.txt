@@ -1,0 +1,3 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[debug    ] Sequence: Computing next value of <function OrderCreateFactory.<lambda> at 0x7effd80a03b0> for seq=0 app_env=dev func_name=evaluate module=declarations service=petstore-api
+[debug    ] LazyFunction: Evaluating <function OrderCreateFactory.<lambda> at 0x7effd80a1430> on <BuildStep for <StepBuilder(<FactoryOptions for OrderCreateFactory>, strategy='create')>> app_env=dev func_name=evaluate module=declarations service=petstore-api

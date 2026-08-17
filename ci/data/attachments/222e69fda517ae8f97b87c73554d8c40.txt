@@ -1,0 +1,106 @@
+DEBUG    docker.utils.config:config.py:21 Trying paths: ['/home/runner/.docker/config.json', '/home/runner/.dockercfg']
+DEBUG    docker.utils.config:config.py:25 Found file at path: /home/runner/.docker/config.json
+DEBUG    docker.auth:auth.py:170 Found 'auths' section
+DEBUG    docker.auth:auth.py:131 Found entry (registry='https://index.docker.io/v1/', username='githubactions')
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /version HTTP/1.1" 200 822
+DEBUG    testcontainers.core.container:container.py:176 Creating Ryuk container
+DEBUG    testcontainers.core.container:container.py:341 Creating new Reaper for session: 7798b746-bb5f-41f3-b721-8a7de256db92
+DEBUG    docker.utils.config:config.py:21 Trying paths: ['/home/runner/.docker/config.json', '/home/runner/.dockercfg']
+DEBUG    docker.utils.config:config.py:25 Found file at path: /home/runner/.docker/config.json
+DEBUG    docker.auth:auth.py:170 Found 'auths' section
+DEBUG    docker.auth:auth.py:131 Found entry (registry='https://index.docker.io/v1/', username='githubactions')
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /version HTTP/1.1" 200 822
+DEBUG    docker.utils.config:config.py:21 Trying paths: ['/home/runner/.docker/config.json', '/home/runner/.dockercfg']
+DEBUG    docker.utils.config:config.py:25 Found file at path: /home/runner/.docker/config.json
+DEBUG    docker.auth:auth.py:170 Found 'auths' section
+DEBUG    docker.auth:auth.py:131 Found entry (registry='https://index.docker.io/v1/', username='githubactions')
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /version HTTP/1.1" 200 822
+INFO     testcontainers.core.container:container.py:178 Pulling image testcontainers/ryuk:0.8.1
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/networks?filters=%7B%22type%22%3A+%5B%22custom%22%5D%7D HTTP/1.1" 200 3
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/containers/create?name=testcontainers-ryuk-7798b746-bb5f-41f3-b721-8a7de256db92 HTTP/1.1" 404 55
+DEBUG    docker.auth:auth.py:38 Looking for auth config
+DEBUG    docker.auth:auth.py:230 Looking for auth entry for 'docker.io'
+DEBUG    docker.auth:auth.py:238 Found 'https://index.docker.io/v1/'
+DEBUG    docker.auth:auth.py:51 Found auth config
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/images/create?tag=0.8.1&fromImage=testcontainers%2Fryuk HTTP/1.1" 200 None
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/images/testcontainers/ryuk:0.8.1/json HTTP/1.1" 200 1682
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/containers/create?name=testcontainers-ryuk-7798b746-bb5f-41f3-b721-8a7de256db92 HTTP/1.1" 201 88
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/containers/1570a631f80c7303eb698a2123420b631866879186a9224d1ec666047d37ddd6/json HTTP/1.1" 200 None
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/containers/1570a631f80c7303eb698a2123420b631866879186a9224d1ec666047d37ddd6/start HTTP/1.1" 204 0
+INFO     testcontainers.core.container:container.py:207 Container started: 1570a631f80c
+DEBUG    testcontainers.core.wait_strategies:wait_strategies.py:699 fetching status of container <testcontainers.core.container.DockerContainer object at 0x7effd63b7230>
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/containers/1570a631f80c7303eb698a2123420b631866879186a9224d1ec666047d37ddd6/json HTTP/1.1" 200 None
+DEBUG    testcontainers.core.wait_strategies:wait_strategies.py:677 status is now running
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/containers/1570a631f80c7303eb698a2123420b631866879186a9224d1ec666047d37ddd6/json HTTP/1.1" 200 None
+INFO     testcontainers.core.container:container.py:178 Pulling image postgres:16-alpine
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/networks?filters=%7B%22type%22%3A+%5B%22custom%22%5D%7D HTTP/1.1" 200 3
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/containers/create HTTP/1.1" 404 48
+DEBUG    docker.auth:auth.py:38 Looking for auth config
+DEBUG    docker.auth:auth.py:230 Looking for auth entry for 'docker.io'
+DEBUG    docker.auth:auth.py:238 Found 'https://index.docker.io/v1/'
+DEBUG    docker.auth:auth.py:51 Found auth config
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/images/create?tag=16-alpine&fromImage=postgres HTTP/1.1" 200 None
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/images/postgres:16-alpine/json HTTP/1.1" 200 None
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/containers/create HTTP/1.1" 201 88
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/containers/e436f247e8ada70c797a1cd86270aa5abba7154e4f5f5682d85406d86fc91d7e/json HTTP/1.1" 200 None
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/containers/e436f247e8ada70c797a1cd86270aa5abba7154e4f5f5682d85406d86fc91d7e/start HTTP/1.1" 204 0
+INFO     testcontainers.core.container:container.py:207 Container started: e436f247e8ad
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/containers/e436f247e8ada70c797a1cd86270aa5abba7154e4f5f5682d85406d86fc91d7e/exec HTTP/1.1" 201 74
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/exec/ee6ed55371bc84e1fcf4ecccd45053f374894358e8b7899e5e8d4e9cda15c00b/start HTTP/1.1" 101 0
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/exec/ee6ed55371bc84e1fcf4ecccd45053f374894358e8b7899e5e8d4e9cda15c00b/json HTTP/1.1" 200 464
+DEBUG    testcontainers.core.wait_strategies:wait_strategies.py:868 ExecWaitStrategy: Command failed with exit code 2, expected 0. Retrying...
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/containers/e436f247e8ada70c797a1cd86270aa5abba7154e4f5f5682d85406d86fc91d7e/exec HTTP/1.1" 201 74
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/exec/711a8056a9d4b9d05fcb37425fc18d15d2762e6cb09ffacd853031a6d0558134/start HTTP/1.1" 101 0
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/exec/711a8056a9d4b9d05fcb37425fc18d15d2762e6cb09ffacd853031a6d0558134/json HTTP/1.1" 200 464
+DEBUG    testcontainers.core.wait_strategies:wait_strategies.py:868 ExecWaitStrategy: Command failed with exit code 2, expected 0. Retrying...
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/containers/e436f247e8ada70c797a1cd86270aa5abba7154e4f5f5682d85406d86fc91d7e/exec HTTP/1.1" 201 74
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "POST /v1.48/exec/331bbfdd503990c9589460befca7ec02bb2fb3509d4c2625ad9f7947a89e47b2/start HTTP/1.1" 101 0
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/exec/331bbfdd503990c9589460befca7ec02bb2fb3509d4c2625ad9f7947a89e47b2/json HTTP/1.1" 200 464
+DEBUG    testcontainers.core.wait_strategies:wait_strategies.py:863 ExecWaitStrategy: Command succeeded with exit code 0 after 2.11s
+DEBUG    testcontainers.core.wait_strategies:wait_strategies.py:699 fetching status of container <testcontainers.postgres.PostgresContainer object at 0x7effd63b67b0>
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/containers/e436f247e8ada70c797a1cd86270aa5abba7154e4f5f5682d85406d86fc91d7e/json HTTP/1.1" 200 None
+DEBUG    testcontainers.core.wait_strategies:wait_strategies.py:677 status is now running
+DEBUG    urllib3.connectionpool:connectionpool.py:544 http://localhost:None "GET /v1.48/containers/e436f247e8ada70c797a1cd86270aa5abba7154e4f5f5682d85406d86fc91d7e/json HTTP/1.1" 200 None
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.started host='127.0.0.1' port=35959 local_address=None timeout=2.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.started host='127.0.0.1' port=35959 local_address=None timeout=2.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.started host='127.0.0.1' port=35959 local_address=None timeout=2.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.started host='127.0.0.1' port=35959 local_address=None timeout=2.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.started host='127.0.0.1' port=35959 local_address=None timeout=2.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.started host='127.0.0.1' port=35959 local_address=None timeout=2.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.started host='127.0.0.1' port=35959 local_address=None timeout=2.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:47 connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7effd63b7e00>
+DEBUG    httpcore.http11:_trace.py:47 send_request_headers.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:47 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:47 send_request_body.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:47 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:47 receive_response_headers.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:47 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Mon, 17 Aug 2026 19:55:52 GMT'), (b'server', b'uvicorn'), (b'content-length', b'102'), (b'content-type', b'application/json'), (b'x-correlation-id', b'6e5ce8b0-6696-446c-ae99-2042ea5727e4')])
+INFO     httpx:_client.py:1025 HTTP Request: GET http://127.0.0.1:35959/health "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:47 receive_response_body.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:47 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:47 response_closed.started
+DEBUG    httpcore.http11:_trace.py:47 response_closed.complete
+DEBUG    httpcore.connection:_trace.py:47 close.started
+DEBUG    httpcore.connection:_trace.py:47 close.complete
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='127.0.0.1' port=35959 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7effd63b7a10>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Mon, 17 Aug 2026 19:55:52 GMT'), (b'server', b'uvicorn'), (b'content-length', b'102'), (b'content-type', b'application/json'), (b'x-correlation-id', b'4c753df3-0684-420b-b69e-7ff5d2e0ac49')])
+INFO     httpx:_client.py:1740 HTTP Request: GET http://127.0.0.1:35959/health "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete

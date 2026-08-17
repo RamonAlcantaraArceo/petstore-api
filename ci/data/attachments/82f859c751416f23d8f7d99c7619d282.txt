@@ -1,0 +1,5 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[info     ] rate_limit_bypass_disabled     app_env=dev func_name=lifespan module=main service=petstore-api
+[info     ] request_started                app_env=dev client_ip=testclient correlation_id=76559e8e-e37a-4553-8bc9-cf46576e17cc func_name=dispatch http_method=GET http_path=/health module=correlation_id service=petstore-api user_agent=testclient
+[info     ] request_completed              app_env=dev client_ip=testclient correlation_id=76559e8e-e37a-4553-8bc9-cf46576e17cc duration_ms=1.54 func_name=dispatch http_method=GET http_path=/health http_status_code=200 module=correlation_id response_content_length=103 service=petstore-api
+[info     ] HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK" app_env=dev func_name=_send_single_request module=_client service=petstore-api

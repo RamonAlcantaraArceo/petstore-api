@@ -1,2 +1,0 @@
-DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
-INFO     app.middleware.delay_injection:delay_injection.py:58 {'path': '/api/v1/pet', 'method': 'GET', 'delay_seconds': 0.42, 'event': 'delay_injected', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'info', 'module': 'delay_injection', 'func_name': 'dispatch'}

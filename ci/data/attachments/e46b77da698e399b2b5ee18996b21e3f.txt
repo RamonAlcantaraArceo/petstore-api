@@ -1,0 +1,4 @@
+[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
+[info     ] delay_injected                 app_env=dev delay_seconds=0.42 func_name=dispatch method=GET module=delay_injection path=/api/v1/pet service=petstore-api
+Saving coverage data...
+[debug    ] http://localhost:None "DELETE /v1.48/containers/e436f247e8ada70c797a1cd86270aa5abba7154e4f5f5682d85406d86fc91d7e?v=True&link=False&force=True HTTP/1.1" 204 0 app_env=dev func_name=_make_request module=connectionpool service=petstore-api
