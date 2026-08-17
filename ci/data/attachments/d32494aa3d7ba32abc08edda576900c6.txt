@@ -1,4 +1,0 @@
-[debug    ] Using selector: EpollSelector  app_env=dev func_name=__init__ module=selector_events service=petstore-api
-[info     ] request_started                app_env=dev client_ip=127.0.0.1 correlation_id=818e8ff3-452e-452f-9fad-40b8dfd44ada func_name=dispatch http_method=GET http_path=/openapi.json module=correlation_id service=petstore-api user_agent=python-httpx/0.28.1
-[info     ] request_completed              app_env=dev client_ip=127.0.0.1 correlation_id=818e8ff3-452e-452f-9fad-40b8dfd44ada duration_ms=67.43 func_name=dispatch http_method=GET http_path=/openapi.json http_status_code=200 module=correlation_id response_content_length=33112 service=petstore-api
-[info     ] HTTP Request: GET http://test/openapi.json "HTTP/1.1 200 OK" app_env=dev correlation_id=818e8ff3-452e-452f-9fad-40b8dfd44ada func_name=_send_single_request module=_client service=petstore-api

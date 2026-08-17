@@ -1,0 +1,3 @@
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    factory.generate:declarations.py:290 Sequence: Computing next value of <function OrderCreateFactory.<lambda> at 0x7fc4b19c1380> for seq=6
+DEBUG    factory.generate:declarations.py:101 LazyFunction: Evaluating <function OrderCreateFactory.<lambda> at 0x7fc4b19c2350> on <BuildStep for <StepBuilder(<FactoryOptions for OrderCreateFactory>, strategy='create')>>

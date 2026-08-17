@@ -1,4 +1,0 @@
-DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
-INFO     app.middleware.correlation_id:correlation_id.py:55 {'http_method': 'GET', 'http_path': '/openapi.json', 'client_ip': '127.0.0.1', 'user_agent': 'python-httpx/0.28.1', 'event': 'request_started', 'correlation_id': '818e8ff3-452e-452f-9fad-40b8dfd44ada', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'info', 'module': 'correlation_id', 'func_name': 'dispatch'}
-INFO     app.middleware.correlation_id:correlation_id.py:76 {'http_method': 'GET', 'http_path': '/openapi.json', 'http_status_code': 200, 'client_ip': '127.0.0.1', 'duration_ms': 67.43, 'response_content_length': '33112', 'event': 'request_completed', 'correlation_id': '818e8ff3-452e-452f-9fad-40b8dfd44ada', 'app_env': 'dev', 'service': 'petstore-api', 'level': 'info', 'module': 'correlation_id', 'func_name': 'dispatch'}
-INFO     httpx:_client.py:1740 HTTP Request: GET http://test/openapi.json "HTTP/1.1 200 OK"
