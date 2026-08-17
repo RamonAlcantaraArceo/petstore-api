@@ -13,7 +13,7 @@ dependencies = [
   "httpx>=0.27.0",
   "python-multipart>=0.0.30",
   "email-validator>=2.3.0",
-  "PyJWT[crypto]>=2.8.0",
+  "PyJWT[crypto]>=2.13.0",
   "petstore-core",
 ]
 
